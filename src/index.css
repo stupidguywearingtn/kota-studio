@@ -1,0 +1,322 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   KOTA STUDIO — base
+   Fonds crème/sable chaud, encre #241A12, accent doré #C8A24E.
+   ============================================================ */
+@layer base {
+  html {
+    scroll-behavior: auto; /* Lenis gère le smooth scroll */
+  }
+  body {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    /* Dégradé crème + grille dorée subtile : visible sur toutes les zones
+       crème, masquée par les sections sombres (bg-encre opaque). */
+    background-color: #FBF6EC;
+    background-image:
+      linear-gradient(to right, rgba(200, 162, 78, 0.07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(200, 162, 78, 0.07) 1px, transparent 1px),
+      linear-gradient(180deg, #FBF6EC 0%, #F6EDDC 100%);
+    background-size: 46px 46px, 46px 46px, 100% 100%;
+    background-repeat: repeat, repeat, no-repeat;
+    background-attachment: fixed, fixed, fixed;
+    @apply text-encre antialiased overflow-x-hidden selection:bg-or selection:text-encre;
+  }
+  ::selection {
+    background: #C8A24E;
+    color: #241A12;
+  }
+}
+
+/* ============================================================
+   Lenis smooth scroll
+   ============================================================ */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* ============================================================
+   Titres — Bricolage 800, lettres serrées, encre
+   ============================================================ */
+.kota-title {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  /* Pas de couleur imposée : le titre hérite de son contexte
+     (encre sur fond clair via <body>, crème sur section sombre via text-creme).
+     Les utilitaires text-encre / text-creme restent prioritaires si posés. */
+}
+
+/* Effet texte-contour : lettres creuses, contour encre.
+   On AÉRE le mot (letter-spacing positif) pour qu'il reste lisible
+   malgré le tracking très serré du titre. */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 2px #241A12;
+  text-stroke: 2px #241A12;
+  /* Poids légèrement réduit (vs 900 du titre) -> lettres creuses mieux
+     formées et régulières ; espacement aéré + paint-order pour un tracé net. */
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  paint-order: stroke fill;
+}
+.text-outline-or {
+  color: transparent;
+  -webkit-text-stroke: 2px #C8A24E;
+  text-stroke: 2px #C8A24E;
+}
+
+/* Soulignement doré épais, décalé sous le mot-clé */
+.gold-underline {
+  position: relative;
+  display: inline-block;
+}
+.gold-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 4px;
+  border-radius: 2px;
+  background: #C8A24E;
+}
+
+/* Badge en relief — ombre dorée chaude + soulèvement au survol */
+.badge-3d {
+  /* Style SocioSpark (pilule en relief, légèrement inclinée) mais en DA :
+     ombre décalée DOUCE encre (pas de noir brutaliste) + halo doré subtil. */
+  transform: rotate(-2deg);
+  box-shadow: 5px 6px 0 0 rgba(36, 26, 18, 0.10),
+    0 10px 22px -8px rgba(36, 26, 18, 0.18),
+    0 2px 8px -2px rgba(200, 162, 78, 0.35);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.badge-3d:hover {
+  transform: rotate(0deg) translateY(-3px);
+  box-shadow: 6px 8px 0 0 rgba(36, 26, 18, 0.10),
+    0 16px 30px -8px rgba(36, 26, 18, 0.22),
+    0 2px 10px -2px rgba(200, 162, 78, 0.45);
+}
+
+/* Boutons à effet de PROFONDEUR (style SocioSpark, mais en DA crème/encre).
+   Au repos : ombre encre décalée -> le bouton « dépasse » de la page.
+   Au survol/clic : il s'enfonce (se décale en bas-droite, l'ombre se réduit). */
+.btn-3d {
+  box-shadow: 5px 6px 0 0 rgba(36, 26, 18, 0.92);
+  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.3, 1),
+    box-shadow 0.12s cubic-bezier(0.2, 0.8, 0.3, 1),
+    background-color 0.25s ease, color 0.25s ease;
+}
+.btn-3d:hover {
+  transform: translate(2px, 3px);
+  box-shadow: 3px 3px 0 0 rgba(36, 26, 18, 0.92);
+}
+.btn-3d:active {
+  transform: translate(5px, 6px);
+  box-shadow: 0 0 0 0 rgba(36, 26, 18, 0);
+}
+
+/* ============================================================
+   HERO — mot animé à largeur fixe (jamais de décalage)
+   Stack en grid : la largeur du conteneur = mot le plus large.
+   Le titre ne bouge JAMAIS, quel que soit le mot affiché.
+   ============================================================ */
+/* Conteneur : largeur figée = mot le plus large (jamais de décalage).
+   - .hero-word-clip empile les mots et clippe le slide vertical.
+   - .hero-wave est posée EN DEHORS du clip pour ne pas être coupée. */
+.hero-word-wrap {
+  position: relative;
+  display: inline-block;
+  vertical-align: bottom;
+}
+.hero-word-clip {
+  display: inline-grid;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.hero-word {
+  grid-area: 1 / 1;          /* tous les mots empilés dans la même cellule */
+  white-space: nowrap;
+  color: #241A12;
+  will-change: transform, opacity;
+}
+/* Soulignement en VAGUE dorée (SVG), sous le mot animé */
+.hero-wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.13em;
+  width: 100%;
+  height: 0.17em;
+}
+.hero-wave svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* ============================================================
+   Marquees — défilement TRULY INFINITE.
+   Chaque piste est en w-max et contient 4 COPIES identiques à la suite.
+   On translate de -25% (= exactement 1 copie) : il reste toujours au moins
+   3 copies (≫ 1 écran) à droite, donc la boucle est invisible (aucun saut,
+   aucun trou), quelle que soit la largeur d'écran. Vitesse constante.
+   ============================================================ */
+@keyframes mq-ltr {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-25%); }
+}
+@keyframes mq-rtl {
+  from { transform: translateX(-25%); }
+  to   { transform: translateX(0); }
+}
+.mq-ltr {
+  animation: mq-ltr 32s linear infinite;
+}
+.mq-rtl {
+  animation: mq-rtl 32s linear infinite;
+}
+.mq-slow {
+  animation: mq-ltr 50s linear infinite;
+}
+
+/* Fondu / flou dégradé sur les bords gauche ET droite */
+.edge-fade {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 11%,
+    #000 89%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 11%,
+    #000 89%,
+    transparent 100%
+  );
+}
+
+/* ============================================================
+   Motif lignes diagonales dorées qui glissent (cartes vides)
+   ============================================================ */
+@keyframes diag-slide {
+  to { background-position: 56px 56px; }
+}
+.diag-lines {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(200, 162, 78, 0.16) 0,
+    rgba(200, 162, 78, 0.16) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+  animation: diag-slide 7s linear infinite;
+}
+.diag-lines-on-dark {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(200, 162, 78, 0.22) 0,
+    rgba(200, 162, 78, 0.22) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+  animation: diag-slide 7s linear infinite;
+}
+
+/* ============================================================
+   Flottements doux & halo doré
+   ============================================================ */
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+.float-soft {
+  animation: float-soft 6s ease-in-out infinite;
+}
+.float-soft-delayed {
+  animation: float-soft 7.5s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+@keyframes halo-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 0.85; transform: scale(1.08); }
+}
+.gold-halo {
+  background: radial-gradient(
+    circle at center,
+    rgba(200, 162, 78, 0.55) 0%,
+    rgba(200, 162, 78, 0.18) 38%,
+    rgba(200, 162, 78, 0) 70%
+  );
+  animation: halo-pulse 9s ease-in-out infinite;
+  filter: blur(8px);
+}
+
+/* ============================================================
+   Reveal au scroll (états de départ posés par GSAP, mais
+   on garde un fallback no-JS visible).
+   ============================================================ */
+.reveal,
+.reveal-stagger > * {
+  will-change: transform, opacity;
+}
+
+/* Browser mockup — perspective 3D légère + redressement au survol */
+.mockup-3d {
+  transform: perspective(1400px) rotateX(8deg) rotateY(-9deg) rotateZ(0.5deg);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-style: preserve-3d;
+}
+.mockup-3d:hover {
+  transform: perspective(1400px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+}
+
+/* Carte qui se soulève au survol */
+.lift {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.lift:hover {
+  transform: translateY(-8px);
+}
+
+/* Flèche qui avance au survol (boutons / liens) */
+.arrow-advance {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.group:hover .arrow-advance {
+  transform: translateX(5px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mq-ltr,
+  .mq-rtl,
+  .mq-slow,
+  .float-soft,
+  .float-soft-delayed,
+  .gold-halo,
+  .diag-lines,
+  .diag-lines-on-dark {
+    animation: none !important;
+  }
+}
