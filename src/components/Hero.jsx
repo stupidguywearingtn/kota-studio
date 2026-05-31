@@ -34,7 +34,7 @@ export default function Hero() {
       <div className="pointer-events-none absolute -top-10 -left-24 h-72 w-72 gold-halo opacity-60" />
       <div className="pointer-events-none absolute top-1/3 right-0 h-80 w-80 gold-halo opacity-40" />
 
-      <div className="relative z-10 grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
+      <div className="relative z-10 grid items-center gap-10 sm:gap-14 lg:grid-cols-2 lg:gap-16">
         {/* Colonne texte */}
         <div className="hero-content max-w-xl">
           <div className="badge-3d mb-7 inline-flex items-center gap-2.5 rounded-full border border-or/40 bg-creme px-5 py-2.5 text-sm font-semibold text-encre/80">
@@ -46,7 +46,7 @@ export default function Hero() {
           </div>
 
           <h1
-            className={`mb-8 font-display font-black leading-[0.9] tracking-[-0.04em] text-[3.3rem] sm:text-[4.2rem] lg:text-[5.5rem] ${
+            className={`mb-8 font-display font-black leading-[0.9] tracking-[-0.04em] text-[3rem] sm:text-[4.2rem] lg:text-[5.5rem] ${
               hero.uppercase ? "uppercase" : ""
             }`}
           >
@@ -92,7 +92,7 @@ export default function Hero() {
         </div>
 
         {/* Colonne illustration — dashboard animé (piloté par App.jsx) */}
-        <div className="hero-illustration relative hidden h-[480px] items-center justify-center md:flex lg:h-[560px]">
+        <div className="hero-illustration relative flex h-[420px] items-center justify-center sm:h-[480px] lg:h-[560px]">
           <div className="pointer-events-none absolute inset-8 gold-halo opacity-50" aria-hidden="true" />
 
           {/* Fenêtre navigateur */}

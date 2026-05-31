@@ -356,18 +356,62 @@ export const finalCta = {
     "15 minutes pour comprendre votre projet et voir comment on peut vous aider. Sans engagement.",
   cta: { label: "Réserver un appel", href: "#contact" },
   ctaNote: "15 minutes, sans engagement",
-  calComPlaceholder: "Calendrier de réservation",
-  calComHint: "Choisissez le créneau qui vous arrange, on s'occupe du reste.",
-  calComBadge: "Réponse sous 24 h",
+
+  /* -- Calendrier Calendly (embed inline) -----------------------------------
+     👉 TON LIEN CALENDLY : colle ici l'URL de ton type d'événement.
+     Ex: "https://calendly.com/ton-compte/30min".
+     Tant que ce champ est vide (""), un joli placeholder s'affiche à la place
+     (le site ne paraît jamais cassé). Dès qu'un lien est présent, le widget
+     Calendly officiel s'affiche directement dans la page, aux couleurs du site. */
+  calendlyUrl: "https://calendly.com/yanisouammou063/30min",
+  calendarPlaceholder: "Calendrier de réservation",
+  calendarHint: "Choisissez le créneau qui vous arrange, on s'occupe du reste.",
+  calendarBadge: "Réponse sous 24 h",
+
+  /* -- Encart "Vous êtes pressé ?" sous le calendrier (WhatsApp direct) ------ */
+  urgent: {
+    title: "Vous êtes pressé ?",
+    text: "Vous voulez une réponse immédiate ? Écrivez-nous directement sur WhatsApp, on vous répond au plus vite.",
+    button: "Nous écrire sur WhatsApp",
+  },
 };
 
 /* -- Bouton WhatsApp flottant (présent sur toute la page) ------------------ */
 export const whatsapp = {
   // ⚠️ Remplace NUMERO par ton numéro au format international SANS "+" ni espaces.
-  number: "33600000000",
+  number: "33668823396",
   // Message pré-rempli à l'ouverture de WhatsApp.
-  message: "Bonjour Kota Studio, je souhaite parler de mon projet de site web.",
+  message:
+    "Bonjour, je viens de votre site Kota Studio, j'aimerais des infos sur la création de mon site.",
   label: "Discuter sur WhatsApp",
+};
+
+/* -- Pages légales (Mentions légales + Politique de confidentialité) --------
+   ⚠️ À COMPLÉTER : remplace chaque valeur entre [crochets] par tes vraies infos.
+   Ces champs alimentent les 2 pages légales (/mentions-legales et
+   /politique-de-confidentialite). Les valeurs entre [crochets] apparaissent
+   surlignées en doré sur les pages pour que tu repères ce qu'il reste à remplir.
+   L'hébergeur est déjà pré-rempli (Vercel). */
+export const legal = {
+  updatedAt: "[JJ/MM/2026]",
+  company: {
+    name: "[Nom de l'entreprise / Kota Studio]",
+    legalForm: "[Forme juridique — ex : micro-entreprise / SASU]",
+    siret: "[Numéro SIRET]",
+    rcs: "[RCS + ville d'immatriculation — si société]",
+    capital: "[Capital social — si société]",
+    vat: "[N° TVA intracommunautaire — si applicable]",
+    address: "[Adresse complète du siège]",
+    email: "[adresse e-mail de contact]",
+    phone: "+33 6 68 82 33 96",
+    director: "[Nom du directeur / de la directrice de la publication]",
+  },
+  // Hébergeur du site — pré-rempli car le site est déployé sur Vercel.
+  host: {
+    name: "Vercel Inc.",
+    address: "340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis",
+    contact: "https://vercel.com",
+  },
 };
 
 /* -- Footer ---------------------------------------------------------------- */
@@ -403,8 +447,8 @@ export const footer = {
     },
   ],
   legal: [
-    { label: "Mentions légales", href: "#" },
-    { label: "Confidentialité", href: "#" },
+    { label: "Mentions légales", href: "/mentions-legales" },
+    { label: "Politique de confidentialité", href: "/politique-de-confidentialite" },
   ],
   copyright: "© 2026 Kota Studio. Tous droits réservés.",
 };

@@ -7,7 +7,7 @@ const whatsappHref =
 
 export default function Footer() {
   return (
-    <footer id="footer" className="relative overflow-hidden bg-encre text-creme pt-20 pb-10">
+    <footer id="footer" className="relative overflow-hidden bg-encre text-creme pt-20 pb-28 md:pb-10">
       {/* Decorative gold halo */}
       <div className="gold-halo pointer-events-none absolute -top-24 right-0 h-72 w-72" aria-hidden="true"></div>
 
@@ -70,16 +70,21 @@ export default function Footer() {
         {/* Bottom row */}
         <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
           <p className="text-sm text-creme/50">{footer.copyright}</p>
-          <div className="flex items-center gap-6">
-            {footer.legal.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="text-sm text-creme/50 transition-colors hover:text-creme"
-              >
-                {item.label}
-              </a>
-            ))}
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            {footer.legal.map((item) => {
+              const cls =
+                "text-sm text-creme/50 transition-colors hover:text-creme";
+              // Liens internes ("/mentions-legales"…) -> Link router (SPA).
+              return item.href.startsWith("/") ? (
+                <Link key={item.label} to={item.href} className={cls}>
+                  {item.label}
+                </Link>
+              ) : (
+                <a key={item.label} href={item.href} className={cls}>
+                  {item.label}
+                </a>
+              );
+            })}
           </div>
         </div>
       </div>

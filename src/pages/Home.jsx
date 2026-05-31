@@ -46,16 +46,20 @@ export default function Home() {
         words.forEach((word, i) => {
           const next = words[(i + 1) % words.length];
           wordTl
+            // 1) l'ancien mot disparaît COMPLÈTEMENT (fade out + glisse vers le haut)
             .to(
               word,
-              { opacity: 0, yPercent: -60, duration: 0.45, ease: "power2.in" },
+              { opacity: 0, yPercent: -60, duration: 0.4, ease: "power2.in" },
               "+=1.8"
             )
+            // 2) PUIS SEULEMENT le nouveau mot apparaît. ">0.12" = 0,12 s APRÈS la
+            //    fin du fade out -> jamais les deux en même temps (mode "wait",
+            //    aucun chevauchement pendant la transition).
             .fromTo(
               next,
               { opacity: 0, yPercent: 60 },
               { opacity: 1, yPercent: 0, duration: 0.5, ease: "power2.out" },
-              "<0.05"
+              ">0.12"
             );
         });
       }

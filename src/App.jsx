@@ -6,6 +6,8 @@ import Lenis from "lenis";
 
 import Home from "./pages/Home";
 import ProjectPage from "./pages/ProjectPage";
+import MentionsLegales from "./pages/MentionsLegales";
+import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -64,6 +66,11 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/projets/:slug" element={<ProjectPage />} />
+        <Route path="/mentions-legales" element={<MentionsLegales />} />
+        <Route
+          path="/politique-de-confidentialite"
+          element={<PolitiqueConfidentialite />}
+        />
       </Routes>
     </>
   );

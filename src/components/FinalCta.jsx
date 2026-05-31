@@ -1,9 +1,15 @@
-import { finalCta } from "../data/content";
+import { finalCta, whatsapp } from "../data/content";
 import Button from "./Button";
+import CalendlyEmbed from "./CalendlyEmbed";
 
-/* SECTION 9 — CTA FINAL + CONTACT
+// Lien WhatsApp (numéro + message pré-rempli, réglés dans content.js).
+const whatsappHref =
+  "https://wa.me/" + whatsapp.number + "?text=" + encodeURIComponent(whatsapp.message);
+
+/* SECTION 9 — CTA FINAL + RÉSERVATION
    Section claire, lumineuse, halo doré. Ferme le site visuellement
-   en écho au hero (anneaux dorés flottants). */
+   en écho au hero (anneaux dorés flottants).
+   Contient le calendrier Calendly (embed inline) + l'encart WhatsApp "pressé ?". */
 export default function FinalCta() {
   // Le dernier mot du titre est souligné en doré (piloté par content.js).
   const titleWords = finalCta.title.trim().split(" ");
@@ -13,7 +19,7 @@ export default function FinalCta() {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden py-24 lg:py-32 text-center"
+      className="relative overflow-hidden py-16 sm:py-24 lg:py-32 text-center"
     >
       {/* Halos dorés décoratifs */}
       <div
@@ -89,33 +95,68 @@ export default function FinalCta() {
         </div>
 
         {/* =============================================================
-            EMBED CAL.COM ICI
-            Remplacer ce bloc placeholder par l'embed Cal.com :
-            <Cal calLink="ton-compte/15min" .../> ou le script inline Cal.com.
-            Doc: https://cal.com/docs/integrations/embed
+            CALENDRIER CALENDLY (embed inline)
+            Lien réglé dans content.js -> finalCta.calendlyUrl :
+            - lien présent : le widget Calendly s'affiche ici (couleurs DA) ;
+            - lien vide "" : le placeholder doré ci-dessous s'affiche à la place.
            ============================================================= */}
-        <div className="reveal mx-auto mt-12 flex min-h-[420px] max-w-3xl flex-col items-center justify-center gap-4 rounded-3xl border border-encre/10 bg-creme p-10 shadow-soft-lg">
-          <span className="flex h-20 w-20 items-center justify-center rounded-full border border-or/20 bg-sable">
-            <iconify-icon
-              icon="solar:calendar-linear"
-              class="text-5xl text-or"
-              aria-hidden="true"
-            ></iconify-icon>
-          </span>
-          <p className="text-lg font-semibold tracking-tight text-encre">
-            {finalCta.calComPlaceholder}
-          </p>
-          <p className="max-w-sm text-sm text-taupe">
-            {finalCta.calComHint}
-          </p>
-          <span className="mt-2 inline-flex items-center gap-2 rounded-full border border-or/20 bg-sable px-4 py-1.5 text-xs font-medium text-taupe">
-            <iconify-icon
-              icon="solar:shield-check-linear"
-              class="text-base text-or"
-              aria-hidden="true"
-            ></iconify-icon>
-            {finalCta.calComBadge}
-          </span>
+        {finalCta.calendlyUrl ? (
+          <div className="reveal mx-auto mt-12 max-w-3xl overflow-hidden rounded-3xl border border-encre/10 bg-creme p-2 shadow-soft-lg sm:p-3">
+            <CalendlyEmbed url={finalCta.calendlyUrl} height={720} />
+          </div>
+        ) : (
+          <div className="reveal mx-auto mt-12 flex min-h-[420px] max-w-3xl flex-col items-center justify-center gap-4 rounded-3xl border border-encre/10 bg-creme p-10 shadow-soft-lg">
+            <span className="flex h-20 w-20 items-center justify-center rounded-full border border-or/20 bg-sable">
+              <iconify-icon
+                icon="solar:calendar-linear"
+                class="text-5xl text-or"
+                aria-hidden="true"
+              ></iconify-icon>
+            </span>
+            <p className="text-lg font-semibold tracking-tight text-encre">
+              {finalCta.calendarPlaceholder}
+            </p>
+            <p className="max-w-sm text-sm text-taupe">{finalCta.calendarHint}</p>
+            <span className="mt-2 inline-flex items-center gap-2 rounded-full border border-or/20 bg-sable px-4 py-1.5 text-xs font-medium text-taupe">
+              <iconify-icon
+                icon="solar:shield-check-linear"
+                class="text-base text-or"
+                aria-hidden="true"
+              ></iconify-icon>
+              {finalCta.calendarBadge}
+            </span>
+          </div>
+        )}
+
+        {/* -- Encart "Vous êtes pressé ?" : contact WhatsApp immédiat -------- */}
+        <div className="reveal mx-auto mt-6 flex max-w-3xl flex-col items-center justify-between gap-5 rounded-3xl border border-or/25 bg-sable/60 p-7 text-center shadow-soft sm:flex-row sm:text-left">
+          <div className="flex items-center gap-4">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-encre text-creme">
+              <iconify-icon
+                icon="mdi:whatsapp"
+                class="text-2xl text-or"
+                aria-hidden="true"
+              ></iconify-icon>
+            </span>
+            <div>
+              <p className="font-display text-lg font-extrabold text-encre">
+                {finalCta.urgent.title}
+              </p>
+              <p className="mt-1 max-w-md text-sm text-taupe">
+                {finalCta.urgent.text}
+              </p>
+            </div>
+          </div>
+          <Button
+            href={whatsappHref}
+            variant="primary"
+            icon="mdi:whatsapp"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0"
+          >
+            {finalCta.urgent.button}
+          </Button>
         </div>
       </div>
     </section>

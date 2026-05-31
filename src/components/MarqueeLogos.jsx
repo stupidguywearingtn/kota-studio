@@ -22,7 +22,7 @@ export default function MarqueeLogos() {
                 aria-hidden={i >= marquee.services.length ? "true" : undefined}
                 className="flex shrink-0 items-center gap-12 px-12"
               >
-                <span className="font-display font-extrabold tracking-title text-4xl md:text-6xl whitespace-nowrap">
+                <span className="font-display font-extrabold tracking-title text-3xl md:text-6xl whitespace-nowrap">
                   {service}
                 </span>
                 {/* Séparateur : étoile pleine dorée (style SocioSpark) */}

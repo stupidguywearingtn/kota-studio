@@ -4,7 +4,7 @@ export default function Promises() {
   return (
     <section
       id="promesses"
-      className="relative overflow-hidden bg-encre text-creme py-24 lg:py-32"
+      className="relative overflow-hidden bg-encre text-creme py-16 sm:py-24 lg:py-32"
     >
       {/* Décor : halo doré diffus */}
       <div

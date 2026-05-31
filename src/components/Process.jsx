@@ -97,7 +97,7 @@ function StepBlock({ step, showText }) {
 
 export default function Process() {
   return (
-    <section id="process" className="relative bg-encre text-creme py-24 lg:py-32">
+    <section id="process" className="relative bg-encre text-creme py-16 sm:py-24 lg:py-32">
       {/* Halo doré décoratif */}
       <div
         className="gold-halo pointer-events-none absolute left-1/2 top-24 -translate-x-1/2 opacity-40"
