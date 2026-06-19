@@ -37,116 +37,37 @@ export default function Home() {
           "-=0.6"
         );
 
-      /* Boucle du mot du hero — largeur fixe (CSS) => jamais de décalage. */
-      const words = gsap.utils.toArray(".hero-word");
-      if (words.length) {
-        gsap.set(words, { opacity: 0, yPercent: 60 });
-        gsap.set(words[0], { opacity: 1, yPercent: 0 });
-        const wordTl = gsap.timeline({ repeat: -1 });
-        words.forEach((word, i) => {
-          const next = words[(i + 1) % words.length];
-          wordTl
-            // 1) l'ancien mot disparaît COMPLÈTEMENT (fade out + glisse vers le haut)
-            .to(
-              word,
-              { opacity: 0, yPercent: -60, duration: 0.4, ease: "power2.in" },
-              "+=1.8"
-            )
-            // 2) PUIS SEULEMENT le nouveau mot apparaît. ">0.12" = 0,12 s APRÈS la
-            //    fin du fade out -> jamais les deux en même temps (mode "wait",
-            //    aucun chevauchement pendant la transition).
-            .fromTo(
-              next,
-              { opacity: 0, yPercent: 60 },
-              { opacity: 1, yPercent: 0, duration: 0.5, ease: "power2.out" },
-              ">0.12"
-            );
+      /* ---- Comparateur AVANT / APRÈS du hero — balayage auto en boucle ----
+         UNE timeline GSAP pilote la ligne (.compare-divider, left%) et le clip
+         du calque AVANT (.compare-before, clip-path). Easing sinusoïdal très
+         doux, pauses aux extrémités, on part du moche pour RÉVÉLER le beau. */
+      const after = mainRef.current?.querySelector(".compare-after");
+      const divider = mainRef.current?.querySelector(".compare-divider");
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (after && divider && !reduceMotion) {
+        const MIN = 8; // ligne à gauche -> APRÈS (beau) occupe presque tout, à droite
+        const MAX = 92; // ligne à droite -> AVANT (moche) dominant à gauche
+        const SWEEP = 5.5; // durée d'un balayage (lent et fluide, identique aller/retour)
+        const HOLD_AFTER = 1.8; // s'attarde côté APRÈS (Tel & Cash) pour le mettre en valeur
+        const HOLD_BEFORE = 0.6; // court arrêt côté AVANT, jamais bloqué
+        // AVANT à gauche / APRÈS à droite. clip-path inset(0 0 0 p%) ne montre
+        // l'APRÈS (calque du dessus) qu'à DROITE de la ligne ; le balayage vers
+        // la gauche agrandit l'APRÈS => révèle le beau de façon flatteuse.
+        const pos = { p: MAX }; // démarre côté moche pour ensuite révéler le beau
+        const apply = () => {
+          after.style.clipPath = `inset(0 0 0 ${pos.p}%)`;
+          divider.style.left = `${pos.p}%`;
+        };
+        apply();
+        const sweep = gsap.timeline({
+          repeat: -1,
+          defaults: { ease: "sine.inOut", onUpdate: apply },
         });
-      }
-
-      /* ---- Dashboard animé du hero (timeline en boucle ~12s) ---- */
-      const dBars = gsap.utils.toArray(".dash-bar");
-      if (dBars.length) {
-        const root = mainRef.current;
-        const dNums = gsap.utils.toArray(".dash-num");
-        const dPcts = gsap.utils.toArray(".dash-pct");
-        const dDots = gsap.utils.toArray(".dash-dot");
-        const trend = root.querySelector(".dash-trend");
-        const total = root.querySelector(".dash-total");
-        const totalNum = root.querySelector(".dash-total-num");
-        const SP = 1.4;
-        const proxies = dNums.map(() => ({ v: 0 }));
-        const totalProxy = { v: 0 };
-
-        gsap.set(dBars, { scaleY: 0, transformOrigin: "bottom center" });
-        gsap.set(dPcts, { opacity: 0, y: 12 });
-        gsap.set(dDots, { scale: 0, transformOrigin: "center center" });
-        if (total) gsap.set(total, { opacity: 0, y: 8 });
-        if (trend) gsap.set(trend, { strokeDasharray: 1, strokeDashoffset: 1 });
-
-        const dash = gsap.timeline({ repeat: -1, repeatDelay: 0.7, delay: 1 });
-
-        dash.set(dBars, { scaleY: 0 }, 0).set(dPcts, { opacity: 0, y: 12 }, 0);
-        dash.set(dDots, { scale: 0 }, 0);
-        proxies.forEach((p) => dash.set(p, { v: 0 }, 0));
-        dash.set(totalProxy, { v: 0 }, 0);
-        if (total) dash.set(total, { opacity: 0, y: 8 }, 0);
-        if (trend) dash.set(trend, { strokeDashoffset: 1 }, 0);
-
-        dBars.forEach((bar, i) => {
-          const at = 0.4 + i * SP;
-          dash.to(bar, { scaleY: 1, duration: 0.9, ease: "power3.out" }, at);
-          if (dDots[i]) {
-            dash.to(dDots[i], { scale: 1, duration: 0.4, ease: "back.out(2)" }, at + 0.55);
-          }
-          if (dPcts[i]) {
-            dash.to(dPcts[i], { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, at + 0.5);
-          }
-          if (dNums[i]) {
-            dash.to(
-              proxies[i],
-              {
-                v: +dNums[i].dataset.target,
-                duration: 0.8,
-                ease: "power1.out",
-                onUpdate: () => {
-                  dNums[i].textContent = Math.round(proxies[i].v);
-                },
-              },
-              at + 0.5
-            );
-          }
-        });
-
-        if (trend) {
-          const drawStart = 0.7;
-          const drawEnd = 0.4 + (dBars.length - 1) * SP + 1;
-          dash.to(trend, { strokeDashoffset: 0, ease: "none", duration: drawEnd - drawStart }, drawStart);
-        }
-
-        const lastAt = 0.4 + (dBars.length - 1) * SP;
-        if (total) dash.to(total, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, lastAt + 0.5);
-        if (totalNum) {
-          dash.to(
-            totalProxy,
-            {
-              v: +totalNum.dataset.target,
-              duration: 1,
-              ease: "power1.out",
-              onUpdate: () => {
-                totalNum.textContent = Math.round(totalProxy.v);
-              },
-            },
-            lastAt + 0.5
-          );
-        }
-
-        const resetAt = lastAt + 1 + 4.3;
-        dash.to(dPcts, { opacity: 0, y: 8, duration: 0.5, ease: "power2.in" }, resetAt);
-        dash.to(dDots, { scale: 0, duration: 0.5, ease: "power2.in" }, resetAt);
-        if (total) dash.to(total, { opacity: 0, duration: 0.5, ease: "power2.in" }, resetAt);
-        dash.to(dBars, { scaleY: 0, duration: 0.7, ease: "power2.inOut", stagger: 0.05 }, resetAt + 0.1);
-        if (trend) dash.to(trend, { strokeDashoffset: 1, duration: 0.7, ease: "power2.inOut" }, resetAt + 0.1);
+        sweep
+          .to(pos, { p: MIN, duration: SWEEP }) // révèle le beau (APRÈS s'agrandit)
+          .to(pos, { p: MIN, duration: HOLD_AFTER }) // s'attarde sur l'APRÈS
+          .to(pos, { p: MAX, duration: SWEEP }) // revient vers le moche
+          .to(pos, { p: MAX, duration: HOLD_BEFORE }); // court arrêt côté AVANT
       }
 
       /* Reveals au scroll */
@@ -168,8 +89,127 @@ export default function Home() {
       }
     }, mainRef);
 
+    /* ============================================================
+       MOT ROTATIF "gender reveal" Kota — UNE seule timeline GSAP
+       qui synchronise sur les MÊMES keyframes :
+         • le mot sortant qui monte + s'efface,
+         • la largeur de la carte blanche qui épouse le mot suivant,
+         • le halo gold qui respire (largeur + opacité),
+         • le mot entrant qui glisse depuis le bas (léger chevauchement).
+       Hors gsap.context() car la mesure des largeurs attend le chargement
+       de la police (document.fonts.ready) et on réagit au resize. */
+    const root = mainRef.current;
+    const words = gsap.utils.toArray(".hero-word");
+    const card = root?.querySelector(".hero-card");
+    const halo = root?.querySelector(".hero-halo");
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let wordTl = null;
+    let resizeTimer = null;
+    let killed = false;
+
+    // Largeur de carte = largeur naturelle du mot + padding horizontal réel
+    // (clamp() résolu en px par getComputedStyle -> s'adapte au responsive).
+    const measure = () => {
+      let padX = 80;
+      if (card) {
+        const cs = getComputedStyle(card);
+        padX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+      }
+      return words.map((w) => Math.round(w.getBoundingClientRect().width + padX));
+    };
+
+    const buildRotor = () => {
+      if (killed || !words.length || !card || !halo) return;
+      if (wordTl) {
+        wordTl.kill();
+        wordTl = null;
+      }
+
+      const cardW = measure();
+      const maxW = Math.max(...cardW);
+      const haloW = (w) => Math.round(w * 1.3);
+      const haloOp = (w) => 0.32 + (w / maxW) * 0.18; // mot long = halo + présent
+
+      // prefers-reduced-motion : mot statique, carte au plus large, aucune anim.
+      if (reduce) {
+        gsap.set(words, { yPercent: 0, opacity: 0 });
+        gsap.set(words[0], { opacity: 1 });
+        gsap.set(card, { width: maxW });
+        gsap.set(halo, { width: haloW(maxW), opacity: 0.42 });
+        return;
+      }
+
+      const n = words.length;
+      const HOLD = 2.4; // temps d'affichage (≈ HOLD - OVERLAP ≈ 2,2 s visible)
+      const DUR = 0.7; // durée du "rouleau"
+      const OVERLAP = 0.18; // léger chevauchement sortie/entrée
+      const SLIDE = 120; // % de la hauteur du mot (clippé par la carte)
+      const STEP = HOLD + DUR; // période par mot — STRICTEMENT identique pour tous
+
+      // État initial : seul le 1er mot est posé (calé à gauche), les autres en bas.
+      gsap.set(words, { yPercent: SLIDE, opacity: 0 });
+      gsap.set(words[0], { yPercent: 0, opacity: 1 });
+      gsap.set(card, { width: cardW[0] });
+      gsap.set(halo, { width: haloW(cardW[0]), opacity: haloOp(cardW[0]) });
+
+      // Boucle VRAIMENT infinie et homogène :
+      //   • chaque sortie est placée à i*STEP -> espacement constant ;
+      //   • repeat:-1 sans aucun repeatDelay ;
+      //   • durée épinglée à n*STEP -> l'enchaînement "dernier -> premier" est
+      //     EXACTEMENT identique aux autres (le mot 0 dispose du même temps
+      //     d'affichage avant que la boucle ne reparte, zéro carte vide) ;
+      //   • delay:HOLD = simple latence d'affichage initiale (ne se répète pas).
+      wordTl = gsap.timeline({
+        repeat: -1,
+        delay: HOLD,
+        defaults: { duration: DUR, ease: "power3.inOut" },
+      });
+
+      words.forEach((word, i) => {
+        const ni = (i + 1) % n; // après le dernier mot -> retour à l'index 0
+        const next = words[ni];
+        const at = i * STEP;
+        // sortie du mot + redimensionnement carte + respiration halo : MÊME instant
+        wordTl.to(word, { yPercent: -SLIDE, opacity: 0 }, at);
+        wordTl.to(card, { width: cardW[ni] }, at);
+        wordTl.to(halo, { width: haloW(cardW[ni]), opacity: haloOp(cardW[ni]) }, at);
+        // entrée du mot suivant par le bas, léger chevauchement.
+        // immediateRender:false => l'état "from" n'est PAS rendu au build
+        // (sinon les mots seraient masqués au repos -> carte vide).
+        wordTl.fromTo(
+          next,
+          { yPercent: SLIDE, opacity: 0 },
+          { yPercent: 0, opacity: 1, immediateRender: false },
+          at + OVERLAP
+        );
+      });
+
+      // Épingle la durée totale à n*STEP : la dernière entrée (mot 0) obtient
+      // le MÊME temps d'affichage que les autres avant le rebouclage. Aucun trou.
+      wordTl.to({}, { duration: 0 }, n * STEP);
+    };
+
+    // Mesure fiable une fois la police Bricolage chargée.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => buildRotor());
+    } else {
+      buildRotor();
+    }
+
+    // Resize : les largeurs changent avec la taille de police responsive.
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => buildRotor(), 200);
+    };
+    window.addEventListener("resize", onResize);
+
     const refreshId = setTimeout(() => ScrollTrigger.refresh(), 400);
     return () => {
+      killed = true;
+      window.removeEventListener("resize", onResize);
+      clearTimeout(resizeTimer);
+      if (wordTl) wordTl.kill();
       ctx.revert();
       clearTimeout(refreshId);
     };

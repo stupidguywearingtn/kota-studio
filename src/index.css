@@ -139,39 +139,145 @@ html.lenis body {
    Stack en grid : la largeur du conteneur = mot le plus large.
    Le titre ne bouge JAMAIS, quel que soit le mot affiché.
    ============================================================ */
-/* Conteneur : largeur figée = mot le plus large (jamais de décalage).
-   - .hero-word-clip empile les mots et clippe le slide vertical.
-   - .hero-wave est posée EN DEHORS du clip pour ne pas être coupée. */
-.hero-word-wrap {
+/* Mot rotatif "gender reveal" Kota :
+   - .hero-rotor réserve la hauteur de ligne (zéro shift vertical) et sert de
+     repère de centrage horizontal (left:50%) -> la carte grandit/rétrécit
+     symétriquement par rapport au centre.
+   - .hero-halo : nuage gold flou qui respire DERRIÈRE la carte.
+   - .hero-card : carte blanche arrondie dont la LARGEUR est animée par GSAP.
+   - .hero-word-stage clippe le slide vertical (overflow via la carte) ; chaque
+     .hero-word est empilé, centré, et glisse en "rouleau".
+   La largeur (carte/halo) est pilotée par GSAP -> aucune transition CSS ici. */
+.hero-rotor {
   position: relative;
-  display: inline-block;
-  vertical-align: bottom;
-}
-.hero-word-clip {
-  display: inline-grid;
-  overflow: hidden;
-  vertical-align: bottom;
-}
-.hero-word {
-  grid-area: 1 / 1;          /* tous les mots empilés dans la même cellule */
-  white-space: nowrap;
-  color: #241A12;
-  will-change: transform, opacity;
-}
-/* Soulignement en VAGUE dorée (SVG), sous le mot animé */
-.hero-wave {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -0.13em;
-  width: 100%;
-  height: 0.17em;
-}
-.hero-wave svg {
   display: block;
   width: 100%;
-  height: 100%;
-  overflow: visible;
+  margin-top: 0.22em;
+  height: 1.72em;            /* réserve la place de la carte (mot + padding) */
+}
+.hero-halo {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(-12%, -50%);   /* suit la carte ancrée à gauche, léger débord */
+  height: 1.25em;
+  border-radius: 999px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(200, 162, 78, 0.85) 0%,
+    rgba(200, 162, 78, 0.45) 45%,
+    rgba(200, 162, 78, 0) 72%
+  );
+  filter: blur(64px);
+  opacity: 0.45;
+  z-index: 0;
+  pointer-events: none;
+}
+.hero-card {
+  position: absolute;
+  top: 50%;
+  left: 0;                            /* bord GAUCHE fixe : la carte grandit vers la DROITE */
+  transform: translateY(-50%);
+  z-index: 1;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;        /* mot calé à gauche, padding gauche constant */
+  padding: 10px clamp(22px, 3vw, 40px);
+  background: #ffffff;
+  border-radius: 22px;
+  box-shadow: 0 24px 50px -18px rgba(36, 26, 18, 0.3);
+  overflow: hidden;          /* masque le mot pendant son glissement vertical */
+}
+.hero-word-stage {
+  position: relative;
+  height: 1em;
+  line-height: 1;
+  min-width: 1px;
+}
+.hero-word {
+  position: absolute;
+  top: 0;
+  left: 0;                   /* calé à gauche dans la carte ; GSAP ne gère que le slide vertical */
+  line-height: 1;
+  white-space: nowrap;
+  color: #c8a24e;            /* signature gold Kota — jamais d'alternance */
+  will-change: transform, opacity;
+}
+
+/* ============================================================
+   HERO — Comparateur AVANT / APRÈS (slider auto)
+   Deux visuels superposés dans le mockup navigateur :
+     • APRÈS (img Tel & Cash) = fond pleine largeur,
+     • AVANT (maquette générique) = dessus, clippé à gauche.
+   .compare-divider (left%) et .compare-before (clip-path) sont
+   balayés ensemble par UNE timeline GSAP (sine.inOut, voir Home.jsx).
+   ============================================================ */
+/* Badge hero — étoile gold 4 branches en rotation lente continue */
+@keyframes badge-star-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.badge-star {
+  transform-origin: center;
+  animation: badge-star-spin 8s linear infinite;
+  will-change: transform;
+}
+
+.hero-browser {
+  /* ombre douce premium conservée */
+  box-shadow: 0 24px 50px -18px rgba(36, 26, 18, 0.3);
+}
+.compare {
+  background: #fbf6ec;
+}
+.compare img {
+  user-select: none;
+}
+/* clip-path inset(0 0 0 POS%) -> ne révèle que la partie DROITE (= APRÈS, beau).
+   POS piloté par GSAP ; 50% = état figé (fallback reduced-motion). */
+.compare-after {
+  clip-path: inset(0 0 0 50%);
+  will-change: clip-path;
+}
+.compare-divider {
+  left: 50%;                 /* piloté par GSAP */
+  width: 2px;
+  margin-left: -1px;
+  background: #c8a24e;
+  box-shadow: 0 0 0 1px rgba(200, 162, 78, 0.2);
+  will-change: left;
+}
+.compare-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: clamp(22px, 3.6vw, 34px);
+  width: clamp(22px, 3.6vw, 34px);
+  border-radius: 999px;
+  background: #c8a24e;
+  color: #241a12;
+  font-size: clamp(9px, 1.4vw, 13px);
+  line-height: 0;
+  /* ombre douce -> légère profondeur */
+  box-shadow: 0 6px 16px -4px rgba(36, 26, 18, 0.45);
+}
+.compare-handle iconify-icon {
+  margin: 0 -2px;            /* double chevron resserré < > */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .compare-after {
+    clip-path: inset(0 0 0 50%) !important;
+  }
+  .compare-divider {
+    left: 50% !important;
+  }
 }
 
 /* ============================================================
@@ -318,7 +424,8 @@ html.lenis body {
   .float-soft-delayed,
   .gold-halo,
   .diag-lines,
-  .diag-lines-on-dark {
+  .diag-lines-on-dark,
+  .badge-star {
     animation: none !important;
   }
 }

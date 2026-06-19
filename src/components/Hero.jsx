@@ -1,32 +1,14 @@
-import { hero } from "../data/content";
+import { hero, projects } from "../data/content";
 import Button from "./Button";
 
-/* Courbe lissée (Catmull-Rom -> Bézier) passant par le sommet des barres :
-   une seule ligne continue qui « serpente » de Mois 1 à Mois 4. */
-function smoothPath(pts) {
-  if (pts.length < 2) return "";
-  const d = [`M${pts[0][0]},${pts[0][1]}`];
-  for (let i = 0; i < pts.length - 1; i++) {
-    const p0 = pts[i - 1] || pts[i];
-    const p1 = pts[i];
-    const p2 = pts[i + 1];
-    const p3 = pts[i + 2] || p2;
-    const c1x = p1[0] + (p2[0] - p0[0]) / 6;
-    const c1y = p1[1] + (p2[1] - p0[1]) / 6;
-    const c2x = p2[0] - (p3[0] - p1[0]) / 6;
-    const c2y = p2[1] - (p3[1] - p1[1]) / 6;
-    d.push(`C${c1x},${c1y} ${c2x},${c2y} ${p2[0]},${p2[1]}`);
-  }
-  return d.join(" ");
-}
+/* APRÈS = le vrai site Tel & Cash, réutilise EXACTEMENT l'asset déjà affiché
+   dans la section « Nos réalisations » (même cover, pas de régénération). */
+const telAndCash = projects.find((p) => p.slug === "tel-and-cash");
+const afterSrc = telAndCash?.cover ?? "/realisations/site-6.png";
+const afterName = telAndCash?.name ?? "Tel & Cash";
 
 export default function Hero() {
   const d = hero.dashboard;
-  const n = d.months.length;
-  const trendPath = smoothPath(
-    d.months.map((m, i) => [(i + 0.5) * (100 / n), 100 - m.height])
-  );
-  const lastPct = d.months[n - 1].pct;
 
   return (
     <section id="top" className="relative mx-auto max-w-7xl px-6 pt-10 pb-16 lg:pt-16 lg:pb-24">
@@ -37,11 +19,16 @@ export default function Hero() {
       <div className="relative z-10 grid items-center gap-10 sm:gap-14 lg:grid-cols-2 lg:gap-16">
         {/* Colonne texte */}
         <div className="hero-content max-w-xl">
-          <div className="badge-3d mb-7 inline-flex items-center gap-2.5 rounded-full border border-or/40 bg-creme px-5 py-2.5 text-sm font-semibold text-encre/80">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-or/50" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-or" />
-            </span>
+          <div className="badge-3d mb-[clamp(24px,4vw,32px)] inline-flex items-center gap-2.5 rounded-full border border-or/40 bg-creme px-5 py-2.5 text-sm font-semibold text-encre/80">
+            {/* Étoile gold 4 branches — rotation lente continue (voir .badge-star) */}
+            <svg
+              className="badge-star h-4 w-4 shrink-0"
+              viewBox="0 0 24 24"
+              fill="#C8A24E"
+              aria-hidden="true"
+            >
+              <path d="M12 0 L14.4 9.6 L24 12 L14.4 14.4 L12 24 L9.6 14.4 L0 12 L9.6 9.6 Z" />
+            </svg>
             {hero.badge}
           </div>
 
@@ -50,29 +37,25 @@ export default function Hero() {
               hero.uppercase ? "uppercase" : ""
             }`}
           >
-            {hero.titleBefore}
-            <span className="text-outline">{hero.outlineWord}</span>
-            {hero.titleMiddle}
-            <span className="hero-word-wrap">
-              <span className="hero-word-clip">
-                {hero.words.map((word, i) => (
-                  <span className="hero-word" key={word} data-index={i}>
-                    {word}
-                  </span>
-                ))}
-              </span>
-              {/* Soulignement en vague dorée */}
-              <span className="hero-wave" aria-hidden="true">
-                <svg viewBox="0 0 120 12" preserveAspectRatio="none">
-                  <path
-                    d="M0 6 Q 7.5 0 15 6 T 30 6 T 45 6 T 60 6 T 75 6 T 90 6 T 105 6 T 120 6"
-                    fill="none"
-                    stroke="#C8A24E"
-                    strokeWidth="2.6"
-                    strokeLinecap="round"
-                    vectorEffect="non-scaling-stroke"
-                  />
-                </svg>
+            <span className="block">
+              {hero.titleBefore}
+              <span className="text-outline">{hero.outlineWord}</span>
+              {hero.titleMiddle}
+            </span>
+
+            {/* Mot rotatif : carte blanche qui épouse le mot + halo gold qui pulse.
+               Largeur de carte, mot et halo sont synchronisés par UNE timeline GSAP
+               (voir Home.jsx). Carte ancrée à gauche -> croît vers la droite. */}
+            <span className="hero-rotor">
+              <span className="hero-halo" aria-hidden="true" />
+              <span className="hero-card">
+                <span className="hero-word-stage">
+                  {hero.words.map((word) => (
+                    <span className="hero-word" key={word}>
+                      {word}
+                    </span>
+                  ))}
+                </span>
               </span>
             </span>
           </h1>
@@ -91,131 +74,112 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Colonne illustration — dashboard animé (piloté par App.jsx) */}
-        <div className="hero-illustration relative flex h-[420px] items-center justify-center sm:h-[480px] lg:h-[560px]">
+        {/* Colonne illustration — comparateur AVANT / APRÈS animé (piloté par Home.jsx) */}
+        <div className="hero-illustration relative flex items-center justify-center">
           <div className="pointer-events-none absolute inset-8 gold-halo opacity-50" aria-hidden="true" />
 
-          {/* Fenêtre navigateur */}
-          <div className="relative z-10 w-[94%] rounded-[26px] border border-encre/10 bg-creme p-5 shadow-soft-lg lg:p-7">
+          {/* Fenêtre navigateur (mockup conservé : 3 dots + barre, ombre premium) */}
+          <div className="hero-browser relative z-10 w-[94%] rounded-[26px] border border-encre/10 bg-creme p-3 sm:p-4 lg:p-5">
             {/* Barre de fenêtre */}
-            <div className="mb-5 flex items-center justify-between border-b border-encre/10 pb-4">
+            <div className="mb-3 flex items-center justify-between px-1 sm:mb-4">
               <div className="flex gap-2">
                 <span className="h-3 w-3 rounded-full bg-or/70" />
                 <span className="h-3 w-3 rounded-full bg-encre/15" />
                 <span className="h-3 w-3 rounded-full bg-encre/15" />
               </div>
-              <span className="inline-flex items-center gap-2 text-sm font-semibold text-taupe">
+              <span className="inline-flex items-center gap-2 text-xs font-semibold text-taupe sm:text-sm">
                 <iconify-icon
-                  icon="solar:graph-up-linear"
-                  class="text-lg text-or"
+                  icon="solar:transfer-horizontal-bold"
+                  class="text-base text-or sm:text-lg"
                   aria-hidden="true"
                 ></iconify-icon>
-                {d.label}
+                Avant / Après
               </span>
             </div>
 
-            {/* Zone graphique — calques empilés proprement :
-               barres (z-10) < courbe (z-20) < points + labels (z-30).
-               Rien ne dépasse du cadre (barres plafonnées + overflow-hidden). */}
-            <div className="relative h-[230px] lg:h-[260px]">
-              {/* Barres */}
-              <div className="absolute inset-0 z-10 flex items-end justify-between gap-3 px-1">
-                {d.months.map((m, i) => {
-                  const last = i === n - 1;
-                  return (
-                    <div
-                      key={m.label}
-                      className="flex h-full w-1/4 items-end justify-center"
-                    >
-                      <div
-                        className={`dash-bar w-[64%] rounded-t-lg ${
-                          last
-                            ? "bg-encre"
-                            : "bg-gradient-to-t from-[#ECDCB2] to-or"
-                        }`}
-                        style={{ height: `${m.height}%` }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
+            {/* Comparateur : les deux visuels se superposent dans le même cadre.
+               Sens de lecture gauche -> droite : AVANT (moche) à GAUCHE, APRÈS
+               (Tel & Cash) à DROITE.
+               - AVANT (maquette générique) = calque de fond, pleine largeur.
+               - APRÈS (Tel & Cash) = calque du dessus, RÉVÉLÉ à droite (clippé).
+               La ligne (.compare-divider) et le clip (.compare-after) sont balayés
+               par UNE timeline GSAP dans Home.jsx (sine.inOut, boucle douce). */}
+            <div
+              className="compare relative w-full overflow-hidden rounded-2xl"
+              style={{ aspectRatio: "1902 / 929" }}
+            >
+              {/* AVANT — faux site de vente de téléphones "PhoneShop", volontairement
+                 daté/template (à GAUCHE). Même secteur que Tel & Cash, qualité opposée.
+                 Tout en Arial système, palette gris-bleu froide, aucune personnalité. */}
+              <div className="compare-base absolute inset-0">
+                <div
+                  className="generic-hero flex h-full w-full flex-col bg-[#f4f6f8] text-[#222]"
+                  style={{ fontFamily: "Arial, Helvetica, sans-serif" }}
+                >
+                  {/* En-tête */}
+                  <div className="flex items-center justify-between border-b border-[#e1e6ec] px-[5%] py-[2.6%]">
+                    <span className="text-[clamp(9px,1.6vw,19px)] font-bold text-[#1a3d6b]">
+                      PhoneShop
+                    </span>
+                    <span className="text-[clamp(6px,0.95vw,12px)] text-[#8a949f]">
+                      Accueil&nbsp;·&nbsp;Produits&nbsp;·&nbsp;Contact
+                    </span>
+                  </div>
 
-              {/* Courbe de tendance dorée — au-dessus des barres, se dessine */}
-              <svg
-                className="pointer-events-none absolute inset-0 z-20 h-full w-full overflow-visible"
-                viewBox="0 0 100 100"
-                preserveAspectRatio="none"
-                aria-hidden="true"
-              >
-                <path
-                  className="dash-trend"
-                  d={trendPath}
-                  pathLength="1"
-                  fill="none"
-                  stroke="#C8A24E"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  vectorEffect="non-scaling-stroke"
-                />
-              </svg>
-
-              {/* Points (nodes) au sommet de chaque barre + label % (compteur) */}
-              <div className="pointer-events-none absolute inset-0 z-30">
-                {d.months.map((m, i) => {
-                  const last = i === n - 1;
-                  return (
-                    <div key={m.label}>
-                      {/* node circulaire (HTML -> reste rond) */}
+                  {/* Corps : texte à gauche + placeholder photo téléphone à droite */}
+                  <div className="flex flex-1 items-center gap-[4%] px-[5%] py-[3%]">
+                    <div className="flex-1">
+                      <h3 className="text-[clamp(12px,2.25vw,30px)] font-bold leading-tight text-[#1d1d1d]">
+                        Les meilleurs téléphones au meilleur prix&nbsp;!
+                      </h3>
+                      <p className="mt-[3.5%] text-[clamp(7px,1.15vw,14px)] leading-snug text-[#717b86]">
+                        Smartphones neufs et reconditionnés. Livraison rapide.
+                        Paiement en plusieurs fois disponible.
+                      </p>
                       <span
-                        className="dash-dot absolute h-3.5 w-3.5 -translate-x-1/2 translate-y-1/2 rounded-full border-2 border-or bg-creme shadow-soft"
-                        style={{
-                          left: `${(i + 0.5) * (100 / n)}%`,
-                          bottom: `${m.height}%`,
-                        }}
-                      />
-                      {/* label de pourcentage */}
-                      <div
-                        className="dash-pct absolute -translate-x-1/2 whitespace-nowrap"
-                        style={{
-                          left: `${(i + 0.5) * (100 / n)}%`,
-                          bottom: `calc(${m.height}% + 16px)`,
-                        }}
+                        className="mt-[6%] inline-block bg-[#2d6cdf] px-[7%] py-[3.2%] text-[clamp(7px,1.1vw,13px)] font-bold text-white"
+                        style={{ borderRadius: "3px" }}
                       >
-                        <span
-                          className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold shadow-soft ${
-                            last ? "bg-encre text-creme" : "bg-creme text-or ring-1 ring-or/30"
-                          }`}
-                        >
-                          +<span className="dash-num" data-target={m.pct}>0</span>%
-                        </span>
-                      </div>
+                        Acheter maintenant
+                      </span>
                     </div>
-                  );
-                })}
+
+                    {/* Placeholder photo de téléphone — gris, basique / mal détouré */}
+                    <div className="flex h-[78%] w-[30%] shrink-0 items-center justify-center rounded-[4px] bg-[#dde3ea]">
+                      <div className="h-[78%] w-[42%] rounded-[5px] border border-[#c4ccd6] bg-[#cdd5df]" />
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            {/* Labels des mois */}
-            <div className="mt-3 flex justify-between px-1 text-xs font-medium text-taupe">
-              {d.months.map((m) => (
-                <span key={m.label} className="w-1/4 text-center">
-                  {m.label}
+              {/* APRÈS — le vrai site, propre et premium (révélé à DROITE) */}
+              <img
+                src={afterSrc}
+                alt={`Site ${afterName} réalisé par Kota Studio`}
+                className="compare-after absolute inset-0 h-full w-full object-cover object-top"
+                draggable="false"
+              />
+
+              {/* Ligne de séparation + poignée gold */}
+              <div className="compare-divider pointer-events-none absolute inset-y-0 z-20">
+                <span className="compare-handle">
+                  <iconify-icon icon="solar:alt-arrow-left-linear" aria-hidden="true"></iconify-icon>
+                  <iconify-icon icon="solar:alt-arrow-right-linear" aria-hidden="true"></iconify-icon>
                 </span>
-              ))}
-            </div>
+              </div>
 
-            {/* Métrique principale */}
-            <div className="dash-total mt-4 flex items-center gap-2 border-t border-encre/10 pt-4 text-sm text-taupe">
-              <span className="font-display text-xl font-extrabold text-or">
-                +<span className="dash-total-num" data-target={lastPct}>0</span>%
+              {/* Labels — avant à GAUCHE (terne), après à DROITE (gold) */}
+              <span className="compare-tag absolute left-2 top-2 z-10 rounded-full bg-creme/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-taupe shadow-soft sm:text-xs">
+                avant
               </span>
-              {d.metricLabel}
+              <span className="compare-tag absolute right-2 top-2 z-10 rounded-full bg-creme/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-or shadow-soft sm:text-xs">
+                après
+              </span>
             </div>
           </div>
 
-          {/* Badge Score flottant */}
-          <div className="float-soft absolute -right-3 top-6 z-20 flex items-center gap-2 rounded-2xl bg-encre px-4 py-3 text-creme shadow-soft-lg">
+          {/* Badge Score flottant — conservé */}
+          <div className="float-soft absolute -right-3 top-4 z-20 flex items-center gap-2 rounded-2xl bg-encre px-4 py-3 text-creme shadow-soft-lg">
             <iconify-icon
               icon="solar:bolt-circle-bold"
               class="text-xl text-or"
@@ -224,8 +188,8 @@ export default function Hero() {
             <span className="text-sm font-semibold">{d.note}</span>
           </div>
 
-          {/* Curseur flottant */}
-          <div className="float-soft-delayed absolute -left-3 bottom-12 z-20 flex h-12 w-12 items-center justify-center rounded-2xl bg-or text-encre shadow-soft-or">
+          {/* Curseur flottant — conservé */}
+          <div className="float-soft-delayed absolute -left-3 bottom-8 z-20 flex h-12 w-12 items-center justify-center rounded-2xl bg-or text-encre shadow-soft-or">
             <iconify-icon
               icon="solar:cursor-bold"
               class="text-2xl"
