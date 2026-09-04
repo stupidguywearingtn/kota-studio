@@ -28,13 +28,13 @@ export default function Promises() {
           </h2>
         </div>
 
-        {/* Trois colonnes avec fins séparateurs dorés */}
-        <div className="reveal-stagger mt-16 grid grid-cols-1 md:grid-cols-3">
+        {/* Colonnes avec fins séparateurs dorés */}
+        <div className="reveal-stagger mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
           {promises.items.map((item, i) => (
             <div
               key={item.title}
               className={`flex flex-col items-center px-8 py-6 text-center md:items-start md:text-left ${
-                i > 0 ? "md:border-l md:border-or/30" : ""
+                i > 0 ? "lg:border-l lg:border-or/30" : ""
               }`}
             >
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-or/30 bg-or/5">

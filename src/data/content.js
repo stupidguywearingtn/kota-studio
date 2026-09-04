@@ -114,6 +114,11 @@ export const promises = {
       title: "Une équipe à votre disposition",
       text: "Du premier appel à la mise en ligne, on reste joignables et impliqués à chaque étape.",
     },
+    {
+      icon: "solar:graph-up-linear",
+      title: "Une base SEO solide, sans fausses promesses",
+      text: "On pose les bonnes fondations techniques dès le départ (structure, vitesse, contenu). On ne vous vendra jamais un classement Google garanti : personne ne peut sérieusement s'engager là-dessus.",
+    },
   ],
 };
 
