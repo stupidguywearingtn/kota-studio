@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://kota-studio.vercel.app/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://kota-studio.vercel.app/projets/tel-and-cash</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://kota-studio.vercel.app/projets/markus-immobilier</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://kota-studio.vercel.app/projets/sensoria</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://kota-studio.vercel.app/projets/margaux-cdr</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://kota-studio.vercel.app/mentions-legales</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+  <url><loc>https://kota-studio.vercel.app/politique-de-confidentialite</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+</urlset>

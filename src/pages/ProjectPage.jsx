@@ -35,6 +35,27 @@ export default function ProjectPage() {
     };
   }, [slug, project]);
 
+  /* SEO : titre + description par projet (SPA sans SSR, donc mis à jour côté client). */
+  useEffect(() => {
+    if (!project) return;
+    const prevTitle = document.title;
+    document.title = `${project.name} — ${project.sector} | Kota Studio`;
+
+    let metaDesc = document.querySelector('meta[name="description"]');
+    const prevDesc = metaDesc ? metaDesc.getAttribute("content") : null;
+    if (metaDesc) {
+      metaDesc.setAttribute(
+        "content",
+        `${project.name} (${project.sector}) — réalisation Kota Studio, agence de création de sites web sur-mesure.`
+      );
+    }
+
+    return () => {
+      document.title = prevTitle;
+      if (metaDesc && prevDesc !== null) metaDesc.setAttribute("content", prevDesc);
+    };
+  }, [project]);
+
   /* Projet introuvable */
   if (!project) {
     return (

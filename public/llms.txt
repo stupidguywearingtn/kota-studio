@@ -1,0 +1,20 @@
+# Kota Studio
+
+> Kota Studio conçoit des sites web sur-mesure qui convertissent : sites vitrine, landing pages, refonte et design. Pas de template, que du fait-main. Livraison en 14 jours, révisions illimitées.
+
+## Pages
+
+- [Accueil](/): Présentation de l'agence, services, offres et prise de rendez-vous.
+- [Mentions légales](/mentions-legales)
+- [Politique de confidentialité](/politique-de-confidentialite)
+
+## Réalisations
+
+- [Tel & Cash](/projets/tel-and-cash): E-commerce — smartphones reconditionnés. Boutique en ligne complète (back-office, SEO, statistiques) construite de A à Z.
+- [Markus Immobilier](/projets/markus-immobilier): Agence immobilière premium (Lyon/Villeurbanne). Site vitrine avec estimation immobilière en ligne et SEO local.
+- [Sensoria](/projets/sensoria): Expérience immersive — escape game premium (Belgique).
+- [Margaux CDR](/projets/margaux-cdr): Soins du corps — beauté / bien-être.
+
+## Contact
+
+WhatsApp : +33 6 68 82 33 96
