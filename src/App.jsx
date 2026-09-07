@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import ProjectPage from "./pages/ProjectPage";
 import MentionsLegales from "./pages/MentionsLegales";
 import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
+import CreationSiteInternetSaintJulien from "./pages/CreationSiteInternetSaintJulien";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -66,6 +67,10 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/projets/:slug" element={<ProjectPage />} />
+        <Route
+          path="/creation-site-internet-saint-julien-en-genevois"
+          element={<CreationSiteInternetSaintJulien />}
+        />
         <Route path="/mentions-legales" element={<MentionsLegales />} />
         <Route
           path="/politique-de-confidentialite"

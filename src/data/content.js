@@ -431,6 +431,7 @@ export const footer = {
         { label: "Réalisations", href: "#realisations" },
         { label: "Process", href: "#process" },
         { label: "Offres", href: "#offre" },
+        { label: "Zone d'intervention", href: "/creation-site-internet-saint-julien-en-genevois" },
       ],
     },
     {
@@ -456,4 +457,78 @@ export const footer = {
     { label: "Politique de confidentialité", href: "/politique-de-confidentialite" },
   ],
   copyright: "© 2026 Kota Studio. Tous droits réservés.",
+};
+
+/* -- Page locale : création site internet Saint-Julien-en-Genevois --------
+   Page dédiée à la requête commerciale locale (levier SEO principal pour une
+   agence mono-site). Tout le contenu chiffré (prix, délais, inclus) reprend
+   EXACTEMENT les données déjà publiées ailleurs sur le site (offer, process,
+   promises) — aucune donnée inventée. Le FAQPage JSON-LD (voir la page)
+   reflète mot pour mot les questions/réponses ci-dessous. */
+export const localSeo = {
+  slug: "creation-site-internet-saint-julien-en-genevois",
+  metaTitle:
+    "Création de site internet à Saint-Julien-en-Genevois | Kota Studio",
+  metaDescription:
+    "Studio de création de sites web basé à Saint-Julien-en-Genevois (74). Sites vitrine et sur-mesure pour le Genevois, Annecy et Lyon. À partir de 790 €, livrés en 14 jours.",
+  updatedAt: "7 septembre 2026",
+  badge: "Saint-Julien-en-Genevois · Haute-Savoie",
+  h1: "Création de site internet à Saint-Julien-en-Genevois",
+  intro:
+    "Kota Studio est un studio de création de sites web basé à Saint-Julien-en-Genevois, à 10 minutes de Genève. Nous concevons des sites vitrine et des sites sur-mesure pour les entreprises et indépendants du Genevois français, d'Annecy et de la région lyonnaise, livrés en 14 jours et 100% codés à la main.",
+  sections: [
+    {
+      id: "prix",
+      question: "Combien coûte un site internet à Saint-Julien-en-Genevois ?",
+      answer:
+        "Chez Kota Studio, une landing page démarre à 790 € et un site sur-mesure complet à 1 290 €, prix annoncés dès le premier appel et sans supplément caché. Ces deux tarifs incluent le design, le développement et la mise en ligne — le détail de ce qui est inclus est listé plus bas.",
+      body: "offer-included",
+    },
+    {
+      id: "delai",
+      question: "Combien de temps pour avoir un site internet en ligne ?",
+      answer:
+        "Comptez 14 jours entre le premier appel et la mise en ligne. Le déroulé est cadré étape par étape : appel découverte, questionnaire structuré, conception et développement, présentation d'une V1 navigable, ajustements, puis livraison — le détail complet des 6 étapes est donné plus bas.",
+    },
+    {
+      id: "proximite",
+      question:
+        "Pourquoi faire appel à une agence basée à Saint-Julien-en-Genevois ?",
+      answer:
+        "Être basé à Saint-Julien-en-Genevois permet des échanges directs — appel ou visio — avec des entreprises et indépendants du Genevois français, d'Annecy et de la région lyonnaise, sans les décalages d'une agence lointaine. Le projet reste piloté du premier appel à la mise en ligne par la même équipe, joignable à chaque étape.",
+    },
+    {
+      id: "process",
+      question: "Comment se déroule un projet avec Kota Studio ?",
+      answer:
+        "Le projet suit un calendrier fixe de 14 jours en 6 étapes : appel découverte (jour 1), questionnaire structuré (jour 2), conception et développement (jours 3 à 6), présentation de la V1 (jour 7), ajustements (jours 8 à 13) et livraison (jour 14).",
+      body: "process-steps",
+    },
+  ],
+  faq: [
+    {
+      q: "Travaillez-vous uniquement avec des entreprises de Saint-Julien-en-Genevois ?",
+      a: "Non. Depuis Saint-Julien-en-Genevois, nous accompagnons des entreprises et indépendants de tout le Genevois français, d'Annecy, d'Annemasse et de la région lyonnaise, en présentiel ou à distance.",
+    },
+    {
+      q: "Qu'est-ce qui est inclus dans le prix affiché (790 € / 1 290 €) ?",
+      a: "Un site 100% codé sur-mesure, un design responsive (mobile / tablette / desktop), un espace admin pour modifier le contenu, l'optimisation des performances, des révisions illimitées et une livraison en 14 jours.",
+    },
+    {
+      q: "Peut-on demander des modifications après la présentation de la V1 ?",
+      a: "Oui, sans limite : entre la présentation de la V1 (jour 7) et la livraison (jour 14), le site est ajusté jusqu'à satisfaction complète.",
+    },
+    {
+      q: "Le SEO est-il inclus dans la création du site ?",
+      a: "Les bonnes fondations techniques (structure, vitesse, contenu) sont posées dès la construction du site. Un accompagnement SEO avancé (contenu, suivi de positions) est proposé en option, sur devis — Kota Studio ne vend aucun classement Google garanti.",
+    },
+    {
+      q: "Comment réserver un premier appel ?",
+      a: "Via le calendrier de réservation en ligne ou directement sur WhatsApp. L'appel dure 15 minutes et n'engage à rien.",
+    },
+  ],
+  cta: {
+    title: "Un projet de site internet dans le Genevois ?",
+    text: "15 minutes pour comprendre votre projet et voir comment on peut vous aider. Sans engagement.",
+  },
 };
