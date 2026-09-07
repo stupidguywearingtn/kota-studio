@@ -440,6 +440,10 @@ export const footer = {
         { label: "Landing page", href: "#ce-quon-fait" },
         { label: "Refonte", href: "#ce-quon-fait" },
         { label: "SEO", href: "#ce-quon-fait" },
+        {
+          label: "Site internet à Saint-Julien-en-Genevois",
+          href: "/creation-site-internet-saint-julien-en-genevois",
+        },
       ],
     },
     {

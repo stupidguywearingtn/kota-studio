@@ -39,15 +39,20 @@ export default function Footer() {
                 <ul className="mt-5 space-y-3">
                   {column.links.map((link) => {
                     // Ancre de section -> route home + ancre (fonctionne depuis
-                    // n'importe quelle page via le ScrollManager).
-                    const internal =
-                      link.href.startsWith("#") && link.href.length > 1;
+                    // n'importe quelle page via le ScrollManager). Lien interne
+                    // ("/creation-site-...") -> Link router (SPA, pas de reload).
+                    const isAnchor = link.href.startsWith("#") && link.href.length > 1;
+                    const isInternalPath = link.href.startsWith("/");
                     const cls =
                       "text-sm text-creme/80 transition-colors hover:text-or";
                     return (
                       <li key={link.label}>
-                        {internal ? (
+                        {isAnchor ? (
                           <Link to={"/" + link.href} className={cls}>
+                            {link.label}
+                          </Link>
+                        ) : isInternalPath ? (
+                          <Link to={link.href} className={cls}>
                             {link.label}
                           </Link>
                         ) : (

@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import ProjectPage from "./pages/ProjectPage";
 import MentionsLegales from "./pages/MentionsLegales";
 import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
+import CityPage from "./pages/CityPage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -71,6 +72,9 @@ export default function App() {
           path="/politique-de-confidentialite"
           element={<PolitiqueConfidentialite />}
         />
+        {/* Pages villes SEO local (src/data/cities.js) — catch-all volontaire,
+            gère aussi le 404 propre pour un slug inconnu (comme /projets/:slug). */}
+        <Route path="/:citySlug" element={<CityPage />} />
       </Routes>
     </>
   );
