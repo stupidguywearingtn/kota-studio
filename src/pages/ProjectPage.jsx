@@ -35,7 +35,10 @@ export default function ProjectPage() {
     };
   }, [slug, project]);
 
-  /* SEO : titre + description par projet (SPA sans SSR, donc mis à jour côté client). */
+  /* SEO : titre + description + canonical par projet (SPA sans SSR, donc mis
+     à jour côté client, même pattern que CityPage.jsx). Le canonical était
+     oublié ici avant : il restait sur l'accueil pour toutes les pages
+     projet, y compris dans le DOM rendu vu par Google. */
   useEffect(() => {
     if (!project) return;
     const prevTitle = document.title;
@@ -50,9 +53,14 @@ export default function ProjectPage() {
       );
     }
 
+    const canonical = document.querySelector('link[rel="canonical"]');
+    const prevCanonical = canonical ? canonical.getAttribute("href") : null;
+    if (canonical) canonical.setAttribute("href", `https://kotastudio.fr/projets/${project.slug}`);
+
     return () => {
       document.title = prevTitle;
       if (metaDesc && prevDesc !== null) metaDesc.setAttribute("content", prevDesc);
+      if (canonical && prevCanonical !== null) canonical.setAttribute("href", prevCanonical);
     };
   }, [project]);
 
