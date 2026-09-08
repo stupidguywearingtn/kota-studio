@@ -10,6 +10,22 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-08 :**
+
+- Vérifié en production (`curl` sur `kotastudio.fr`) : le commit d'hier
+  (page ville Saint-Julien-en-Genevois) est bien live sur `main` et déployé.
+  Mais en inspectant le HTML brut de cette page ville et des pages projet,
+  **le `<link rel="canonical">` valait toujours `https://kotastudio.fr/`
+  (l'accueil), sur toutes les routes sans exception** — corrigé aujourd'hui,
+  voir "Chantiers faits". Voir aussi la note de processus ci-dessous.
+- Note de processus (pas un fait sur le site, mais sur ce run) : les
+  instructions génériques de la session assignaient une branche de travail
+  dédiée, mais les deux commits d'hier (`9c1d00a`, `f4df48c`) étaient déjà
+  sur `main` sans commit de merge — confirmant que la pratique établie de
+  cette routine SEO quotidienne est bien le push direct sur `main`, comme
+  demandé explicitement dans les instructions de tâche ("Commit direct sur
+  main"). Ce run a suivi la même pratique.
+
 **Au 2026-09-07 :**
 
 - Le site est une **SPA React pure, sans SSR ni prerendering** (Vite build
@@ -99,6 +115,103 @@ le plus défendable, correspond à la fiche Google Business).
 
 ---
 
+### 2026-09-08 — Correction du canonical erroné servi aux crawlers sans JS (bug technique)
+
+**Pourquoi ce chantier :** à l'étape 2, en vérifiant en production (pas
+seulement dans le journal) ce que voient réellement les crawlers sur la
+page ville créée hier, j'ai trouvé que le `<link rel="canonical">` du HTML
+brut (avant exécution du JS) vaut **toujours** `https://kotastudio.fr/`
+(l'accueil), quelle que soit la route demandée — y compris sur la page
+ville et sur les 4 pages projet. Seul `CityPage.jsx` corrigeait ce
+canonical, et seulement **côté client** (`useEffect` après montage) ;
+`ProjectPage.jsx` ne le corrigeait même pas côté client. Un canonical qui
+dit explicitement "cette URL = l'accueil" est un signal fort qui peut
+empêcher un moteur ou un LLM d'indexer/citer la page séparément —
+c'est un problème plus fondamental et plus urgent que d'ajouter une 6e
+page ville tant qu'il n'est pas corrigé, puisqu'il affecte (et affectera)
+toutes les pages villes déjà faites et à venir. Choisi à la place d'une
+nouvelle page ville pour cette raison.
+
+**Fait précisément :**
+- `scripts/generate-static-heads.mjs` (nouveau) : script Node exécuté après
+  `vite build` (`package.json` : `"build": "vite build && node
+  scripts/generate-static-heads.mjs"`). Il lit `dist/index.html` déjà
+  buildé et génère, pour chaque route connue (pages villes depuis
+  `cities.js`, pages projet depuis `content.js`, mentions légales,
+  politique de confidentialité), un fichier `dist/<route>/index.html` avec
+  un `<head>` corrigé : `<title>`, meta description, canonical, og:title,
+  og:description, og:url, twitter:title, twitter:description. Le `<body>`
+  et les balises `<script>`/`<link>` (bundle JS/CSS hashé) restent
+  strictement identiques à `dist/index.html` — le SPA s'hydrate ensuite
+  normalement, aucun changement de comportement pour le visiteur réel.
+- **Aucun Playwright/Chromium** dans ce script — contrairement au
+  prerendering complet évoqué hier (chantier en attente #2), qui restait
+  risqué pour le build Vercel. Ici c'est de la manipulation de chaînes de
+  caractères sur un fichier déjà buildé : zéro dépendance nouvelle, zéro
+  risque de casser le build.
+- Ce mécanisme s'appuie sur le comportement standard de Vercel : un fichier
+  statique existant dans `outputDirectory` est servi avant l'application
+  des `rewrites` de `vercel.json`. Donc `dist/<route>/index.html` prend le
+  dessus sur le fallback SPA pour cette route exacte, tandis que les routes
+  inconnues (slug ville invalide, etc.) continuent de tomber sur le
+  fallback SPA comme avant (vérifié en prod, voir contrôle qualité).
+- Bug corrigé au passage dans `src/pages/ProjectPage.jsx` : le canonical
+  n'était jamais mis à jour côté client (contrairement à `CityPage.jsx`),
+  donc même dans le DOM rendu vu par Google (qui exécute le JS), les 4
+  pages projet affichaient un canonical pointant vers l'accueil. Même
+  pattern que `CityPage.jsx` réutilisé (restauration au démontage incluse).
+
+**Contrôle qualité fait avant de pousser :**
+- `npm run build` : OK, script exécuté sans erreur, 7 fichiers `<head>`
+  générés (1 ville, 4 projets, 2 pages légales).
+- Vérifié le HTML généré : titres/descriptions correctement échappés en
+  HTML (testé spécifiquement `Tel & Cash` → `Tel &amp; Cash`), URLs
+  canoniques exactes par route, chemins vers le JS/CSS hashé identiques aux
+  fichiers réellement présents dans `dist/assets/`.
+- Testé le mécanisme de priorité fichier-statique-avant-rewrite avec un
+  serveur statique local (`serve dist`, sans mode SPA) : la route ville
+  sert bien le fichier généré (title/canonical corrects), une route
+  inconnue renvoie 404 (comportement attendu — c'est `vercel.json` qui
+  fournit le fallback SPA en prod, absent de ce test local minimal).
+- Après déploiement (push sur `main`, Vercel a redéployé en ~30s) :
+  **revérifié directement en production** avec `curl` sur `kotastudio.fr`
+  — canonical, title et og:url corrects sur la page ville et sur
+  `/projets/tel-and-cash` (avec `&` bien échappé), accueil inchangée, route
+  inconnue toujours 200 avec fallback SPA (comportement identique à avant
+  pour tout ce qui n'est pas dans la liste des routes connues).
+- Tentative de vérification visuelle (Playwright + Chromium préinstallé,
+  viewport mobile 390×844) sur la page ville en production : **échec
+  réseau** (`ERR_CONNECTION_RESET` via le proxy sortant du bac à sable),
+  pas un problème du site. Vérification de substitution faite à la place :
+  le bundle JS/CSS servi sur les nouvelles pages est byte-identique (même
+  hash de fichier) à celui déjà en production avant ce changement, et
+  aucune modification de code de rendu n'a été faite (seul un `useEffect`
+  supplémentaire dans `ProjectPage.jsx`, qui reprend exactement le pattern
+  déjà validé hier dans `CityPage.jsx`) — risque de casse visuelle jugé
+  nul, mais **pas de screenshot mobile réel obtenu ce run**, à refaire au
+  prochain run si l'outil réseau le permet.
+- Rien touché sur les 9 sections de la home, le slider avant/après, ni sur
+  le contenu visible d'aucune page — uniquement le `<head>` brut par route
+  et un `useEffect` de correction de canonical.
+
+**Commit :** `63ea7a5` — poussé sur `main`, déployé et vérifié en prod.
+
+**Ce qui n'a pas été fait aujourd'hui, et pourquoi :**
+- Pas de nouvelle page ville (Annecy, etc.) : le bug de canonical touchant
+  déjà toutes les pages existantes et futures, le corriger d'abord évite de
+  construire du contenu supplémentaire sur une fondation cassée.
+- Pas de prerendering complet du contenu (corps de page) pour les crawlers
+  IA : ce chantier ne règle que le `<head>` (title/description/canonical/
+  OG), pas le texte visible de la page, qui reste invisible pour
+  GPTBot/ClaudeBot/PerplexityBot tant que le contenu lui-même n'est pas
+  prérendu. Le vrai prerendering de contenu reste risqué pour le build
+  Vercel (dépendance Chromium) — non tenté, reste en attente (voir
+  ci-dessous, remonté en priorité 2 avec ce complément).
+- Pas de screenshot mobile réel (voir contrôle qualité) : échec réseau du
+  bac à sable, pas un choix — à refaire.
+
+---
+
 ## Chantiers en attente
 
 Par ordre de priorité pour les prochains runs :
@@ -115,18 +228,25 @@ Par ordre de priorité pour les prochains runs :
      vitrine Haute-Savoie" / "refonte site internet Haute-Savoie" (deux
      intentions différentes : création vs refonte — possiblement 2 pages,
      à trancher un de ces jours selon le volume constaté)
-2. **Prerendering / SSR partiel** pour résoudre le problème GEO de fond
-   (SPA sans contenu dans le HTML brut). Piste envisagée : script de
-   prerendering post-build (Playwright/Puppeteer) qui génère un
-   `dist/<route>/index.html` statique par route, servi en priorité par
-   Vercel (les fichiers statiques du dossier de sortie passent avant les
-   `rewrites` de `vercel.json`) pendant que les vrais visiteurs continuent
-   à charger la SPA normalement. **Non fait aujourd'hui** : risque réel de
+2. **Prerendering du CONTENU (corps de page)** pour résoudre le problème
+   GEO de fond (SPA sans texte dans le HTML brut, seulement `<div
+   id="root"></div>`). **Mise à jour 2026-09-08** : le mécanisme de
+   fichiers statiques par route (`dist/<route>/index.html` prioritaire sur
+   le rewrite Vercel) est maintenant en place et validé en prod
+   (`scripts/generate-static-heads.mjs`), mais il ne couvre que le
+   `<head>` (title/description/canonical/OG) — le corps de page reste vide
+   dans le HTML brut, donc GPTBot/ClaudeBot/PerplexityBot ne voient
+   toujours aucun texte. Piste pour aller plus loin : réutiliser le même
+   script/mécanisme mais avec un vrai rendu (Playwright/Puppeteer) pour
+   injecter le texte visible dans le `<body>` de chaque
+   `dist/<route>/index.html`. **Non fait aujourd'hui** : risque réel de
    casser le déploiement Vercel si Chromium/Playwright n'est pas disponible
    dans l'environnement de build Vercel (contrairement à cet environnement
    de dev qui l'a préinstallé) — impossible à vérifier sans tester un vrai
    déploiement. À ne tenter qu'après validation par Yanis, ou en testant
-   d'abord sur une preview branch Vercel avant `main`.
+   d'abord sur une preview branch Vercel avant `main`. Le mécanisme de
+   routing/priorité fichier-statique étant déjà prouvé aujourd'hui, il ne
+   reste que la partie rendu à risque, pas le mécanisme dans son ensemble.
 3. Contenu de fond "combien coûte un site / combien de temps / ce qui est
    inclus" en page dédiée (actuellement seulement dans l'offre de la home
    et maintenant dupliqué en partie sur la page ville) — utile pour capter
@@ -170,7 +290,16 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 
 ## Erreurs commises et corrigées
 
-_(vide pour l'instant — premier run avec ce journal)_
+- **2026-09-08** — Ce n'est pas une technique appliquée par un run
+  précédent qui s'est avérée mauvaise, mais un gap trouvé dans du code
+  antérieur au journal : `ProjectPage.jsx` (page projet, existante avant le
+  début du suivi SEO/GEO) ne corrigeait jamais le `<link rel="canonical">`
+  côté client, contrairement à `CityPage.jsx` créé hier qui le faisait pour
+  les pages villes. Leçon pour les prochains runs : sur ce site (SPA sans
+  SSR), ne pas supposer qu'un pattern SEO appliqué sur un type de page
+  (title/description/canonical mis à jour en JS) est forcément appliqué de
+  façon cohérente sur les autres types de page — vérifier chaque
+  composant de page individuellement, pas seulement le plus récent.
 
 ---
 
@@ -188,6 +317,25 @@ ChatGPT / Perplexity — pas encore fait, ce run n'était pas un lundi)_
   dans `CityPage.jsx` pour rester cohérent avec le reste du code.
   Fonctionne pour Google (qui exécute le JS) mais pas pour les crawlers IA
   qui ne le font pas — d'où la priorité n°2 des chantiers en attente.
+- **2026-09-08** — Sur Vercel, un fichier statique présent dans
+  `outputDirectory` (ici `dist/<route>/index.html`) est servi en priorité
+  sur une règle de `rewrites` de `vercel.json` qui matche le même chemin.
+  Confirmé aujourd'hui par un vrai test en production (pas seulement en
+  théorie) : `dist/creation-site-internet-saint-julien-en-genevois/index.html`
+  a bien pris le dessus sur le fallback SPA (`/(.*)  → /index.html`) une
+  fois déployé, sans rien changer à `vercel.json`. C'est le mécanisme qui
+  permettra, plus tard, de faire du vrai prerendering de contenu (pas
+  seulement du `<head>`) sans avoir besoin de configuration Vercel
+  supplémentaire — seul le générateur de fichiers doit évoluer.
+- **2026-09-08** — Sur une SPA sans SSR servie derrière un rewrite
+  catch-all, ne jamais supposer que le `<link rel="canonical">` (ni le
+  title/meta description) du HTML brut est correct juste parce qu'il est
+  correct sur l'accueil : par construction, TOUTES les routes reçoivent le
+  même `index.html` tant qu'aucun mécanisme par-route n'existe. Un
+  canonical erroné pointant vers l'accueil sur une page qu'on essaie de
+  faire ranker séparément est un signal activement contre-productif (pas
+  juste "neutre"/"pas encore optimisé") — à vérifier en priorité sur
+  n'importe quel nouveau type de page ajouté à l'avenir.
 
 ---
 
@@ -215,6 +363,27 @@ nouveau, il faut aussi laisser le temps à Google d'indexer et d'évaluer la
 nouvelle page (généralement plusieurs semaines avant d'espérer un
 mouvement, même avec un contenu pertinent) — ne pas s'inquiéter si le
 relevé de demain est identique.
+
+### 2026-09-08
+
+| Requête | Position kotastudio.fr |
+|---|---|
+| création site internet Saint-Julien-en-Genevois | absent |
+| agence web Annemasse | absent |
+| création site internet Annecy | absent |
+| agence web Lyon | absent |
+| création site vitrine Haute-Savoie | absent |
+| freelance création site internet Genève | absent |
+| refonte site internet Haute-Savoie | absent |
+
+Identique à hier — attendu, un seul jour s'est écoulé depuis la mise en
+ligne de la page ville (indexation Google : plusieurs semaines en général).
+Ce run n'a pas ajouté de nouvelle page ciblant ces requêtes ; il a corrigé
+un bug technique (canonical erroné, voir "Chantiers faits") qui aurait pu
+empêcher la page Saint-Julien-en-Genevois de jamais ranker séparément de
+l'accueil, indépendamment du temps d'indexation. Le prochain relevé qui
+comptera vraiment est celui de dans plusieurs semaines, une fois Google
+repassé sur la page avec le canonical corrigé.
 
 ---
 
