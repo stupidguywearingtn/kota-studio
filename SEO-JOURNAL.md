@@ -10,6 +10,19 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-09 :**
+
+- Vérifié en production avant d'agir : le bug de canonical corrigé hier
+  (`63ea7a5`) tient bien — `curl` sur la page ville Saint-Julien-en-Genevois
+  et sur `/projets/tel-and-cash` renvoie le canonical, title et meta
+  description corrects, pas ceux de l'accueil. `sitemap.xml`, `llms.txt` et
+  `robots.txt` conformes à ce qui est documenté hier.
+- `npm run build` échouait avant tout (`vite: not found`) car
+  `node_modules` n'existait pas dans cet environnement de session — `npm
+  install` fait au début du run (dépendances du `package-lock.json`
+  existant, rien de changé côté versions). À refaire si un futur run
+  démarre aussi sans `node_modules`.
+
 **Au 2026-09-08 :**
 
 - Vérifié en production (`curl` sur `kotastudio.fr`) : le commit d'hier
@@ -196,6 +209,101 @@ nouvelle page ville pour cette raison.
 
 **Commit :** `63ea7a5` — poussé sur `main`, déployé et vérifié en prod.
 
+---
+
+### 2026-09-09 — Deuxième page ville : "Création de site internet à Annecy"
+
+**Pourquoi ce chantier :** priorité n°1 de la liste "Chantiers en attente"
+laissée hier. Le bug de canonical (bloquant pour toutes les pages villes,
+existantes et futures) est corrigé et vérifié en prod ce matin avant de
+commencer — plus de raison de retarder une nouvelle page ville. Annecy
+choisi en premier parmi les villes restantes (Annemasse, Lyon, Genève,
+Haute-Savoie) : plus gros bassin de population et de recherche de la zone
+ciblée, requête "création site internet Annecy" confirmée comme
+concurrentielle et réelle (7 agences/freelances déjà positionnés dessus,
+vu en résultats de recherche à l'étape 2 — Boondooa, D2b Consulting,
+WeComeBack, Webies, Teaminfo, Alpaweb, Julie Web Concept).
+
+**Point d'attention traité explicitement (risque de doorway page) :**
+Kota Studio n'a qu'une seule adresse réelle (Saint-Julien-en-Genevois).
+Une page "création de site internet à Annecy" qui laisserait croire à une
+implantation locale à Annecy serait non seulement un mensonge (interdit
+par la règle "n'invente jamais"), mais aussi le genre de doorway page que
+Google pénalise (pages quasi-identiques, seul le nom de ville change).
+Pour éviter ça sur le fond, pas seulement sur la forme :
+- La FAQ #1 de la page Annecy pose directement la question ("Kota Studio
+  a-t-il un bureau à Annecy ?") et répond honnêtement : non, l'agence est
+  à Saint-Julien-en-Genevois, suivi client en visio + présentiel possible
+  (moins d'1h de route). Aucune affirmation d'implantation locale.
+- Contenu non dupliqué mot pour mot depuis la page Saint-Julien : intro
+  reformulée, FAQ #1 structurellement différente (question d'implantation
+  au lieu de "pourquoi une agence locale"), et une 5e FAQ propre à Annecy
+  sur les secteurs tourisme/immobilier autour du lac — absente de la page
+  Saint-Julien.
+
+**Fait précisément :**
+- `src/data/cities.js` : nouvelle entrée `creation-site-internet-annecy`
+  (5 FAQ, intro et meta title/description propres à Annecy). Réutilise le
+  même gabarit `CityPage.jsx` que Saint-Julien — route `/:citySlug`
+  automatique dans `App.jsx`, aucune autre modif de composant nécessaire.
+  Prix/délai/inclus toujours importés de `content.js` (`offer`, `process`),
+  jamais dupliqués en dur.
+- `src/data/content.js` : lien "Site internet à Annecy" ajouté dans le
+  footer, colonne "Services" (maillage interne, même colonne que le lien
+  Saint-Julien-en-Genevois déjà présent).
+- `public/sitemap.xml` et `public/llms.txt` : nouvelle page ajoutée. La
+  fiche `llms.txt` mentionne explicitement l'absence de bureau à Annecy,
+  pour que les crawlers IA aient la même info honnête que les visiteurs
+  humains (cohérence GEO).
+- `scripts/generate-static-heads.mjs` n'a pas eu besoin d'être modifié :
+  il boucle déjà sur `cities` depuis `cities.js`, donc la nouvelle route a
+  automatiquement généré son `dist/creation-site-internet-annecy/index.html`
+  avec le bon `<head>` (title/description/canonical/OG) au build.
+
+**Contrôle qualité fait avant de pousser :**
+- Session sans `node_modules` au départ (`vite: not found`) — `npm
+  install` fait avant tout, puis `npm run build` : OK, le nouveau head
+  statique `/creation-site-internet-annecy` généré correctement dans la
+  sortie du script (vérifié dans les logs de build).
+- Testé avec Playwright/Chromium (viewport mobile 390×844, priorité TikTok)
+  contre un `serve dist` local : H1, title, canonical et JSON-LD corrects ;
+  JSON-LD `FAQPage` comparé mot pour mot au texte des `<h2>` visibles via
+  script — identique, aucun mismatch.
+- Premier screenshot plein-page pris sans scroll : sections FAQ et CTA
+  apparaissaient vides (opacity 0). Pas un bug — chaque bloc `.reveal` est
+  animé par ScrollTrigger (`src/lib/reveal.js`), qui ne se déclenche qu'au
+  scroll réel, comportement déjà présent et voulu sur la page Saint-Julien.
+  Refait avec un script qui scrolle la page par paliers avant la capture :
+  les 5 FAQ (avec le tableau prix/inclus et les étapes du process), le CTA
+  final et le footer (avec le nouveau lien Annecy) s'affichent
+  correctement, mise en page crème/encre/or intacte, rien de cassé.
+  Fichiers de test temporaires supprimés après vérification (pas commités).
+- Après déploiement sur `main`, revérifié en production avec `curl` :
+  `/creation-site-internet-annecy` renvoie 200, canonical/title/meta
+  description corrects dans le HTML brut (avant JS), `sitemap.xml` et
+  `llms.txt` à jour.
+- Rien touché sur les 9 sections de la home ni sur le slider avant/après.
+  Seule modification visible ailleurs que la nouvelle page : un lien
+  supplémentaire dans le footer.
+
+**Commit :** `39ca550` — poussé sur `main`.
+
+**Ce qui n'a pas été fait aujourd'hui, et pourquoi :**
+- Pas de 3e page ville (Annemasse) : une page ville par jour, pour laisser
+  le temps de vérifier chacune correctement plutôt que d'enchaîner vite et
+  mal. Annemasse reste en tête de la liste "Chantiers en attente".
+- Pas de lien croisé inline entre les pages Saint-Julien et Annecy dans le
+  corps du texte des FAQ (seulement via le footer et le breadcrumb) : le
+  texte des `f.a` est actuellement du texte brut, pas du JSX — ajouter un
+  lien cliquable dedans demanderait de changer la structure de données
+  (passer d'une string à du JSX ou à un mini-format à parser), ce qui
+  touche le composant partagé par toutes les pages villes. Trop risqué
+  pour un ajout mineur de maillage interne un jour où la priorité était la
+  nouvelle page — à reconsidérer si le maillage interne devient un vrai
+  chantier dédié.
+- Pas de prerendering du contenu (corps de page) pour les crawlers IA :
+  toujours en attente, priorité 2, inchangé depuis hier.
+
 **Ce qui n'a pas été fait aujourd'hui, et pourquoi :**
 - Pas de nouvelle page ville (Annecy, etc.) : le bug de canonical touchant
   déjà toutes les pages existantes et futures, le corriger d'abord évite de
@@ -218,8 +326,8 @@ Par ordre de priorité pour les prochains runs :
 
 1. **Pages villes suivantes** (gabarit déjà prêt dans `cities.js` +
    `CityPage.jsx`) — un jour = une ville, angle de requête différent à
-   respecter (ne pas copier-coller le même texte) :
-   - Annecy → angle "création site internet Annecy"
+   respecter (ne pas copier-coller le même texte). **Annecy faite le
+   2026-09-09** (voir "Chantiers faits") :
    - Annemasse → angle "agence web Annemasse"
    - Lyon → angle "agence web Lyon"
    - Genève → angle "freelance création site internet Genève" (ton freelance/
@@ -384,6 +492,29 @@ empêcher la page Saint-Julien-en-Genevois de jamais ranker séparément de
 l'accueil, indépendamment du temps d'indexation. Le prochain relevé qui
 comptera vraiment est celui de dans plusieurs semaines, une fois Google
 repassé sur la page avec le canonical corrigé.
+
+### 2026-09-09
+
+| Requête | Position kotastudio.fr |
+|---|---|
+| création site internet Saint-Julien-en-Genevois | absent |
+| agence web Annemasse | absent |
+| création site internet Annecy | absent |
+| agence web Lyon | absent |
+| création site vitrine Haute-Savoie | absent |
+| freelance création site internet Genève | absent |
+| refonte site internet Haute-Savoie | absent |
+
+Toujours absent partout, attendu (2 jours depuis la page Saint-Julien, 0
+jour depuis la page Annecy créée aujourd'hui — largement en dessous du
+délai d'indexation Google de plusieurs semaines évoqué hier). Les
+résultats obtenus pour "création site internet Annecy" montrent un
+marché déjà occupé par 7 agences/freelances établis (Boondooa, D2b
+Consulting, WeComeBack, Webies, Teaminfo, Alpaweb, Julie Web Concept) —
+s'attendre à un ranking plus lent et plus difficile que sur Saint-Julien-
+en-Genevois, marché moins disputé. Premier relevé qui comptera vraiment :
+dans plusieurs semaines, une fois Google indexé et évalué les 2 pages
+villes actuelles.
 
 ---
 
