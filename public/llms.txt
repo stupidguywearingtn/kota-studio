@@ -6,6 +6,7 @@
 
 - [Accueil](/): Présentation de l'agence, services, offres et prise de rendez-vous.
 - [Création de site internet à Saint-Julien-en-Genevois](/creation-site-internet-saint-julien-en-genevois): Page locale — prix, délais, inclus et zone d'intervention (Genevois, Annecy, Annemasse, Genève, Lyon).
+- [Création de site internet à Annecy](/creation-site-internet-annecy): Page locale pour Annecy — prix, délais, inclus. Agence basée à Saint-Julien-en-Genevois (pas de bureau à Annecy), clients suivis en visio ou en présentiel.
 - [Mentions légales](/mentions-legales)
 - [Politique de confidentialité](/politique-de-confidentialite)
 

@@ -444,6 +444,10 @@ export const footer = {
           label: "Site internet à Saint-Julien-en-Genevois",
           href: "/creation-site-internet-saint-julien-en-genevois",
         },
+        {
+          label: "Site internet à Annecy",
+          href: "/creation-site-internet-annecy",
+        },
       ],
     },
     {

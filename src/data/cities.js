@@ -46,4 +46,38 @@ export const cities = [
       },
     ],
   },
+  {
+    slug: "creation-site-internet-annecy",
+    cityName: "Annecy",
+    badge: "Annecy",
+    metaTitle: "Création de site internet à Annecy | Kota Studio",
+    metaDescription:
+      "Sites vitrine et sites sur-mesure pour les entreprises d'Annecy, conçus par une agence basée à Saint-Julien-en-Genevois. Livrés en 14 jours, révisions illimitées.",
+    h1: "Création de site internet à Annecy",
+    intro:
+      "Kota Studio conçoit des sites internet sur-mesure pour les entreprises, commerces et indépendants d'Annecy et du bassin annécien. L'agence est basée à Saint-Julien-en-Genevois, à moins d'une heure de route d'Annecy : les rendez-vous se font en visio ou en présentiel selon ce qui vous convient le mieux.",
+    updatedAt: "9 septembre 2026",
+    faqs: [
+      {
+        q: "Kota Studio a-t-il un bureau à Annecy ?",
+        a: "Non, et il est plus honnête de le dire clairement : l'agence est basée à Saint-Julien-en-Genevois, pas à Annecy. Les clients annéciens sont suivis en visio pour l'essentiel du projet, avec un rendez-vous en présentiel possible si besoin (moins d'une heure de trajet). Ce qui compte pour votre site, c'est le travail livré, pas l'adresse du studio.",
+      },
+      {
+        q: "Combien coûte un site internet à Annecy ?",
+        a: "Une landing page démarre à 790 € et un site sur-mesure complet à partir de 1 290 €, tout compris, quel que soit votre secteur d'activité à Annecy. Le montant exact dépend du nombre de pages et des options : un devis précis est donné après un appel de 15 minutes, sans engagement.",
+      },
+      {
+        q: "Combien de temps pour un site internet à Annecy ?",
+        a: "14 jours du premier échange à la mise en ligne, avec un processus cadré en 6 étapes détaillé ci-dessous. Ce délai ne change pas selon la ville : il dépend du cadrage initial et de la rapidité des retours, pas de la localisation du client.",
+      },
+      {
+        q: "Qu'est-ce qui est inclus dans un projet Kota Studio ?",
+        a: "Un site 100% codé sur-mesure (aucun template), un design responsive pensé mobile en premier, un espace admin pour modifier le contenu vous-même, l'optimisation des performances et des révisions illimitées jusqu'à validation.",
+      },
+      {
+        q: "Kota Studio travaille-t-il avec les commerces touristiques et l'immobilier autour du lac d'Annecy ?",
+        a: "Oui, ce sont des secteurs fréquents pour les entreprises basées à Annecy : hôtellerie, restauration, activités de plein air, immobilier. Le principe reste le même quel que soit le secteur : un site sur-mesure pensé pour convertir, pas un template générique réutilisé d'un client à l'autre.",
+      },
+    ],
+  },
 ];
