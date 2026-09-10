@@ -10,6 +10,24 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-10 :**
+
+- Vérifié en production avant d'agir : les fixes canonical (09-08) et les 2
+  pages villes (09-07, 09-09) tiennent toujours — `curl` sur les 2 pages
+  villes et `/projets/tel-and-cash` renvoie title/description/canonical
+  corrects. `sitemap.xml`, `llms.txt`, `robots.txt` conformes. Corps de
+  page toujours vide dans le HTML brut sur toutes les routes (SPA sans
+  SSR) — problème GEO de fond non résolu, inchangé depuis le 09-07.
+- Nouvelle page de fond ajoutée aujourd'hui : `/combien-coute-un-site-internet`
+  (prix, délais, inclus, landing vs sur-mesure, SEO). Voir "Chantiers
+  faits" pour le détail.
+- `npm run build` échouait avant tout (`vite: not found`) — `node_modules`
+  absent au démarrage de cette session, comme le 09-09. `npm install` fait
+  en début de run (dépendances de `package-lock.json` existant, rien
+  changé côté versions). Se reproduit à chaque session sans état
+  persistant — à ne plus noter comme un "problème", c'est structurel à cet
+  environnement, juste refaire `npm install` avant tout `npm run build`.
+
 **Au 2026-09-09 :**
 
 - Vérifié en production avant d'agir : le bug de canonical corrigé hier
@@ -72,6 +90,111 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-09-10 — Page de fond "Combien coûte un site internet ?" (prix/délais/inclus)
+
+**Pourquoi ce chantier :** liste "Chantiers en attente" laissée le 09-09, item 3.
+Les 3 derniers chantiers étaient soit techniques (canonical) soit des pages
+villes (Saint-Julien, Annecy) — même angle deux jours de suite. Pour alterner
+comme demandé, ce run traite un contenu de fond informationnel plutôt qu'une
+3e page ville. Autre raison : les pages villes ciblent des requêtes locales
+("création site internet + ville"), mais une partie du volume (et des
+questions posées à ChatGPT/Perplexity) porte sur le prix et le délai en
+général, sans mention de ville — non couvert avant ce run (seulement présent
+en résumé sur la home, section Offre, sans page dédiée ni JSON-LD FAQ/HowTo).
+
+**Mesuré avant d'agir (étape 2) :** `curl` en prod sur les 2 pages villes et
+`/projets/tel-and-cash` : canonical/title/description corrects (le fix du
+09-08 tient toujours). Corps de page toujours vide dans le HTML brut
+(`<div id="root"></div>` seul) — le problème GEO de fond (item 2 des
+"Chantiers en attente") n'est pas résolu, inchangé. Recherche web sur les 7
+requêtes cibles : kotastudio.fr absent partout, sans surprise (3 jours
+depuis la page Saint-Julien, 1 jour depuis Annecy — délai d'indexation
+Google de plusieurs semaines encore loin d'être écoulé). Marché confirmé
+occupé sur chaque requête (mêmes agences que le 09-09 pour Annecy, plus
+Beaucoup/Digital Unicorn/Alteo pour Lyon, Mont-Site/Alpaweb pour Haute-Savoie,
+Fast Digital/Pixelium pour Genève).
+
+**Fait précisément :**
+- `src/pages/PricingGuidePage.jsx` (nouveau) : page statique (pas de
+  paramètre d'URL, contrairement à `CityPage`/`ProjectPage`), route fixe
+  `/combien-coute-un-site-internet` dans `App.jsx`. Même pattern de tête SEO
+  que `CityPage.jsx` (title/description/canonical mis à jour en `useEffect`,
+  restaurés au démontage).
+- 5 questions/réponses format GEO (réponse directe 2-3 phrases en tête de
+  chaque H2) : combien ça coûte, combien de temps, ce qui est inclus,
+  landing page vs sur-mesure, le prix inclut-il le SEO. **Aucun chiffre
+  inventé** : tout est importé de `content.js` (`offer.plans`, `offer.extras`,
+  `offer.included`, `process.steps`, `whatWeDo.cards`, `promises.items[3]`
+  — la promesse SEO exacte, mot pour mot, pas reformulée).
+- JSON-LD `BreadcrumbList` + `FAQPage` + **`HowTo`** (nouveau type, pas
+  encore utilisé sur le site — les 6 étapes du process, contenu procédural
+  comme demandé à l'étape 4). Le `FAQPage` reprend mot pour mot le texte
+  affiché (vérifié automatiquement, voir contrôle qualité).
+- Maillage interne à double sens : bloc "Vous cherchez une agence près de
+  chez vous ?" en bas du guide avec liens vers les 2 pages villes existantes
+  (généré depuis `cities.js`, pas en dur — s'étend automatiquement aux
+  prochaines villes) ; bloc "Envie de comparer avant d'appeler ?" ajouté sur
+  `CityPage.jsx` (donc sur Saint-Julien ET Annecy) vers ce nouveau guide ;
+  lien "Combien coûte un site ?" ajouté dans `footer.columns` (colonne
+  Services, `content.js`).
+- `public/sitemap.xml`, `public/llms.txt`, `scripts/generate-static-heads.mjs`
+  mis à jour pour la nouvelle route (même mécanisme que les pages villes,
+  aucune modification du script nécessaire au-delà d'un `writeRoute()` de
+  plus).
+
+**Ce qui n'a pas été fait, et pourquoi (décidé pour rester dans la règle
+"ne rien inventer") :** pas de section "coût de la maintenance" ni "coût du
+pack SEO" sur cette page, alors que la structure s'y prêtait bien (le sujet
+est directement lié aux prix). Ces montants n'existent nulle part dans
+`content.js` ni ailleurs sur le site — les inventer aurait été le genre
+exact d'erreur que la règle interdit. Noté sous "Hypothèses à vérifier"
+pour que Yanis fournisse ces chiffres ; la page pourra être complétée avec
+une 6e question dès qu'ils existent, sans changement de structure.
+
+**Contrôle qualité fait avant de pousser :**
+- `npm run build` : OK (après `npm install`, `node_modules` absent au
+  démarrage de cette session comme le 09-09), le nouveau `<head>` statique
+  `/combien-coute-un-site-internet` généré dans les logs de build.
+- Testé avec Playwright (Chromium préinstallé de cette session, pas de
+  problème réseau cette fois contrairement au 09-08) contre `serve dist`
+  en local, viewport mobile 390×844 (priorité TikTok) :
+  - Script de vérification automatique : les 5 réponses visibles dans le
+    DOM comparées programmatiquement au texte du JSON-LD `FAQPage` —
+    **0 écart**. Les 6 `HowToStep` correspondent aux 6 étapes de
+    `process.steps`. Aucune erreur console/page.
+  - Screenshot pleine page après scroll par paliers (pour déclencher les
+    animations ScrollTrigger `.reveal`) : mise en page crème/encre/or
+    intacte, tableau prix, options, étapes du process, comparatif landing
+    vs sur-mesure et bloc SEO tous rendus correctement.
+  - Sur les pages villes (Saint-Julien testée en screenshot, Annecy par
+    lecture de code identique) : le nouveau bloc de maillage interne
+    s'affiche correctement sans rien décaler ; clic sur le lien vérifié
+    par script → navigation SPA propre vers `/combien-coute-un-site-internet`
+    (pas de rechargement complet, `H1` correct après clic).
+- Après déploiement sur `main` (push direct, pratique établie confirmée par
+  le journal du 09-08), revérifié en production avec `curl` : title/
+  description/canonical corrects sur `/combien-coute-un-site-internet`,
+  `sitemap.xml` et `llms.txt` à jour, page d'accueil inchangée.
+- Home.jsx et tous les composants des 9 sections de la home (`Offer.jsx`
+  inclus, où j'ai été tenté d'ajouter un lien vers ce guide) **non
+  modifiés** : vérifié avec `git diff --stat` avant de commit, seuls
+  `CityPage.jsx`, `App.jsx`, `content.js` (footer), `PricingGuidePage.jsx`
+  (nouveau), `sitemap.xml`, `llms.txt`, `generate-static-heads.mjs`
+  apparaissent dans le diff.
+
+**Commit :** `7e81d46` — poussé sur `main`, déployé et vérifié en prod.
+
+**Ce qui reste, et pourquoi :**
+- Pas de 3e page ville (Annemasse) : reste en tête de la liste "Chantiers en
+  attente" pour demain — le chantier de fond était la priorité du jour pour
+  alterner l'angle.
+- Pas de prerendering du contenu (corps de page) pour les crawlers IA :
+  toujours en attente, priorité 2, inchangé.
+- La page ne mentionne pas le coût de la maintenance ni du pack SEO (voir
+  ci-dessus, "Hypothèses à vérifier").
+
+---
 
 ### 2026-09-07 — Page ville "Création de site internet à Saint-Julien-en-Genevois"
 
@@ -355,16 +478,18 @@ Par ordre de priorité pour les prochains runs :
    d'abord sur une preview branch Vercel avant `main`. Le mécanisme de
    routing/priorité fichier-statique étant déjà prouvé aujourd'hui, il ne
    reste que la partie rendu à risque, pas le mécanisme dans son ensemble.
-3. Contenu de fond "combien coûte un site / combien de temps / ce qui est
-   inclus" en page dédiée (actuellement seulement dans l'offre de la home
-   et maintenant dupliqué en partie sur la page ville) — utile pour capter
-   les recherches informationnelles génériques en plus des recherches
-   locales.
+3. ~~Contenu de fond "combien coûte un site / combien de temps / ce qui est
+   inclus" en page dédiée~~ — **fait le 2026-09-10** (voir "Chantiers
+   faits") : page `/combien-coute-un-site-internet`.
 4. Remplir les 4 pages projet (`Le défi / Notre approche / Le résultat / La
    recette Kota`, actuellement "Bientôt disponible") — bloqué sur du
    contenu que seul Yanis peut fournir (voir Hypothèses à vérifier).
 5. Rubrique témoignages (actuellement placeholders "Nom du client, Activité,
    ville") — bloqué sur de vrais avis clients.
+6. Ajouter une 6e question "coût de la maintenance / du pack SEO" sur la
+   page `/combien-coute-un-site-internet` dès que Yanis fournit ces
+   montants (voir "Hypothèses à vérifier") — la page est structurée pour
+   accueillir cet ajout sans refonte.
 
 ---
 
@@ -393,6 +518,13 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
   requête réelle ("freelance création site internet Genève") suggère un
   positionnement différent de "agence" utilisé ailleurs — à clarifier avant
   d'écrire cette page pour ne pas sonner faux.
+- **Coût de la maintenance mensuelle et du pack SEO** (2026-09-10) :
+  `content.js > offer.extras` liste "Maintenance mensuelle" et "SEO avancé"
+  avec le prix "sur devis" pour les deux — jamais un montant réel. La
+  nouvelle page `/combien-coute-un-site-internet` répond à "le prix
+  inclut-il le SEO ?" mais ne peut pas donner de montant. Dès que Yanis
+  fournit un prix (ou une fourchette) pour ces deux options, une 6e
+  question peut être ajoutée à cette page sans changer sa structure.
 
 ---
 
@@ -444,6 +576,21 @@ ChatGPT / Perplexity — pas encore fait, ce run n'était pas un lundi)_
   faire ranker séparément est un signal activement contre-productif (pas
   juste "neutre"/"pas encore optimisé") — à vérifier en priorité sur
   n'importe quel nouveau type de page ajouté à l'avenir.
+- **2026-09-10** — Automatiser le contrôle "FAQPage JSON-LD == texte
+  visible" plutôt que de le vérifier à l'œil : un petit script Playwright
+  qui extrait le texte du DOM après chaque `<h2>` et le compare
+  programmatiquement à `mainEntity[].acceptedAnswer.text` du JSON-LD rend
+  le contrôle qualité de l'étape 6 fiable et rapide (quelques secondes),
+  au lieu d'une relecture manuelle sujette à erreur. À réutiliser
+  systématiquement pour toute future page avec `FAQPage`/`HowTo`.
+- **2026-09-10** — Playwright n'est pas dans les dépendances du projet
+  (`package.json`), seulement préinstallé globalement dans certains
+  environnements de session (`/opt/pw-browsers` + le paquet npm global).
+  Pour l'utiliser en script de test ponctuel (jamais commité), pointer
+  `executablePath: '/opt/pw-browsers/chromium'` et, si `import "playwright"`
+  échoue en ESM malgré `NODE_PATH`, créer un `node_modules/playwright`
+  symlink vers le paquet global dans le dossier du script — plus simple et
+  plus fiable que de dépendre de `NODE_PATH` avec les imports ESM.
 
 ---
 
@@ -516,6 +663,28 @@ en-Genevois, marché moins disputé. Premier relevé qui comptera vraiment :
 dans plusieurs semaines, une fois Google indexé et évalué les 2 pages
 villes actuelles.
 
+### 2026-09-10
+
+| Requête | Position kotastudio.fr |
+|---|---|
+| création site internet Saint-Julien-en-Genevois | absent |
+| agence web Annemasse | absent |
+| création site internet Annecy | absent |
+| agence web Lyon | absent |
+| création site vitrine Haute-Savoie | absent |
+| freelance création site internet Genève | absent |
+| refonte site internet Haute-Savoie | absent |
+
+Toujours absent partout, attendu (3 jours depuis Saint-Julien, 1 jour
+depuis Annecy — toujours largement sous le délai d'indexation de plusieurs
+semaines). Ce run n'a pas ajouté de nouvelle page ville, donc pas de
+changement attendu sur ces 7 requêtes précises avant le prochain relevé.
+Le contenu ajouté aujourd'hui (page prix/délais) cible des requêtes
+informationnelles différentes, non suivies dans ce tableau — à surveiller
+séparément une fois indexé (ex. "combien coûte un site internet",
+"combien coûte un site vitrine"). Premier relevé qui comptera vraiment
+pour le tableau ci-dessus : toujours dans plusieurs semaines.
+
 ---
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
@@ -529,3 +698,6 @@ villes actuelles.
    projet, vrais témoignages.
 5. Positionnement à clarifier pour la future page Genève (freelance vs
    agence).
+6. Coût de la maintenance mensuelle et du pack SEO avancé (actuellement
+   "sur devis" dans `content.js > offer.extras`) — permettrait de compléter
+   la page `/combien-coute-un-site-internet` avec une réponse chiffrée.
