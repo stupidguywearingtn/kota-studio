@@ -106,6 +106,12 @@ for (const project of projects) {
   });
 }
 
+writeRoute("/combien-coute-un-site-internet", {
+  title: "Combien coûte un site internet ? Prix, délais, inclus | Kota Studio",
+  description:
+    "Prix réels d'un site internet chez Kota Studio : landing page à partir de 790 €, site sur-mesure à partir de 1 290 €. Délai de 14 jours, ce qui est inclus, ce qui est en option.",
+});
+
 writeRoute("/mentions-legales", {
   title: "Mentions légales | Kota Studio",
   description:

@@ -9,6 +9,7 @@ import ProjectPage from "./pages/ProjectPage";
 import MentionsLegales from "./pages/MentionsLegales";
 import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
 import CityPage from "./pages/CityPage";
+import PricingGuidePage from "./pages/PricingGuidePage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -71,6 +72,10 @@ export default function App() {
         <Route
           path="/politique-de-confidentialite"
           element={<PolitiqueConfidentialite />}
+        />
+        <Route
+          path="/combien-coute-un-site-internet"
+          element={<PricingGuidePage />}
         />
         {/* Pages villes SEO local (src/data/cities.js) — catch-all volontaire,
             gère aussi le 404 propre pour un slug inconnu (comme /projets/:slug). */}

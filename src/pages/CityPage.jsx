@@ -234,6 +234,20 @@ export default function CityPage() {
           ))}
         </section>
 
+        {/* ---- Maillage interne : guide prix/délais ---- */}
+        <section className="reveal mx-auto max-w-4xl px-6 pb-24">
+          <div className="rounded-2xl border border-encre/10 bg-sable/40 px-6 py-6">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-encre">
+              Envie de comparer avant d'appeler ?
+            </h3>
+            <p className="mt-2 text-sm text-taupe">
+              <Link to="/combien-coute-un-site-internet" className="font-semibold text-or hover:underline">
+                Combien coûte un site internet ? Prix, délais et inclus détaillés →
+              </Link>
+            </p>
+          </div>
+        </section>
+
         {/* ---- CTA final ---- */}
         <section className="reveal mx-auto max-w-4xl px-6 pb-24">
           <div className="rounded-[28px] bg-encre px-8 py-12 text-center shadow-soft-lg lg:px-14 lg:py-16">

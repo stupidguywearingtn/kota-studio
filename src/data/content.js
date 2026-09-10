@@ -448,6 +448,10 @@ export const footer = {
           label: "Site internet à Annecy",
           href: "/creation-site-internet-annecy",
         },
+        {
+          label: "Combien coûte un site ?",
+          href: "/combien-coute-un-site-internet",
+        },
       ],
     },
     {
