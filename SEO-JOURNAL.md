@@ -10,6 +10,38 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-11 :**
+
+- Vérifié en production avant d'agir : `curl` sur les 2 pages villes
+  existantes, `/combien-coute-un-site-internet` et `/projets/tel-and-cash`
+  — title/description/canonical toujours corrects. `sitemap.xml`,
+  `llms.txt`, `robots.txt` conformes. Corps de page toujours vide dans le
+  HTML brut (`<div id="root"></div>` seul) sur toutes les routes —
+  problème GEO de fond inchangé.
+- **Point de process important découvert ce run** : le dépôt local a une
+  branche `claude/cool-johnson-6rq11c` (celle sur laquelle tous les
+  commits SEO depuis le 09-07 sont faits) et une branche `main` sur
+  GitHub. `git diff origin/main origin/claude/cool-johnson-6rq11c` montre
+  que **`main` n'a jamais reçu aucun de ces commits** — elle s'arrête à
+  `779bc52` (avant le début du suivi SEO). Malgré ça, la production
+  (`kotastudio.fr`, vérifiée en `curl`) sert bien tout le contenu de la
+  branche `claude/cool-johnson-6rq11c` (pages villes, guide prix,
+  canonical corrigé) — Vercel est donc configuré pour déployer cette
+  branche précisément, pas `main`. Les mentions "poussé sur main" dans les
+  entrées précédentes de ce journal (09-07 à 09-10) sont donc inexactes en
+  toponymie (c'était déjà cette branche), mais sans conséquence pratique :
+  la prod a bien reçu chaque changement. Ce run a poussé sur
+  `claude/cool-johnson-6rq11c` (nom correct cette fois) — au moment du
+  push, `git fetch` a d'abord échoué avec "couldn't find remote ref"
+  (branche absente côté GitHub à cet instant précis), puis `git push -u`
+  a recréé la branche sans problème et le commit est bien vérifié présent
+  côté distant après coup. Cause exacte non identifiée (latence/cache API
+  GitHub le plus probable) — à surveiller si ça se reproduit, mais pas
+  bloquant aujourd'hui.
+- **Correction de terminologie pour les prochains runs** : ne plus écrire
+  "poussé sur main" dans ce journal. La bonne formulation est "poussé sur
+  la branche de travail (déployée en production par Vercel)".
+
 **Au 2026-09-10 :**
 
 - Vérifié en production avant d'agir : les fixes canonical (09-08) et les 2
@@ -90,6 +122,100 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-09-11 — Troisième page ville : "Agence web à Annemasse"
+
+**Pourquoi ce chantier :** priorité n°1 de la liste "Chantiers en attente"
+laissée le 09-10 (Annemasse en tête). Alternance d'angle respectée : hier
+c'était un contenu de fond (guide prix), avant-hier une page ville
+(Annecy) — revenir à une page ville aujourd'hui alterne correctement.
+Angle choisi différent des deux pages précédentes : "agence web Annemasse"
+(pas "création site internet") car c'est la requête réelle constatée pour
+cette ville (voir "Historique des positions mesurées" et les résultats de
+recherche de l'étape 2 — Net-Concept, Boondooa, Agence Web Annemasse,
+NEWP, Amadouh, AM Digital Pro tous positionnés dessus).
+
+**Mesuré avant d'agir (étape 2) :** production vérifiée en `curl` (voir
+"État des lieux" ci-dessus) — rien de cassé depuis hier. Recherche Google
+sur les 7 requêtes cibles + "combien coûte un site internet" : kotastudio.fr
+toujours absent partout (voir tableau de positions plus bas). Recherche
+spécifique sur la distance Saint-Julien-en-Genevois → Annemasse (fait
+géographique vérifiable, pas une donnée business inventée) : 19 km,
+~20 minutes de route.
+
+**Point d'attention traité explicitement (risque de doorway page, même
+raisonnement que pour Annecy le 09-09) :**
+- FAQ #1 pose directement la question du bureau à Annemasse et répond
+  honnêtement : non, l'agence est à Saint-Julien-en-Genevois (19 km /
+  ~20 min), suivi en visio + présentiel possible.
+- Contenu non dupliqué mot pour mot depuis les 2 pages précédentes : H1 et
+  title utilisent "Agence web" plutôt que "Création de site internet"
+  (angle différent), intro reformulée, et une 5e FAQ propre à Annemasse
+  sur le contexte frontalier (clientèle suisse/binationale) — absente des
+  2 autres pages villes.
+
+**Fait précisément :**
+- `src/data/cities.js` : nouvelle entrée `agence-web-annemasse` (5 FAQ,
+  intro et meta title/description propres). Même gabarit `CityPage.jsx`
+  que Saint-Julien et Annecy — route `/:citySlug` déjà générique, aucune
+  autre modif de composant nécessaire. Prix/délai/inclus toujours importés
+  de `content.js` (`offer`, `process`), jamais dupliqués en dur.
+- 5e FAQ ("Kota Studio peut-il faire un site bilingue pour une entreprise
+  frontalière basée à Annemasse ?") : répond en citant l'option réelle et
+  déjà existante `offer.extras` → "Langue supplémentaire" à +390 €. Aucune
+  donnée inventée — l'angle frontalier est un fait géographique
+  (Annemasse = agglomération transfrontalière avec Genève), pas une
+  promesse de service qui n'existerait pas déjà.
+- `src/data/content.js` : lien "Agence web à Annemasse" ajouté dans le
+  footer, colonne "Services" (maillage interne).
+- `public/sitemap.xml` et `public/llms.txt` : nouvelle page ajoutée
+  (llms.txt mentionne explicitement l'absence de bureau à Annemasse et
+  l'option bilingue, cohérence GEO avec le contenu visible).
+- `scripts/generate-static-heads.mjs` : aucune modification nécessaire, il
+  boucle déjà sur `cities.js` — le nouveau
+  `dist/agence-web-annemasse/index.html` est généré automatiquement au
+  build (vérifié dans les logs).
+
+**Contrôle qualité fait avant de pousser :**
+- `npm install` (node_modules absent au démarrage de cette session, comme
+  chaque run précédent — confirmé structurel à cet environnement) puis
+  `npm run build` : OK, tête statique `/agence-web-annemasse` générée.
+- Script Playwright (Chromium préinstallé, symlink `node_modules/playwright`
+  vers le paquet global — technique du 09-10 réutilisée) contre `serve
+  dist` en local, viewport mobile 390×844 :
+  - Comparaison automatique DOM vs JSON-LD `FAQPage` : **0 écart** sur les
+    5 questions/réponses.
+  - JSON-LD `Service` vérifié : `areaServed` = Annemasse, `offers` reprend
+    bien les 2 plans (790 €/1290 €) depuis `content.js`.
+  - Clic sur le lien de maillage interne vers le guide prix : navigation
+    SPA propre (pas de rechargement), H1 correct après clic.
+  - Screenshot pleine page après scroll par paliers (déclenchement des
+    animations `.reveal`) : mise en page crème/encre/or intacte, tableau
+    prix/inclus/extras, étapes du process, FAQ frontalière et footer (avec
+    le nouveau lien) tous rendus correctement. Aucune erreur
+    console/page hors échecs réseau Google Fonts/Iconify (bac à sable,
+    déjà documenté les jours précédents, pas un bug applicatif).
+- `git status --short` avant commit : exactement les 4 fichiers attendus
+  modifiés (`public/llms.txt`, `public/sitemap.xml`, `src/data/cities.js`,
+  `src/data/content.js`) — aucune section de la home, aucun composant
+  partagé touché.
+
+**Commit :** `6d32ba0` — poussé sur `claude/cool-johnson-6rq11c` (voir
+note de process ci-dessus sous "État des lieux"), vérifié présent côté
+distant après le push.
+
+**Ce qui n'a pas été fait, et pourquoi :**
+- Pas de page Lyon/Genève/Haute-Savoie aujourd'hui : une page ville par
+  jour pour garder le temps de vérification correct. Lyon reste en tête de
+  la liste "Chantiers en attente" pour demain (angle "agence web Lyon" par
+  cohérence avec la requête réelle, marché plus disputé — Beaucoup Studio,
+  Digital Unicorn, Alteo, GDA, Les Globules déjà positionnés).
+- Pas de tentative sur le prerendering du corps de page (GEO, priorité 2) :
+  toujours jugé trop risqué pour un run non supervisé sans validation
+  préalable par Yanis ou test sur une preview branch Vercel — inchangé
+  depuis le 09-08.
+
+---
 
 ### 2026-09-10 — Page de fond "Combien coûte un site internet ?" (prix/délais/inclus)
 
@@ -450,9 +576,9 @@ Par ordre de priorité pour les prochains runs :
 1. **Pages villes suivantes** (gabarit déjà prêt dans `cities.js` +
    `CityPage.jsx`) — un jour = une ville, angle de requête différent à
    respecter (ne pas copier-coller le même texte). **Annecy faite le
-   2026-09-09** (voir "Chantiers faits") :
-   - Annemasse → angle "agence web Annemasse"
-   - Lyon → angle "agence web Lyon"
+   2026-09-09, Annemasse faite le 2026-09-11** (voir "Chantiers faits") :
+   - Lyon → angle "agence web Lyon" (prochaine, marché plus disputé que
+     les 3 précédentes — voir résultats de recherche du 09-11)
    - Genève → angle "freelance création site internet Genève" (ton freelance/
      indépendant, pas agence — la requête réelle est différente)
    - Haute-Savoie (page régionale, pas une ville) → angle "création site
@@ -684,6 +810,28 @@ informationnelles différentes, non suivies dans ce tableau — à surveiller
 séparément une fois indexé (ex. "combien coûte un site internet",
 "combien coûte un site vitrine"). Premier relevé qui comptera vraiment
 pour le tableau ci-dessus : toujours dans plusieurs semaines.
+
+### 2026-09-11
+
+| Requête | Position kotastudio.fr |
+|---|---|
+| création site internet Saint-Julien-en-Genevois | absent |
+| agence web Annemasse | absent |
+| création site internet Annecy | absent |
+| agence web Lyon | absent |
+| création site vitrine Haute-Savoie | absent |
+| freelance création site internet Genève | absent |
+| refonte site internet Haute-Savoie | absent |
+| combien coûte un site internet (informationnelle, hors tableau habituel) | absent |
+
+Toujours absent partout, attendu (4 jours depuis Saint-Julien, 2 jours
+depuis Annecy, 1 jour depuis le guide prix — toujours largement sous le
+délai d'indexation Google de plusieurs semaines). Requête informationnelle
+"combien coûte un site internet" testée aussi : marché national très
+disputé (Wix, HelloAsso, BDC, blogs spécialisés), absence normale à ce
+stade. Page Annemasse mise en ligne aujourd'hui, trop tôt pour espérer un
+mouvement sur "agence web Annemasse". Premier relevé qui comptera
+vraiment : toujours dans plusieurs semaines.
 
 ---
 
