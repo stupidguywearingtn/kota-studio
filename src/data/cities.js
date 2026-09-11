@@ -80,4 +80,38 @@ export const cities = [
       },
     ],
   },
+  {
+    slug: "agence-web-annemasse",
+    cityName: "Annemasse",
+    badge: "Annemasse",
+    metaTitle: "Agence web à Annemasse | Kota Studio",
+    metaDescription:
+      "Agence web pour les entreprises d'Annemasse : sites sur-mesure et landing pages codés à la main, livrés en 14 jours. Agence basée à Saint-Julien-en-Genevois, à 20 min de route.",
+    h1: "Agence web à Annemasse",
+    intro:
+      "Kota Studio est une agence web qui conçoit des sites internet sur-mesure et des landing pages pour les entreprises, commerces et indépendants d'Annemasse et du Genevois français. L'agence est basée à Saint-Julien-en-Genevois, à environ 20 minutes de route : les échanges se font en visio ou en présentiel selon ce qui vous convient le mieux.",
+    updatedAt: "11 septembre 2026",
+    faqs: [
+      {
+        q: "Kota Studio a-t-il un bureau à Annemasse ?",
+        a: "Non, l'agence est basée à Saint-Julien-en-Genevois, à environ 20 minutes de route d'Annemasse (19 km). Le suivi de projet se fait en visio pour l'essentiel, avec un rendez-vous en présentiel possible si besoin. Ce qui compte pour votre site, c'est le travail livré, pas l'adresse exacte du studio.",
+      },
+      {
+        q: "Combien coûte un site avec une agence web à Annemasse ?",
+        a: "Une landing page démarre à 790 € et un site sur-mesure complet à partir de 1 290 €, tout compris, pour les entreprises basées à Annemasse comme ailleurs dans le Genevois. Le montant exact dépend du nombre de pages et des options : un devis précis est donné après un appel de 15 minutes, sans engagement.",
+      },
+      {
+        q: "Combien de temps pour un site internet à Annemasse ?",
+        a: "14 jours du premier échange à la mise en ligne, grâce à un processus cadré en 6 étapes détaillé ci-dessous. Ce délai ne dépend pas de la ville du client : il dépend du cadrage initial et de la rapidité des retours.",
+      },
+      {
+        q: "Qu'est-ce qui est inclus dans un projet Kota Studio ?",
+        a: "Un site 100% codé sur-mesure (aucun template), un design responsive pensé mobile en premier, un espace admin pour modifier le contenu vous-même, l'optimisation des performances et des révisions illimitées jusqu'à validation.",
+      },
+      {
+        q: "Kota Studio peut-il faire un site bilingue pour une entreprise frontalière basée à Annemasse ?",
+        a: "Oui. Beaucoup d'entreprises annemassiennes travaillent avec une clientèle suisse ou binationale : une langue supplémentaire (par exemple français/anglais) est proposée en option à +390 €, ajoutée à n'importe quel site sur-mesure ou landing page. Le tarif de base reste inchangé, l'option s'ajoute simplement au devis.",
+      },
+    ],
+  },
 ];
