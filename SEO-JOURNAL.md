@@ -10,6 +10,51 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-12 :**
+
+- Vérifié en production avant d'agir : `curl` sur les 2 pages villes, la page
+  prix et `/projets/tel-and-cash` — title/description/canonical corrects,
+  `robots.txt`/`sitemap.xml`/`llms.txt` conformes à ce qui est documenté le
+  09-10. Corps de page toujours vide dans le HTML brut sur toutes les routes
+  (SPA sans SSR) — problème GEO de fond non résolu, inchangé.
+- **Anomalie de process découverte ce run, importante pour la suite** :
+  cette session est contrainte par le harness à développer sur une branche
+  dédiée (`claude/cool-johnson-mk23n5`, différente à chaque run) et à ne
+  **jamais pousser sur une autre branche sans autorisation explicite**, ni
+  ouvrir de pull request sans qu'on le demande explicitement. Or les
+  instructions de tâche de ce run (et le journal des runs précédents,
+  09-08 : "confirmant que la pratique établie... est bien le push direct
+  sur `main`") indiquent que la pratique jusqu'ici était de pousser
+  **directement sur `main`** — et `main` sur GitHub pointe effectivement
+  sur le même commit que la branche du run du 09-10 (`d949e34`), donc au
+  moins jusqu'à cette date les commits sont bien arrivés sur `main` (ce qui
+  explique que tout le contenu SEO fait depuis le 09-07 soit réellement en
+  ligne sur kotastudio.fr, vérifié). Aucune pull request n'existe ni
+  n'a jamais existé sur ce repo (vérifié via l'API GitHub) : le mécanisme
+  qui faisait passer les commits sur `main` les jours précédents n'est pas
+  visible depuis cette session (probablement une action manuelle de Yanis,
+  ou une contrainte harness différente lors des runs précédents).
+  **Conséquence concrète pour aujourd'hui : le commit de ce run
+  (page Annemasse) est poussé sur `claude/cool-johnson-mk23n5` mais PAS sur
+  `main` — il ne sera donc pas déployé sur kotastudio.fr tant que
+  quelqu'un ne le fusionne pas dans `main`.** Noté aussi dans "Hypothèses à
+  vérifier". Si ce blocage se reproduit au prochain run, ne pas le
+  re-découvrir à chaque fois : le signaler à Yanis dès l'étape 1 et
+  proposer explicitement l'ouverture d'une pull request au lieu de rester
+  silencieux dessus.
+- Recherche des 7 requêtes commerciales cibles (sans connexion, jamais le
+  nom de marque) : **kotastudio.fr absent partout**, identique au relevé du
+  09-10. Attendu : 2 jours se sont écoulés (dernier run 09-10, aucun run
+  hier 09-11 semble-t-il — le journal n'a pas d'entrée pour cette date),
+  et le délai d'indexation Google de plusieurs semaines évoqué depuis le
+  09-07 est toujours loin d'être écoulé pour les 2 pages villes existantes
+  (Saint-Julien : 5 jours, Annecy : 3 jours). Voir tableau détaillé plus
+  bas.
+- `npm run build` échouait avant tout (`vite: not found`, `node_modules`
+  absent au démarrage de cette session) — comme à chaque run précédent,
+  `npm install` refait en début de session. Confirmé structurel à
+  l'environnement, pas un bug du projet.
+
 **Au 2026-09-10 :**
 
 - Vérifié en production avant d'agir : les fixes canonical (09-08) et les 2
@@ -90,6 +135,80 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-09-12 — Troisième page ville : "Agence web à Annemasse"
+
+**Pourquoi ce chantier :** priorité n°1 de la liste "Chantiers en attente"
+laissée le 09-10 (Annemasse en tête, angle "agence web Annemasse" déjà
+défini). Les pages villes restent le levier principal sur ce marché (rappel
+étape 3 des instructions) et aucun problème technique bloquant n'a été
+trouvé à l'étape 2 qui aurait dû passer avant (le bug de canonical du 09-08
+tient toujours, vérifié).
+
+**Angle choisi et différenciation (risque de doorway page traité comme pour
+Annecy) :** contrairement aux 2 pages précédentes ("création site internet
++ ville"), celle-ci cible directement la requête réelle "agence web
+Annemasse" (title, H1 et slug `/agence-web-annemasse` alignés dessus, pas
+`/creation-site-internet-annemasse`). Contenu non dupliqué : FAQ #1
+(honnêteté sur l'absence d'agence à Annemasse, formulation différente de
+Saint-Julien et d'Annecy) et FAQ #5 propre à Annemasse sur la clientèle
+frontalière (Annemasse est une des principales communes frontalières de
+l'agglomération genevoise — fait géographique/économique réel, aucune
+statistique ni client précis inventé).
+
+**Fait précisément :**
+- `src/data/cities.js` : nouvelle entrée `agence-web-annemasse` (5 FAQ,
+  intro et meta title/description propres). Même gabarit `CityPage.jsx`
+  que Saint-Julien/Annecy, aucune modification de composant nécessaire.
+  Prix (790 €/1 290 €), délai (14 jours) et inclus toujours importés de
+  `content.js` (`offer`, `process`), jamais dupliqués en dur.
+- `src/data/content.js` : lien "Agence web à Annemasse" ajouté dans le
+  footer, colonne "Services".
+- `public/sitemap.xml` et `public/llms.txt` : nouvelle page ajoutée.
+- `scripts/generate-static-heads.mjs` : aucune modification nécessaire
+  (boucle déjà sur `cities` depuis `cities.js`) — confirmé dans les logs de
+  build, `dist/agence-web-annemasse/index.html` généré automatiquement.
+- Maillage interne automatique confirmé : le bloc "Vous cherchez une agence
+  près de chez vous ?" de `PricingGuidePage.jsx` boucle sur `cities`, donc
+  la page Annemasse y apparaît sans modification de ce composant.
+
+**Contrôle qualité fait avant de pousser :**
+- `npm run build` : OK (`npm install` refait, `node_modules` absent au
+  démarrage comme d'habitude), le head statique `/agence-web-annemasse`
+  généré dans les logs.
+- Script Playwright automatique (Chromium préinstallé de la session,
+  `serve dist` en local, viewport mobile 390×844) : les 5 réponses visibles
+  dans le DOM comparées programmatiquement au JSON-LD `FAQPage` — **0
+  écart**. H1/title/canonical corrects. Navigation SPA depuis le lien
+  footer de la home vérifiée par script (clic → URL et H1 corrects, pas de
+  rechargement complet).
+- Screenshot pleine page après scroll par paliers (pour déclencher les
+  animations `.reveal`) : mise en page crème/encre/or intacte, tableau
+  prix/inclus, étapes du process, bloc maillage interne et footer (avec le
+  nouveau lien) tous rendus correctement sur mobile.
+- `git diff --stat` avant commit : seuls `cities.js`, `content.js` (footer),
+  `sitemap.xml`, `llms.txt` modifiés — aucune des 9 sections de la home ni
+  le slider avant/après touchés.
+- Erreurs console observées pendant le test (Google Fonts, API Iconify,
+  `ERR_CONNECTION_RESET`) : blocage réseau du bac à sable de développement,
+  déjà documenté les jours précédents, pas un bug applicatif.
+
+**Commit :** `c297722` — poussé sur `claude/cool-johnson-mk23n5`. **Pas
+encore sur `main`, donc pas encore déployé** — voir "État des lieux"
+ci-dessus pour le détail de cette anomalie de process et "Hypothèses à
+vérifier" pour ce qui est demandé à Yanis.
+
+**Ce qui n'a pas été fait, et pourquoi :**
+- Pas de page Lyon/Genève/Haute-Savoie aujourd'hui : une page ville par
+  jour, pour laisser le temps de bien vérifier chacune. Lyon reste en tête
+  de la liste "Chantiers en attente" pour le prochain run.
+- Pas de tentative de fusion vers `main` ni d'ouverture de pull request :
+  la première irait à l'encontre de la règle harness "ne jamais pousser
+  sur une autre branche sans autorisation explicite", la seconde de la
+  règle "ne jamais ouvrir de PR sans qu'on le demande explicitement".
+  Signalé à Yanis plutôt que décidé unilatéralement.
+
+---
 
 ### 2026-09-10 — Page de fond "Combien coûte un site internet ?" (prix/délais/inclus)
 
@@ -450,8 +569,7 @@ Par ordre de priorité pour les prochains runs :
 1. **Pages villes suivantes** (gabarit déjà prêt dans `cities.js` +
    `CityPage.jsx`) — un jour = une ville, angle de requête différent à
    respecter (ne pas copier-coller le même texte). **Annecy faite le
-   2026-09-09** (voir "Chantiers faits") :
-   - Annemasse → angle "agence web Annemasse"
+   2026-09-09, Annemasse faite le 2026-09-12** (voir "Chantiers faits") :
    - Lyon → angle "agence web Lyon"
    - Genève → angle "freelance création site internet Genève" (ton freelance/
      indépendant, pas agence — la requête réelle est différente)
@@ -518,6 +636,14 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
   requête réelle ("freelance création site internet Genève") suggère un
   positionnement différent de "agence" utilisé ailleurs — à clarifier avant
   d'écrire cette page pour ne pas sonner faux.
+- **Le commit du 2026-09-12 (page Annemasse) doit être fusionné dans
+  `main`** pour être déployé — voir "État des lieux" 2026-09-12. Cette
+  session ne peut pas le faire elle-même (contrainte harness : pas de push
+  sur une autre branche, pas de PR sans demande explicite). Soit Yanis
+  fusionne `claude/cool-johnson-mk23n5` dans `main` lui-même (fast-forward
+  simple, un seul commit d'écart), soit il confirme à un prochain run qu'il
+  peut ouvrir une pull request. Sans ça, le contenu SEO produit par cette
+  routine risque de s'accumuler sur des branches jamais fusionnées.
 - **Coût de la maintenance mensuelle et du pack SEO** (2026-09-10) :
   `content.js > offer.extras` liste "Maintenance mensuelle" et "SEO avancé"
   avec le prix "sur devis" pour les deux — jamais un montant réel. La
@@ -685,6 +811,28 @@ séparément une fois indexé (ex. "combien coûte un site internet",
 "combien coûte un site vitrine"). Premier relevé qui comptera vraiment
 pour le tableau ci-dessus : toujours dans plusieurs semaines.
 
+### 2026-09-12
+
+| Requête | Position kotastudio.fr |
+|---|---|
+| création site internet Saint-Julien-en-Genevois | absent |
+| agence web Annemasse | absent |
+| création site internet Annecy | absent |
+| agence web Lyon | absent |
+| création site vitrine Haute-Savoie | absent |
+| freelance création site internet Genève | absent |
+| refonte site internet Haute-Savoie | absent |
+
+Toujours absent partout, attendu (5 jours depuis Saint-Julien, 3 jours
+depuis Annecy — toujours sous le délai d'indexation de plusieurs semaines).
+Pas de run le 2026-09-11 (aucune entrée dans ce journal pour cette date).
+La page Annemasse créée aujourd'hui n'est pas encore déployée (voir "État
+des lieux" — bloquée sur `claude/cool-johnson-mk23n5`, pas fusionnée dans
+`main`), donc même une fois le délai d'indexation écoulé elle ne pourra
+rien changer à "agence web Annemasse" tant qu'elle n'est pas en ligne :
+**premier relevé utile pour cette requête précise, seulement après la
+fusion dans `main` + plusieurs semaines d'indexation.**
+
 ---
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
@@ -701,3 +849,8 @@ pour le tableau ci-dessus : toujours dans plusieurs semaines.
 6. Coût de la maintenance mensuelle et du pack SEO avancé (actuellement
    "sur devis" dans `content.js > offer.extras`) — permettrait de compléter
    la page `/combien-coute-un-site-internet` avec une réponse chiffrée.
+7. **Fusionner `claude/cool-johnson-mk23n5` dans `main`** (ou valider
+   qu'un prochain run peut ouvrir une pull request) pour déployer la page
+   Annemasse du 2026-09-12 — voir "État des lieux" du même jour. Sans ça,
+   les futurs runs vont continuer à accumuler des commits sur des branches
+   jamais mises en ligne.
