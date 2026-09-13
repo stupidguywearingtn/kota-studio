@@ -80,4 +80,38 @@ export const cities = [
       },
     ],
   },
+  {
+    slug: "agence-web-annemasse",
+    cityName: "Annemasse",
+    badge: "Annemasse",
+    metaTitle: "Agence web à Annemasse — Création de site internet | Kota Studio",
+    metaDescription:
+      "Agence web pour les entreprises et indépendants d'Annemasse : sites vitrine et sites sur-mesure, livrés en 14 jours. Basée à Saint-Julien-en-Genevois, à 15 min de route.",
+    h1: "Agence web à Annemasse",
+    intro:
+      "Kota Studio est une agence web qui conçoit des sites internet sur-mesure pour les entreprises, commerces et indépendants d'Annemasse et du bassin frontalier. L'agence est basée à Saint-Julien-en-Genevois, à environ 15-20 minutes de route d'Annemasse : les rendez-vous se font en visio ou en présentiel selon ce qui vous arrange le mieux.",
+    updatedAt: "13 septembre 2026",
+    faqs: [
+      {
+        q: "Qu'est-ce qu'une agence web fait concrètement pour une entreprise à Annemasse ?",
+        a: "Une agence web prend en charge la conception, le design et le développement d'un site internet de A à Z : arborescence, textes, visuels, code, mise en ligne, puis les ajustements après lancement. Chez Kota Studio, ça couvre les sites vitrine, les sites sur-mesure, la refonte d'un site existant et les landing pages, avec le référencement (SEO) inclus dès la conception plutôt qu'ajouté après coup.",
+      },
+      {
+        q: "Kota Studio a-t-il un bureau à Annemasse ?",
+        a: "Non : l'agence est basée à Saint-Julien-en-Genevois, à environ 17 km et 15-20 minutes de route d'Annemasse (via l'A411). Les clients annemassiens sont suivis en visio pour l'essentiel du projet, avec un rendez-vous en présentiel possible si besoin — la proximité géographique rend un aller-retour simple à organiser.",
+      },
+      {
+        q: "Combien coûte un site internet pour une entreprise à Annemasse ?",
+        a: "Une landing page démarre à 790 € et un site sur-mesure complet à partir de 1 290 €, tout compris, quel que soit votre secteur d'activité. Le montant exact dépend du nombre de pages et des options choisies : un devis précis est donné après un appel de 15 minutes, sans engagement.",
+      },
+      {
+        q: "Combien de temps pour lancer un site avec une agence web basée près d'Annemasse ?",
+        a: "14 jours du premier échange à la mise en ligne, avec un processus cadré en 6 étapes détaillé ci-dessous. Ce délai ne dépend pas de la localisation du client : il dépend du cadrage initial et de la rapidité des retours sur les maquettes.",
+      },
+      {
+        q: "Kota Studio travaille-t-il avec les entreprises frontalières d'Annemasse (clients ou activité liés à Genève) ?",
+        a: "Oui, c'est une situation fréquente pour les entreprises et indépendants d'Annemasse : une partie de la clientèle ou de l'activité côté suisse. Le site peut être pensé pour s'adresser aux deux bassins (français et genevois) dès la conception — contenu, ton et éventuellement une page dédiée selon votre activité.",
+      },
+    ],
+  },
 ];
