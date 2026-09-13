@@ -10,6 +10,44 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-13 :**
+
+- Aucun run n'a eu lieu les 2026-09-11 et 2026-09-12 (pas d'entrée dans ce
+  journal, pas de commit dans `git log` sur ces dates) — trou dans le
+  suivi, cause inconnue (probablement pas de déclenchement de la routine
+  ces jours-là). Rien à rattraper : le dernier état vérifié (09-10) tenait
+  toujours à la reprise de ce run.
+- Note de processus (pas un fait sur le site) : cette session a reçu des
+  instructions d'environnement assignant explicitement une branche de
+  travail dédiée (`claude/cool-johnson-h1ibup`) avec la règle "ne jamais
+  pousser ailleurs sans permission explicite", alors que le journal du
+  09-08 documentait le push direct sur `main` comme pratique établie. Les
+  deux instructions sont contradictoires pour ce run. Décision prise :
+  suivre la règle de branche de cette session (plus stricte, plus
+  récente, propre à l'environnement d'exécution) plutôt que la pratique
+  historique — donc **ce run pousse sur `claude/cool-johnson-h1ibup`, pas
+  sur `main`**. Si Yanis veut que la routine repasse en push direct sur
+  `main`, il faudra soit fusionner cette branche, soit ajuster la
+  configuration de la routine/session pour que l'instruction de branche
+  ne soit plus injectée.
+- Vérifié en production avant d'agir (`curl` sur `kotastudio.fr`, avec 2-3
+  échecs de connexion transitoires du bac à sable réseau résolus au retry,
+  rien côté site) : les 3 pages existantes (Saint-Julien, Annecy, guide
+  prix) renvoient toujours title/description/canonical corrects dans le
+  HTML brut. `sitemap.xml`, `llms.txt`, `robots.txt` conformes à ce qui
+  est documenté le 09-10. Corps de page toujours vide dans le HTML brut
+  sur toutes les routes (SPA sans SSR) — problème GEO de fond inchangé.
+- Recherche Google sur les 7 requêtes commerciales cibles : kotastudio.fr
+  toujours absent partout (voir "Historique des positions mesurées").
+  Marché de "combien coûte un site internet vitrine" (requête
+  informationnelle liée à la page du 09-10) vérifié aussi : kotastudio.fr
+  absent de cette requête également, sans surprise (page en ligne depuis 3
+  jours, délai d'indexation encore loin d'être écoulé).
+- `npm run build` échouait avant tout (`vite: not found`, `node_modules`
+  absent au démarrage de cette session) — comportement structurel de cet
+  environnement déjà noté les jours précédents, `npm install` refait en
+  début de run.
+
 **Au 2026-09-10 :**
 
 - Vérifié en production avant d'agir : les fixes canonical (09-08) et les 2
@@ -90,6 +128,120 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-09-13 — Troisième page ville : "Agence web à Annemasse"
+
+**Pourquoi ce chantier :** priorité n°1 de la liste "Chantiers en attente"
+laissée le 09-10 (Annemasse en tête des villes restantes). Choisi plutôt
+qu'un nouveau contenu de fond pour revenir à l'angle "page qui cible une
+requête locale non couverte" après un jour de contenu informationnel
+(guide prix du 09-10) — alternance des angles respectée sur les chantiers
+successifs (ville → technique → ville → fond → ville).
+
+**Angle différent des 2 pages villes existantes (décidé explicitement,
+pas par hasard) :** Saint-Julien et Annecy utilisent toutes les deux le
+gabarit "Création de site internet à <ville>". La requête réelle mesurée
+à l'étape 2 pour Annemasse est **"agence web Annemasse"**, pas "création
+site internet Annemasse" — intention de recherche différente (on cherche
+un prestataire générique, pas une prestation précise). Traduit en 3
+décisions concrètes pour éviter une 3e page qui ne serait qu'un copier-
+coller avec le nom de ville changé (risque de doorway page déjà traité le
+09-09 pour Annecy, mais qui grandit à chaque page supplémentaire si le
+gabarit n'est jamais questionné) :
+- Slug `/agence-web-annemasse` (au lieu de `/creation-site-internet-
+  annemasse`) — correspond à l'intention de recherche réelle, pas au
+  gabarit précédent.
+- H1/title sur "Agence web à Annemasse", pas "Création de site internet".
+- **1re FAQ entièrement nouvelle et absente des 2 autres pages villes** :
+  "Qu'est-ce qu'une agence web fait concrètement pour une entreprise à
+  Annemasse ?" — une vraie question informationnelle que quelqu'un poserait
+  à ChatGPT avant même de chercher un prestataire précis, avec une réponse
+  qui définit le périmètre du métier (conception, design, dev, mise en
+  ligne, SEO inclus) avant d'entrer dans le prix. Absente des pages
+  Saint-Julien/Annecy qui supposent déjà que le visiteur sait ce qu'il
+  cherche.
+- 5e FAQ propre à Annemasse (clientèle frontalière/Genève), différente de
+  la 5e FAQ d'Annecy (tourisme/immobilier lac).
+
+**Honnêteté sur l'implantation (même principe que la page Annecy) :**
+Kota Studio n'a pas de bureau à Annemasse. Recherché avant d'écrire (pas
+supposé) : distance réelle Saint-Julien-en-Genevois → Annemasse = 16,7 km
+dont 13,2 km d'autoroute (A411), 15 minutes de trajet en voiture. Écrit
+dans la FAQ #2 comme "environ 17 km et 15-20 minutes de route" (fourchette
+légèrement élargie pour rester robuste aux conditions de circulation,
+sans exagérer). Aucune affirmation d'implantation locale.
+
+**Fait précisément :**
+- `src/data/cities.js` : nouvelle entrée `agence-web-annemasse` (5 FAQ,
+  intro et meta title/description propres, voir ci-dessus pour l'angle).
+  Réutilise le gabarit `CityPage.jsx` existant sans aucune modification de
+  composant — route `/:citySlug` automatique. Prix/délai/inclus toujours
+  importés de `content.js` (`offer`, `process`), jamais dupliqués en dur.
+- `src/data/content.js` : lien "Agence web à Annemasse" ajouté dans le
+  footer, colonne "Services", juste après le lien Annecy.
+- `public/sitemap.xml` et `public/llms.txt` : nouvelle page ajoutée (le
+  llms.txt précise l'absence de bureau à Annemasse et la distance, même
+  logique de transparence GEO que pour Annecy).
+- `scripts/generate-static-heads.mjs` : aucune modification nécessaire, il
+  boucle déjà sur `cities` — le nouveau
+  `dist/agence-web-annemasse/index.html` avec le bon `<head>` a été généré
+  automatiquement au build (vérifié dans les logs).
+- `src/pages/PricingGuidePage.jsx` : aucune modification nécessaire non
+  plus — le bloc "Vous cherchez une agence près de chez vous ?" boucle sur
+  `cities` et affiche donc automatiquement le nouveau lien Annemasse.
+
+**Contrôle qualité fait avant de pousser :**
+- Session sans `node_modules` au départ (`vite: not found`, comme les
+  jours précédents) — `npm install` fait avant tout, puis `npm run
+  build` : OK, `/agence-web-annemasse` apparaît dans les logs du script de
+  génération de `<head>` statiques.
+- Testé avec Playwright/Chromium (`/opt/pw-browsers/chromium`, viewport
+  mobile 390×844, priorité TikTok) contre `serve dist` en local :
+  - Script de vérification automatique (même technique que le 09-10) :
+    les 5 réponses visibles comparées programmatiquement au texte du
+    JSON-LD `FAQPage` — **0 écart**. H1, title, canonical et
+    `BreadcrumbList` corrects. `Service.areaServed` = Annemasse.
+  - Screenshot pleine page après scroll par paliers (déclenche les
+    animations `.reveal`) : mise en page crème/encre/or intacte, tableau
+    prix/inclus, étapes du process, les 5 FAQ, bloc de maillage vers le
+    guide prix, CTA final et footer (avec le nouveau lien) tous rendus
+    correctement.
+  - Navigation testée par script depuis le lien footer de la home : clic
+    → navigation SPA propre vers `/agence-web-annemasse` (pas de
+    rechargement complet), H1 correct après clic.
+  - Fichiers de test (script Playwright, screenshot, symlink
+    `node_modules/playwright`, `dist/`) créés dans un dossier séparé et
+    supprimés après vérification, jamais commités.
+- `git diff --stat` avant commit : seuls `src/data/cities.js`,
+  `src/data/content.js`, `public/sitemap.xml`, `public/llms.txt`
+  apparaissent — aucune des 9 sections de la home, aucun composant
+  partagé (`CityPage.jsx`, `Footer.jsx`, etc.) modifié.
+
+**Ce qui n'a pas été fait, et pourquoi :**
+- Pas de lien croisé inline vers Annemasse dans le texte des FAQ
+  Saint-Julien/Annecy (déjà noté le 09-09 : le texte des FAQ est une
+  string brute, pas du JSX — changer ça toucherait le composant partagé
+  par toutes les pages villes, trop risqué pour un ajout mineur de
+  maillage). Le maillage se fait via le footer, le breadcrumb et le bloc
+  du guide prix, comme pour les 2 pages précédentes.
+- Pas de vérification en production après déploiement (contrairement aux
+  jours précédents) : ce run pousse sur une branche (`claude/cool-
+  johnson-h1ibup`, voir note de processus ci-dessus), pas sur `main` —
+  donc pas de déploiement Vercel automatique à vérifier tant que la
+  branche n'est pas fusionnée. À faire par le prochain run (ou par Yanis
+  après merge) : revérifier `/agence-web-annemasse` en prod une fois
+  fusionné.
+
+**Commit :** poussé sur `claude/cool-johnson-h1ibup` (voir note de
+processus dans "État des lieux").
+
+**Ce qui reste :**
+- Lyon et Genève restent les 2 prochaines villes de la liste (voir
+  "Chantiers en attente").
+- Prerendering du contenu (corps de page) pour les crawlers IA : toujours
+  en attente, priorité inchangée.
+
+---
 
 ### 2026-09-10 — Page de fond "Combien coûte un site internet ?" (prix/délais/inclus)
 
@@ -450,8 +602,7 @@ Par ordre de priorité pour les prochains runs :
 1. **Pages villes suivantes** (gabarit déjà prêt dans `cities.js` +
    `CityPage.jsx`) — un jour = une ville, angle de requête différent à
    respecter (ne pas copier-coller le même texte). **Annecy faite le
-   2026-09-09** (voir "Chantiers faits") :
-   - Annemasse → angle "agence web Annemasse"
+   2026-09-09, Annemasse faite le 2026-09-13** (voir "Chantiers faits") :
    - Lyon → angle "agence web Lyon"
    - Genève → angle "freelance création site internet Genève" (ton freelance/
      indépendant, pas agence — la requête réelle est différente)
@@ -525,6 +676,18 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
   inclut-il le SEO ?" mais ne peut pas donner de montant. Dès que Yanis
   fournit un prix (ou une fourchette) pour ces deux options, une 6e
   question peut être ajoutée à cette page sans changer sa structure.
+- **Workflow de push à trancher** (2026-09-13) : la pratique établie
+  jusqu'au 09-10 était le push direct sur `main`. Ce run a reçu des
+  instructions d'environnement imposant une branche dédiée
+  (`claude/cool-johnson-h1ibup`) avec interdiction explicite de pousser
+  ailleurs — le run a donc poussé sur cette branche au lieu de `main` (voir
+  "État des lieux" et "Chantiers faits" du 09-13). **Tant que cette branche
+  n'est pas fusionnée, la page Annemasse (et tout futur commit sur cette
+  branche) n'est pas en ligne sur kotastudio.fr.** Si Yanis veut que la
+  routine quotidienne continue à déployer automatiquement (push direct sur
+  `main`), il faut soit fusionner cette branche régulièrement, soit ajuster
+  la configuration de la routine pour qu'elle ne reçoive plus d'instruction
+  de branche dédiée.
 
 ---
 
@@ -591,6 +754,14 @@ ChatGPT / Perplexity — pas encore fait, ce run n'était pas un lundi)_
   échoue en ESM malgré `NODE_PATH`, créer un `node_modules/playwright`
   symlink vers le paquet global dans le dossier du script — plus simple et
   plus fiable que de dépendre de `NODE_PATH` avec les imports ESM.
+- **2026-09-13** — Pour une donnée factuelle vérifiable mais absente de
+  `content.js` (ex. distance/temps de trajet entre deux villes, différent
+  d'une donnée client interdite par "n'invente jamais"), faire une
+  recherche web courte avant de l'écrire plutôt que de l'estimer à l'œil
+  sur une carte mentale — une estimation "raisonnable" peut être fausse
+  de 50%. Une fois la valeur trouvée, l'écrire en fourchette légèrement
+  élargie ("15-20 minutes" plutôt que "15 minutes" pile) reste plus
+  robuste qu'un chiffre unique qui dépend des conditions de circulation.
 
 ---
 
@@ -684,6 +855,31 @@ informationnelles différentes, non suivies dans ce tableau — à surveiller
 séparément une fois indexé (ex. "combien coûte un site internet",
 "combien coûte un site vitrine"). Premier relevé qui comptera vraiment
 pour le tableau ci-dessus : toujours dans plusieurs semaines.
+
+### 2026-09-13
+
+| Requête | Position kotastudio.fr |
+|---|---|
+| création site internet Saint-Julien-en-Genevois | absent |
+| agence web Annemasse | absent |
+| création site internet Annecy | absent |
+| agence web Lyon | absent |
+| création site vitrine Haute-Savoie | absent |
+| freelance création site internet Genève | absent |
+| refonte site internet Haute-Savoie | absent |
+
+Toujours absent partout, attendu (6 jours depuis Saint-Julien, 4 depuis
+Annecy, 3 depuis la page prix — toujours sous le délai d'indexation de
+plusieurs semaines ; la page Annemasse créée aujourd'hui n'a pas encore pu
+être indexée). Vérifié aussi "combien coûte un site internet vitrine" :
+absent également. Pas de run les 09-11/09-12 (voir "État des lieux") donc
+pas de nouveau contenu entre le 09-10 et aujourd'hui qui aurait pu changer
+ces positions. Point notable : ce run pousse sur une branche
+(`claude/cool-johnson-h1ibup`), pas sur `main` — tant que la branche n'est
+pas fusionnée et déployée, la page Annemasse n'est pas en ligne sur
+`kotastudio.fr` et ne peut pas être indexée. Le prochain relevé qui
+comptera vraiment reste dans plusieurs semaines, une fois les pages
+indexées ET, pour Annemasse spécifiquement, une fois la branche fusionnée.
 
 ---
 
