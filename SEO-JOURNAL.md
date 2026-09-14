@@ -10,6 +10,32 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-14 (lundi — 4 jours depuis le dernier run, pas de run les 11/12/13) :**
+
+- Vérifié en production avant d'agir (pas seulement le journal) : les 2
+  pages villes, la page prix (`/combien-coute-un-site-internet`) et
+  `/projets/tel-and-cash` renvoient toujours title/description/canonical
+  corrects en `curl`. `sitemap.xml` et `llms.txt` conformes à ce qui est
+  documenté le 09-10. Rien n'a bougé côté code entre le 09-10 et
+  aujourd'hui (`git log` : dernier commit avant ce run = `d949e34`, le
+  commit de journal du 09-10). Placeholders légaux (`legal.company.*`
+  dans `content.js`) toujours non remplis — aucune info fournie par Yanis
+  depuis le dernier run.
+- Recherche des 7 requêtes commerciales + les 2 requêtes informationnelles
+  liées à la page prix (`combien coûte un site internet`, `combien coûte
+  un site vitrine`) : **kotastudio.fr absent partout**, sans surprise (7
+  jours depuis Saint-Julien, 5 depuis Annecy, 4 depuis la page prix —
+  toujours sous le délai d'indexation Google de plusieurs semaines).
+  Détail dans "Historique des positions mesurées". Nouveau concurrent
+  observé plusieurs fois sur les requêtes Haute-Savoie/Saint-Julien :
+  **Kreaxion** (apparaît sur 3 des 7 requêtes) — à surveiller, pas
+  d'action requise pour l'instant.
+- Recherche du lundi (étape 5) faite avant de choisir le chantier :
+  **FAQ rich results supprimés par Google depuis le 7 mai 2026** (le
+  déroulant FAQ dans les résultats de recherche n'existe plus, quelle que
+  soit la présence du JSON-LD `FAQPage`). Détail et implication pour ce
+  site sous "Techniques apprises".
+
 **Au 2026-09-10 :**
 
 - Vérifié en production avant d'agir : les fixes canonical (09-08) et les 2
@@ -90,6 +116,107 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-09-14 — Troisième page ville : "Agence web à Annemasse"
+
+**Pourquoi ce chantier :** priorité n°1 de la liste "Chantiers en attente"
+laissée le 09-10 (Annemasse était en tête, avec l'angle explicitement noté
+"agence web Annemasse"). Continue le pattern d'alternance observé sur les 4
+runs précédents (ville → technique → ville → fond) en revenant sur une page
+ville. Recherche du lundi (étape 5, voir "Techniques apprises") faite avant
+de choisir : rien trouvé qui remette en cause l'approche pages-villes en
+cours (le principal changement trouvé — dépréciation des FAQ rich results
+Google — ne change rien à la stratégie GEO/JSON-LD déjà appliquée, voir
+détail plus bas).
+
+**Point d'attention traité explicitement (même règle anti-doorway-page que
+pour Annecy le 09-09) :** Kota Studio n'a pas de bureau à Annemasse non
+plus. La FAQ #1 pose la question directement et répond honnêtement (pas de
+bureau, ~30 min de route de Saint-Julien-en-Genevois, suivi visio +
+présentiel possible). Contenu non dupliqué depuis les 2 pages existantes :
+angle de la page recentré sur "agence web" (et non "création de site
+internet") pour matcher la requête réelle différente, et la 5e FAQ
+(clientèle transfrontalière France/Suisse) est propre à Annemasse — sujet
+absent des pages Saint-Julien et Annecy, pertinent ici car Annemasse est
+la principale ville française frontalière avec Genève côté est.
+
+**Fait précisément :**
+- `src/data/cities.js` : nouvelle entrée `agence-web-annemasse` (5 FAQ,
+  intro et meta title/description propres à Annemasse, angle "agence web").
+  Réutilise le gabarit `CityPage.jsx` existant — route `/:citySlug`
+  automatique, aucune modification de composant nécessaire. Prix/délai/
+  inclus toujours importés de `content.js` (`offer`, `process`), jamais
+  dupliqués en dur. Nouveau champ optionnel `crossLinkLabel` ajouté sur les
+  entrées villes (defaulté à "Création de site internet à {cityName}" côté
+  `PricingGuidePage.jsx` si absent) pour que le maillage interne affiche le
+  bon intitulé ("Agence web à Annemasse") plutôt qu'un texte générique qui
+  ne correspondrait pas au vrai H1 de la page.
+- `src/pages/PricingGuidePage.jsx` : une ligne modifiée pour lire ce nouveau
+  champ (`city.crossLinkLabel || ...`), rétrocompatible avec les 2 entrées
+  existantes qui n'ont pas ce champ.
+- `src/data/content.js` : lien "Agence web à Annemasse" ajouté dans le
+  footer, colonne "Services" (même colonne que les 2 pages villes
+  existantes et le guide prix).
+- `public/sitemap.xml` et `public/llms.txt` : nouvelle page ajoutée, avec
+  mention explicite de l'absence de bureau à Annemasse dans `llms.txt`
+  (cohérence GEO, même pratique que pour Annecy).
+- `scripts/generate-static-heads.mjs` : aucune modification nécessaire, il
+  boucle déjà sur `cities.js` (confirmé dans les logs de build : le nouveau
+  head statique `/agence-web-annemasse` est généré automatiquement).
+
+**Contrôle qualité fait avant de pousser :**
+- `npm install` (node_modules absent au démarrage de cette session, comme
+  à chaque run précédent — comportement structurel de l'environnement, pas
+  un problème) puis `npm run build` : OK, le nouveau head statique généré
+  et listé dans les logs de build.
+- Script Playwright (Chromium préinstallé `/opt/pw-browsers/chromium`,
+  symlink local du module `playwright`, technique documentée le 09-10)
+  contre `serve dist` en local, viewport mobile 390×844 :
+  - Comparaison programmatique JSON-LD `FAQPage` vs texte visible du DOM :
+    **0 écart** sur les 5 questions/réponses.
+  - `Service.areaServed` correct (`Annemasse`), `BreadcrumbList` à 2
+    niveaux correct.
+  - Lien croisé vers le guide prix présent sur la page Annemasse ; sur la
+    page guide prix, le nouveau `crossLinkLabel` s'affiche bien ("Agence
+    web à Annemasse →") au lieu du texte générique.
+  - Navigation SPA testée par clic programmatique depuis le guide prix vers
+    `/agence-web-annemasse` : URL et H1 corrects après clic, pas de
+    rechargement complet.
+  - Screenshot pleine page après scroll par paliers (déclenchement des
+    animations `.reveal`) : mise en page crème/encre/or intacte, tableau
+    prix/inclus/options, étapes du process, FAQ transfrontalière et footer
+    (avec le nouveau lien) tous rendus correctement sur mobile.
+  - Erreurs console observées : uniquement des `ERR_CONNECTION_RESET` sur
+    ressources externes (fonts, Iconify — blocage réseau du bac à sable,
+    déjà noté les runs précédents) et un 404 sur `/vite.svg` (favicon par
+    défaut Vite, présent sur **toutes** les pages du site avant ce run,
+    vérifié — pas une régression de ce chantier, hors scope aujourd'hui).
+- `git diff --stat` avant commit : seuls les 5 fichiers attendus modifiés
+  (`cities.js`, `content.js`, `PricingGuidePage.jsx`, `sitemap.xml`,
+  `llms.txt`). Aucune section de la home, aucun composant partagé
+  (`CityPage.jsx`, `App.jsx`) touché.
+- Après déploiement sur `main` (push direct), revérifié en production avec
+  `curl` : title/description/canonical corrects sur `/agence-web-annemasse`,
+  `sitemap.xml` et `llms.txt` à jour, page d'accueil inchangée (title
+  identique à avant).
+
+**Commit :** `7bf15d8` — poussé sur `main`, déployé et vérifié en prod.
+
+**Ce qui n'a pas été fait, et pourquoi :**
+- Pas de nettoyage du 404 `/vite.svg` : hors scope du chantier du jour
+  (pré-existant sur tout le site, pas lié aux pages villes), et modifier
+  `index.html`/favicon n'était pas le chantier choisi — à considérer un
+  jour dédié si jugé prioritaire (impact SEO/GEO probablement nul, plutôt
+  un détail de propreté technique).
+
+**Ce qui reste, et pourquoi :**
+- Pas de 4e page ville (Lyon, Genève, Haute-Savoie) : une page ville
+  vérifiée correctement vaut mieux qu'enchaîner, pattern déjà établi les
+  runs précédents. Lyon passe en tête de la liste "Chantiers en attente".
+- Prerendering du corps de page pour les crawlers IA : toujours en
+  attente, inchangé depuis le 09-08.
+
+---
 
 ### 2026-09-10 — Page de fond "Combien coûte un site internet ?" (prix/délais/inclus)
 
@@ -450,8 +577,7 @@ Par ordre de priorité pour les prochains runs :
 1. **Pages villes suivantes** (gabarit déjà prêt dans `cities.js` +
    `CityPage.jsx`) — un jour = une ville, angle de requête différent à
    respecter (ne pas copier-coller le même texte). **Annecy faite le
-   2026-09-09** (voir "Chantiers faits") :
-   - Annemasse → angle "agence web Annemasse"
+   2026-09-09, Annemasse faite le 2026-09-14** (voir "Chantiers faits") :
    - Lyon → angle "agence web Lyon"
    - Genève → angle "freelance création site internet Genève" (ton freelance/
      indépendant, pas agence — la requête réelle est différente)
@@ -546,7 +672,50 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 ## Techniques apprises
 
 _(à compléter chaque lundi après recherche sur l'état de l'art AI Overviews /
-ChatGPT / Perplexity — pas encore fait, ce run n'était pas un lundi)_
+ChatGPT / Perplexity)_
+
+- **2026-09-14 (recherche du lundi)** — **Google a supprimé les FAQ rich
+  results (le déroulant FAQ dans les résultats de recherche) le 7 mai
+  2026**, confirmé par plusieurs sources sérieuses et concordantes
+  (Search Engine Land, Search Engine Journal, et la documentation
+  officielle Google Search Central qui porte maintenant un bandeau de
+  dépréciation sur la page `FAQPage`). Le support dans Search Console et
+  le Rich Results Test s'arrête en juin 2026, l'API Search Console en août
+  2026. **Point important, vérifié explicitement** : le type `FAQPage`
+  reste valide au sens schema.org, Google dit explicitement qu'il n'y a
+  aucun problème à laisser le balisage en place, et la documentation
+  technique complète reste publiée — seul l'affichage SERP disparaît.
+  Implication concrète pour ce site : le JSON-LD `FAQPage` déjà posé sur
+  les 3 pages villes et la page prix ne produira plus jamais de snippet
+  enrichi dans Google Search (objectif qu'on visait en partie à l'origine,
+  09-07/09-09), mais reste pertinent pour l'objectif GEO (extraction de
+  passages par les LLM/AI Overviews, sujet distinct de l'affichage SERP
+  classique) — **aucun changement de pratique nécessaire**, continuer à
+  poser du `FAQPage` correspondant mot pour mot au contenu visible, mais
+  ne plus le présenter comme un levier de rich snippet Google dans les
+  futurs comptes-rendus. Rappel utile trouvé au passage (déjà su, pas
+  nouveau) : les rich results `HowTo` étaient déjà réduits/supprimés par
+  Google depuis 2023 — le `HowTo` posé sur la page prix le 09-10 n'a donc
+  jamais eu vocation à produire un rich snippet, seulement à servir le
+  volet GEO, ce qui reste valable.
+  Sources : [Google to no longer support FAQ rich results](https://searchengineland.com/google-to-no-longer-support-faq-rich-results-476957),
+  [Google Drops FAQ Rich Results From Search](https://www.searchenginejournal.com/google-drops-faq-rich-results-from-search/574429/),
+  page officielle [Mark Up FAQs with Structured Data](https://developers.google.com/search/docs/appearance/structured-data/faqpage) (bandeau de dépréciation daté).
+- **Mise en garde méthodologique (2026-09-14)** : une partie des résultats
+  de recherche du lundi sur "comment ChatGPT/Perplexity choisissent leurs
+  sources" provient de blogs SEO avec des statistiques très précises mais
+  invérifiables (ex. "score de 8.5/10 en complétude sémantique = 4.2x plus
+  de citations", "corrélation r=0.18 avec l'autorité de domaine") — ce
+  sont très probablement des chiffres inventés ou extrapolés par un LLM
+  pour ces articles eux-mêmes, pas des études sourcées. **Non retenu** dans
+  ce journal, conformément à la consigne "sources sérieuses uniquement, pas
+  des blogs de contenu recyclé". Seul le point vérifiable par une source
+  officielle (dépréciation FAQ Google, ci-dessus) a été gardé. Pour les
+  prochains lundis : privilégier les recherches croisées avec la
+  documentation officielle (`developers.google.com/search`) ou des médias
+  spécialisés reconnus (Search Engine Land/Journal) plutôt que des guides
+  "2026" génériques dont le titre contient déjà l'année en cours (signal
+  fréquent de contenu produit en masse).
 
 - **2026-09-07** — Constat technique (pas une "technique" au sens recherche,
   mais un apprentissage structurel important sur CE site) : sur une SPA
@@ -684,6 +853,37 @@ informationnelles différentes, non suivies dans ce tableau — à surveiller
 séparément une fois indexé (ex. "combien coûte un site internet",
 "combien coûte un site vitrine"). Premier relevé qui comptera vraiment
 pour le tableau ci-dessus : toujours dans plusieurs semaines.
+
+### 2026-09-14
+
+| Requête | Position kotastudio.fr |
+|---|---|
+| création site internet Saint-Julien-en-Genevois | absent |
+| agence web Annemasse | absent |
+| création site internet Annecy | absent |
+| agence web Lyon | absent |
+| création site vitrine Haute-Savoie | absent |
+| freelance création site internet Genève | absent |
+| refonte site internet Haute-Savoie | absent |
+| combien coûte un site internet (informationnelle, page du 09-10) | absent |
+| combien coûte un site vitrine (informationnelle, page du 09-10) | absent |
+
+Toujours absent partout — attendu, aucun run entre le 09-10 et aujourd'hui
+(4 jours d'écart), et 7 jours depuis Saint-Julien / 5 depuis Annecy / 4
+depuis la page prix restent sous le délai d'indexation Google de plusieurs
+semaines évoqué depuis le premier relevé. Mesure faite via l'outil de
+recherche web de cette session (résultats non garantis géolocalisés
+France/Haute-Savoie et limités à ~5-8 liens par requête, pas un vrai
+rank-tracker) — traiter comme un signal de visibilité approximatif, pas
+une position exacte. Concurrents récurrents observés sur les requêtes
+Haute-Savoie/Saint-Julien : **Kreaxion** (3 requêtes sur 7), PappleWeb (2),
+Boondooa (2), PagesJaunes (2) — première fois que Kreaxion apparaît dans
+ce suivi, à garder à l'œil. Sur les 2 requêtes informationnelles liées à
+la page prix, la première page est dominée par de gros sites de contenu
+(Wix, plateformes) et d'autres guides d'agences, pas d'annuaires locaux —
+cohérent avec le caractère national/générique de ces requêtes. Premier
+relevé qui comptera vraiment sur les 7 requêtes locales : toujours dans
+plusieurs semaines à partir des dates de mise en ligne de chaque page.
 
 ---
 
