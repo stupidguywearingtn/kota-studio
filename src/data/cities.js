@@ -80,4 +80,39 @@ export const cities = [
       },
     ],
   },
+  {
+    slug: "agence-web-annemasse",
+    cityName: "Annemasse",
+    badge: "Annemasse",
+    crossLinkLabel: "Agence web à Annemasse",
+    metaTitle: "Agence web à Annemasse | Kota Studio",
+    metaDescription:
+      "Agence web basée à Saint-Julien-en-Genevois, à environ 30 minutes d'Annemasse : sites vitrine et sites sur-mesure pour les entreprises du Genevois. Livrés en 14 jours.",
+    h1: "Agence web à Annemasse",
+    intro:
+      "Kota Studio conçoit des sites internet sur-mesure pour les entreprises, commerces et indépendants d'Annemasse et de l'agglomération genevoise. L'agence est basée à Saint-Julien-en-Genevois, de l'autre côté du bassin genevois : les rendez-vous se font en visio ou en présentiel selon ce qui vous convient le mieux.",
+    updatedAt: "14 septembre 2026",
+    faqs: [
+      {
+        q: "Kota Studio a-t-il une agence ou un bureau à Annemasse ?",
+        a: "Non : Kota Studio est basé à Saint-Julien-en-Genevois, à environ 30 minutes de route d'Annemasse (un peu plus aux heures de pointe à la frontière). Les clients annemassiens sont suivis en visio pour l'essentiel du projet, avec un rendez-vous en présentiel possible si besoin. Ce qui compte pour votre site, c'est le travail livré, pas l'adresse exacte du studio.",
+      },
+      {
+        q: "Combien coûte un site internet pour une entreprise à Annemasse ?",
+        a: "Une landing page démarre à 790 € et un site sur-mesure complet à partir de 1 290 €, tout compris, quel que soit votre secteur d'activité. Le montant exact dépend du nombre de pages et des options choisies : un devis précis est donné après un appel de 15 minutes, sans engagement.",
+      },
+      {
+        q: "Combien de temps pour un site internet à Annemasse ?",
+        a: "14 jours du premier échange à la mise en ligne, avec un processus cadré en 6 étapes détaillé ci-dessous. Ce délai ne dépend pas de la ville du client : il dépend du cadrage initial du projet et de la rapidité des retours.",
+      },
+      {
+        q: "Qu'est-ce qui est inclus dans un projet Kota Studio ?",
+        a: "Un site 100% codé sur-mesure (aucun template), un design responsive pensé mobile en premier, un espace admin pour modifier le contenu vous-même, l'optimisation des performances et des révisions illimitées jusqu'à validation.",
+      },
+      {
+        q: "Un site pour une clientèle transfrontalière France/Suisse change-t-il quelque chose ?",
+        a: "Oui : beaucoup d'entreprises annemassiennes travaillent avec une clientèle des deux côtés de la frontière. Cela peut se traduire par un contenu adapté (zone d'intervention précisée, devis clairs en euros pour un client suisse) plutôt qu'un site générique. Ce point se discute dès le premier appel, selon votre activité.",
+      },
+    ],
+  },
 ];

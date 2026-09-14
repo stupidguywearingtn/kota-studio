@@ -293,7 +293,7 @@ export default function PricingGuidePage() {
               {cities.map((city) => (
                 <li key={city.slug}>
                   <Link to={`/${city.slug}`} className="font-semibold text-or hover:underline">
-                    Création de site internet à {city.cityName} →
+                    {city.crossLinkLabel || `Création de site internet à ${city.cityName}`} →
                   </Link>
                 </li>
               ))}
