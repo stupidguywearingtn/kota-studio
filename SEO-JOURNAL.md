@@ -10,6 +10,24 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-15 :**
+
+- Vérifié en production avant d'agir : `git log` confirmait que rien n'avait
+  bougé depuis le commit de journal du 09-14 (`7ee625b`). `curl` sur les 3
+  pages villes, la page prix et une page projet : title/description/
+  canonical toujours corrects. Recherche des 7 requêtes commerciales + 2
+  informationnelles (détail sous "Historique des positions mesurées") :
+  **kotastudio.fr toujours absent partout**, attendu (1 jour depuis le
+  dernier run, largement sous le délai d'indexation). Kreaxion toujours
+  présent sur plusieurs requêtes Haute-Savoie/Genevois, rien de nouveau.
+- Chantier du jour : **prerendering du contenu texte (corps de page)**,
+  priorité 2 de "Chantiers en attente" depuis le 09-07/09-08, jusqu'ici
+  bloqué par le risque perçu (Playwright/Chromium indisponible dans le
+  build Vercel). Résolu aujourd'hui sans cette dépendance — voir
+  "Chantiers faits" pour le détail technique. C'est un chantier technique,
+  pas une page ville, ce qui respecte la règle d'alternance (dernier
+  chantier, 09-14, était une page ville).
+
 **Au 2026-09-14 (lundi — 4 jours depuis le dernier run, pas de run les 11/12/13) :**
 
 - Vérifié en production avant d'agir (pas seulement le journal) : les 2
@@ -116,6 +134,136 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-09-15 — Prerendering du contenu texte (corps de page) pour les crawlers sans JS
+
+**Pourquoi ce chantier :** priorité n°2 de "Chantiers en attente" depuis le
+09-07/09-08 — le problème GEO le plus fondamental du site, affectant TOUTES
+les pages (home incluse) : le HTML brut servi à n'importe quel crawler
+n'exécutant pas le JS (GPTBot, ClaudeBot, PerplexityBot, et la première
+passe non-rendue de Googlebot) ne contenait qu'un `<div id="root"></div>`
+vide, quel que soit le `<head>` correct par route déjà en place depuis le
+09-08. Autrement dit : aucun de ces crawlers ne pouvait lire ni citer le
+moindre mot du site. Ce chantier était resté bloqué 3 runs de suite (09-08,
+09-09, 09-10) avec la même raison notée à chaque fois : "risque réel de
+casser le build Vercel si Chromium/Playwright n'est pas disponible dans
+l'environnement de build" — non vérifiable sans tenter un vrai déploiement.
+
+**Ce qui a changé aujourd'hui :** au lieu d'un rendu par navigateur headless
+(Playwright/Chromium), utilisation de `ReactDOMServer.renderToStaticMarkup`
+— rendu React 100% en JavaScript pur, sans navigateur, sans aucune nouvelle
+dépendance binaire. Le risque précédemment identifié (Chromium indisponible
+au build Vercel) ne s'applique donc plus : `react-dom/server` fait partie de
+`react-dom`, déjà une dépendance du projet. Vérifié explicitement avant
+d'écrire le code : tous les composants de page (`CityPage`, `Home`,
+`PricingGuidePage`, `ProjectPage`, `Footer`, `CalendlyEmbed`...) ne touchent
+au DOM/`window`/`document` que dans des `useEffect` (animations GSAP,
+titre/meta/JSON-LD, scripts tiers) — **jamais dans le corps du rendu** —
+donc un rendu statique sans navigateur ne pouvait pas planter sur du code
+qui suppose un DOM présent. Vérifié aussi que `main.jsx` utilise
+`ReactDOM.createRoot(...).render()` (pas `hydrateRoot()`) : React remplace
+simplement le HTML pré-rendu par le même rendu côté client au montage, sans
+risque d'erreur d'hydratation React — le visiteur humain réel ne voit
+aucune différence de comportement.
+
+**Fait précisément :**
+- `src/entry-server.jsx` (nouveau) : exporte `renderPage(path)`, qui rend
+  `<App/>` (le même composant que le vrai site) dans un `<StaticRouter>`
+  (au lieu du `<BrowserRouter>` de `main.jsx`) via
+  `ReactDOMServer.renderToStaticMarkup`. Jamais importé par `main.jsx` —
+  n'existe que pour le script de build, zéro impact sur le bundle client.
+- `scripts/prerender-body.mjs` (nouveau), ajouté à la fin du script `build`
+  de `package.json` (après `vite build` et `generate-static-heads.mjs`) :
+  1. Construit un bundle SSR autonome (`vite build --ssr src/entry-server.jsx
+     --outDir dist-server`) — testé, fonctionne proprement (le chargement
+     "à chaud" de `react-router-dom` via `vite.ssrLoadModule` en dev
+     échouait sur un conflit d'interop CJS/ESM propre à ce paquet en v7 ;
+     un vrai build `--ssr` bundle tout correctement et évite le problème).
+  2. Importe le bundle généré et appelle `renderPage()` pour chacune des 11
+     routes connues (accueil, 3 pages villes, 4 pages projet, page prix, 2
+     pages légales).
+  3. Injecte le HTML obtenu dans le `<div id="root"></div>` (encore vide) du
+     `dist/<route>/index.html` déjà généré par `generate-static-heads.mjs`
+     (ou `dist/index.html` pour l'accueil).
+  4. **Robustesse du build, testée explicitement** : toute erreur à
+     n'importe quelle étape (build SSR, import du bundle, rendu d'une route
+     précise) est catchée, loguée, et le script se termine avec un code de
+     sortie 0 (succès) — jamais d'échec de `npm run build` à cause de ce
+     chantier. Si une route précise plante, elle est simplement ignorée
+     (body vide, exactement le comportement d'avant) pendant que les
+     autres routes continuent d'être traitées normalement.
+  5. Nettoie systématiquement `dist-server/` (dossier de build SSR
+     intermédiaire, jamais servi) à la fin, succès ou échec.
+- `.gitignore` : ajout de `dist-server` par précaution (le dossier
+  s'autonettoie toujours en fin de script, mais au cas où un run futur
+  interromprait le script au milieu).
+- Aucune page, composant ou donnée modifiée : uniquement 2 nouveaux
+  fichiers (script + entry SSR) et une ligne dans `package.json`
+  (`scripts.build`).
+
+**Contrôle qualité fait avant de pousser :**
+- `npm run build` complet (après `npm install`, `node_modules` absent au
+  démarrage de cette session comme systématiquement) : les 3 étapes
+  (`vite build`, `generate-static-heads.mjs`, `prerender-body.mjs`)
+  s'enchaînent sans erreur, les 11 routes rapportent un nombre de
+  caractères HTML injectés cohérent (de ~12 000 pour les pages projet à
+  ~87 000 pour l'accueil), `dist-server/` bien supprimé à la fin.
+- `curl` sur `dist` servi en local (`serve dist`, sans JS) : le texte réel
+  de la page (FAQ, prix, intro, footer) est maintenant présent dans le HTML
+  brut sur les pages villes/prix/projet — vérifié explicitement en extrayant
+  le texte du HTML brut sans exécuter de JS, confirmé pour Annecy ("Kota
+  Studio a-t-il un bureau à Annecy ?" présent tel quel dans le `curl`).
+- Playwright (Chromium préinstallé `/opt/pw-browsers/chromium`, technique
+  déjà documentée les runs précédents), viewport mobile 390×844, sur les 6
+  routes principales **y compris l'accueil** :
+  - `waitUntil: networkidle` puis lecture du DOM : **0 erreur console**
+    (`pageerror`/`console.error`) sur chacune des 6 routes.
+  - `H1` correct sur chaque route après hydratation.
+  - Nombre d'enfants de `#root` après hydratation cohérent (React a bien
+    remonté proprement, pas de DOM dupliqué ni de crash silencieux).
+  - Screenshots mobile de l'accueil et d'Annecy : mise en page crème/encre/
+    or intacte, hero + slider avant/après + toutes les sections de l'accueil
+    rendus normalement, rien de cassé visuellement.
+- Script automatique (même pattern que le 09-10) : JSON-LD `FAQPage` de la
+  page Annecy comparé mot pour mot au texte visible du DOM après
+  hydratation — **0 écart**, ce chantier ne touchant ni la génération du
+  JSON-LD (toujours injecté côté client uniquement, voir "Ce qui reste")
+  ni le texte des FAQ.
+- `git diff --stat` avant commit : uniquement les 2 nouveaux fichiers +
+  `package.json` (1 ligne) + `.gitignore` (1 ligne). Aucune page, aucun
+  composant, aucune donnée (`content.js`, `cities.js`) touchés — home et
+  ses 9 sections, slider avant/après inclus, inchangés au sens strict du
+  code (seul le mécanisme de build change, pas le JSX).
+
+**Commit :** `7703663` — poussé sur `main`.
+
+**Ce qui n'a pas été fait, et pourquoi :**
+- Le JSON-LD (`Service`/`BreadcrumbList`/`FAQPage`/`ProfessionalService`)
+  reste injecté **uniquement côté client** (`useEffect`), donc toujours
+  invisible pour les crawlers sans JS malgré ce chantier — seul le texte
+  visible (corps de page) est maintenant pré-rendu, pas les balises
+  `<script type="application/ld+json">` ajoutées dynamiquement. Champ
+  différent du "corps de page" ciblé aujourd'hui ; l'étendre aurait demandé
+  de dupliquer ou refactorer la logique de construction du JSON-LD (répétée
+  dans 4 composants de page) pour qu'elle soit calculable de façon pure et
+  réutilisable côté serveur — plus risqué et hors scope du chantier du
+  jour. Noté ci-dessous comme prochaine étape naturelle.
+
+**Ce qui reste, et pourquoi :**
+- **Prerendering du JSON-LD structuré** (voir ci-dessus) : logique
+  actuellement dupliquée par page (`CityPage.jsx`, `PricingGuidePage.jsx`,
+  `ProjectPage.jsx`) et couplée à `useEffect`/manipulation directe du DOM.
+  Passe en tête des "Chantiers en attente" — impact GEO réel (Google et les
+  crawlers IA qui lisent le JSON-LD sans exécuter le JS y gagneraient), mais
+  demande un refactor plus large (extraire le calcul du JSON-LD en fonction
+  pure par page, appelable à la fois côté client et dans
+  `entry-server.jsx`) à faire avec soin sur un run dédié plutôt qu'ajouté à
+  la hâte aujourd'hui.
+- Pas de nouvelle page ville (Lyon) aujourd'hui : chantier technique
+  choisi à la place pour respecter la règle d'alternance après la page
+  Annemasse du 09-14. Lyon reste en tête de la liste des pages villes.
+
+---
 
 ### 2026-09-14 — Troisième page ville : "Agence web à Annemasse"
 
@@ -585,25 +733,16 @@ Par ordre de priorité pour les prochains runs :
      vitrine Haute-Savoie" / "refonte site internet Haute-Savoie" (deux
      intentions différentes : création vs refonte — possiblement 2 pages,
      à trancher un de ces jours selon le volume constaté)
-2. **Prerendering du CONTENU (corps de page)** pour résoudre le problème
-   GEO de fond (SPA sans texte dans le HTML brut, seulement `<div
-   id="root"></div>`). **Mise à jour 2026-09-08** : le mécanisme de
-   fichiers statiques par route (`dist/<route>/index.html` prioritaire sur
-   le rewrite Vercel) est maintenant en place et validé en prod
-   (`scripts/generate-static-heads.mjs`), mais il ne couvre que le
-   `<head>` (title/description/canonical/OG) — le corps de page reste vide
-   dans le HTML brut, donc GPTBot/ClaudeBot/PerplexityBot ne voient
-   toujours aucun texte. Piste pour aller plus loin : réutiliser le même
-   script/mécanisme mais avec un vrai rendu (Playwright/Puppeteer) pour
-   injecter le texte visible dans le `<body>` de chaque
-   `dist/<route>/index.html`. **Non fait aujourd'hui** : risque réel de
-   casser le déploiement Vercel si Chromium/Playwright n'est pas disponible
-   dans l'environnement de build Vercel (contrairement à cet environnement
-   de dev qui l'a préinstallé) — impossible à vérifier sans tester un vrai
-   déploiement. À ne tenter qu'après validation par Yanis, ou en testant
-   d'abord sur une preview branch Vercel avant `main`. Le mécanisme de
-   routing/priorité fichier-statique étant déjà prouvé aujourd'hui, il ne
-   reste que la partie rendu à risque, pas le mécanisme dans son ensemble.
+2. ~~Prerendering du CONTENU (corps de page)~~ — **fait le 2026-09-15**
+   (voir "Chantiers faits") : `scripts/prerender-body.mjs` +
+   `src/entry-server.jsx`, `ReactDOMServer.renderToStaticMarkup` sans
+   Chromium/Playwright. **Reste ouvert, en tête de liste** :
+   prerendering du **JSON-LD structuré** (`Service`/`BreadcrumbList`/
+   `FAQPage`/`ProfessionalService`), toujours injecté uniquement côté
+   client (`useEffect`) donc toujours invisible pour les crawlers sans JS
+   — voir "Ce qui reste" du 09-15 pour le détail technique (nécessite un
+   refactor de la logique JSON-LD en fonctions pures réutilisables côté
+   serveur).
 3. ~~Contenu de fond "combien coûte un site / combien de temps / ce qui est
    inclus" en page dédiée~~ — **fait le 2026-09-10** (voir "Chantiers
    faits") : page `/combien-coute-un-site-internet`.
@@ -763,6 +902,36 @@ ChatGPT / Perplexity)_
 
 ---
 
+- **2026-09-15** — Sur une SPA React (Vite) sans SSR, il n'est pas
+  nécessaire de dépendre de Playwright/Chromium pour prérendre le CONTENU
+  texte d'une page (pas seulement le `<head>`) : `ReactDOMServer.
+  renderToStaticMarkup()` (partie de `react-dom`, déjà une dépendance
+  standard) suffit tant que les composants ne touchent au DOM que dans des
+  `useEffect` — ce qui est le cas ici pour toutes les pages (vérifié
+  composant par composant avant d'écrire le code, voir "Chantiers faits"
+  09-15). Condition supplémentaire qui rend ce remplacement sûr sans
+  aucun changement de comportement pour le vrai visiteur : le point de
+  montage client doit utiliser `createRoot().render()` (remplacement
+  inconditionnel du DOM) et non `hydrateRoot()` (qui exigerait une
+  correspondance exacte serveur/client, source d'erreurs). À retenir pour
+  tout futur site SPA similaire : le vrai blocage à un prerendering léger
+  n'est presque jamais "il faut un navigateur", c'est souvent une fausse
+  piste — d'abord vérifier si un simple rendu `ReactDOMServer` suffit.
+- **2026-09-15** — Piège technique rencontré et contourné : `vite.
+  ssrLoadModule()` (le mode "SSR à chaud" habituellement utilisé pour du
+  prerendering léger en un seul script, sans étape de build séparée) plante
+  sur ce projet à cause d'un conflit d'interop CommonJS/ESM propre à
+  `react-router-dom` v7 (son point d'entrée `node` résout vers un fichier
+  CJS que le pipeline de transformation "à chaud" de Vite n'arrive pas à
+  charger proprement, avec ou sans `ssr.noExternal`). Contournement fiable :
+  faire un vrai build SSR isolé (`vite build --ssr src/entry-server.jsx
+  --outDir <dossier>`) puis importer le fichier `.js` déjà bundlé avec un
+  `import()` Node classique — le bundling Rollup gère l'interop CJS/ESM
+  correctement là où le chargement à chaud échoue. Génère un dossier de
+  build intermédiaire à nettoyer après usage (`dist-server/`, jamais servi
+  ni commité). À réutiliser si un futur run a besoin d'un rendu React côté
+  serveur ponctuel sur ce projet, plutôt que de retenter `ssrLoadModule`.
+
 ## Historique des positions mesurées
 
 _(recherche Google, sans connexion, requêtes commerciales pures — jamais le
@@ -884,6 +1053,31 @@ la page prix, la première page est dominée par de gros sites de contenu
 cohérent avec le caractère national/générique de ces requêtes. Premier
 relevé qui comptera vraiment sur les 7 requêtes locales : toujours dans
 plusieurs semaines à partir des dates de mise en ligne de chaque page.
+
+---
+
+### 2026-09-15
+
+| Requête | Position kotastudio.fr |
+|---|---|
+| création site internet Saint-Julien-en-Genevois | absent |
+| agence web Annemasse | absent |
+| création site internet Annecy | absent |
+| agence web Lyon | absent |
+| création site vitrine Haute-Savoie | absent |
+| freelance création site internet Genève | absent |
+| refonte site internet Haute-Savoie | absent |
+| combien coûte un site internet (informationnelle) | absent |
+| combien coûte un site vitrine (informationnelle) | absent |
+
+Toujours absent partout — attendu, un seul jour depuis le dernier relevé
+(09-14) et aucune nouvelle page ville ajoutée aujourd'hui (chantier du jour :
+technique, prerendering du corps de page, voir "Chantiers faits"). Kreaxion
+toujours présent sur plusieurs requêtes Haute-Savoie/Genevois (Saint-Julien,
+vitrine Haute-Savoie, refonte Haute-Savoie), cohérent avec le 09-14, rien de
+nouveau à signaler côté concurrence. Premier relevé qui comptera vraiment sur
+les 7 requêtes locales : toujours dans plusieurs semaines à partir des dates
+de mise en ligne de chaque page (la plus récente, Annemasse, date du 09-14).
 
 ---
 
