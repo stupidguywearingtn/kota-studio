@@ -453,6 +453,10 @@ export const footer = {
           href: "/agence-web-annemasse",
         },
         {
+          label: "Agence web à Lyon",
+          href: "/agence-web-lyon",
+        },
+        {
           label: "Combien coûte un site ?",
           href: "/combien-coute-un-site-internet",
         },

@@ -115,4 +115,39 @@ export const cities = [
       },
     ],
   },
+  {
+    slug: "agence-web-lyon",
+    cityName: "Lyon",
+    badge: "Lyon",
+    crossLinkLabel: "Agence web à Lyon",
+    metaTitle: "Agence web à Lyon | Kota Studio",
+    metaDescription:
+      "Sites vitrine et sites sur-mesure pour les entreprises de Lyon, conçus par une agence basée en Haute-Savoie : prix fixes, livraison en 14 jours, révisions illimitées.",
+    h1: "Agence web à Lyon",
+    intro:
+      "Kota Studio conçoit des sites internet sur-mesure pour les entreprises, commerces et indépendants de Lyon et de son agglomération. L'agence est basée à Saint-Julien-en-Genevois, à environ 1h30 de route de Lyon : les rendez-vous se font en visio, avec un présentiel possible si besoin.",
+    updatedAt: "16 septembre 2026",
+    faqs: [
+      {
+        q: "Kota Studio a-t-il une agence à Lyon ?",
+        a: "Non : l'agence est basée à Saint-Julien-en-Genevois, à environ 1h30 de route de Lyon. Le suivi de projet se fait en visio du premier appel à la livraison, avec un rendez-vous en présentiel possible si votre activité le demande. Sur un projet de site internet, la distance géographique n'a pas d'impact sur la qualité du travail livré.",
+      },
+      {
+        q: "Pourquoi choisir une agence de Haute-Savoie plutôt qu'une agence lyonnaise ?",
+        a: "Lyon compte de nombreuses agences web bien installées, et c'est un argument légitime à considérer. La différence chez Kota Studio : un prix fixe annoncé dès le départ (pas seulement \"sur devis\"), un délai de 14 jours tenu par un process cadré en 6 étapes, et un seul interlocuteur du premier appel à la mise en ligne plutôt qu'un chef de projet qui répartit le travail dans une équipe.",
+      },
+      {
+        q: "Combien coûte un site internet à Lyon ?",
+        a: "Une landing page démarre à 790 € et un site sur-mesure complet à partir de 1 290 €, tout compris, quel que soit votre secteur d'activité. Le montant exact dépend du nombre de pages et des options choisies : un devis précis est donné après un appel de 15 minutes, sans engagement.",
+      },
+      {
+        q: "Combien de temps pour un site internet à Lyon ?",
+        a: "14 jours du premier échange à la mise en ligne, avec un processus cadré en 6 étapes détaillé ci-dessous. Ce délai ne dépend pas de la ville du client : il dépend du cadrage initial du projet et de la rapidité des retours.",
+      },
+      {
+        q: "Qu'est-ce qui est inclus dans un projet Kota Studio ?",
+        a: "Un site 100% codé sur-mesure (aucun template), un design responsive pensé mobile en premier, un espace admin pour modifier le contenu vous-même, l'optimisation des performances et des révisions illimitées jusqu'à validation.",
+      },
+    ],
+  },
 ];

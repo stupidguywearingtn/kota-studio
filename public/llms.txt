@@ -8,6 +8,7 @@
 - [Création de site internet à Saint-Julien-en-Genevois](/creation-site-internet-saint-julien-en-genevois): Page locale — prix, délais, inclus et zone d'intervention (Genevois, Annecy, Annemasse, Genève, Lyon).
 - [Création de site internet à Annecy](/creation-site-internet-annecy): Page locale pour Annecy — prix, délais, inclus. Agence basée à Saint-Julien-en-Genevois (pas de bureau à Annecy), clients suivis en visio ou en présentiel.
 - [Agence web à Annemasse](/agence-web-annemasse): Page locale pour Annemasse — prix, délais, inclus, clientèle transfrontalière France/Suisse. Agence basée à Saint-Julien-en-Genevois (pas de bureau à Annemasse, ~30 min de route), clients suivis en visio ou en présentiel.
+- [Agence web à Lyon](/agence-web-lyon): Page locale pour Lyon — prix, délais, inclus. Agence basée à Saint-Julien-en-Genevois (pas de bureau à Lyon, ~1h30 de route), clients suivis en visio ou en présentiel.
 - [Combien coûte un site internet ?](/combien-coute-un-site-internet): Guide prix et délais — landing page à partir de 790 €, site sur-mesure à partir de 1 290 €, délai de 14 jours, inclus détaillés, options, landing page vs site sur-mesure, ce qui est couvert côté SEO.
 - [Mentions légales](/mentions-legales)
 - [Politique de confidentialité](/politique-de-confidentialite)
@@ -15,8 +16,8 @@
 ## Réalisations
 
 - [Tel & Cash](/projets/tel-and-cash): E-commerce — smartphones reconditionnés. Boutique en ligne complète (back-office, SEO, statistiques) construite de A à Z.
-- [Markus Immobilier](/projets/markus-immobilier): Agence immobilière premium (Lyon/Villeurbanne). Site vitrine avec estimation immobilière en ligne et SEO local.
-- [Sensoria](/projets/sensoria): Expérience immersive — escape game premium (Belgique).
+- [Markus Immobilier](/projets/markus-immobilier): Agence immobilière premium. Site vitrine avec estimation immobilière en ligne et SEO local.
+- [Sensoria](/projets/sensoria): Expérience immersive — escape game premium.
 - [Margaux CDR](/projets/margaux-cdr): Soins du corps — beauté / bien-être.
 
 ## Contact
