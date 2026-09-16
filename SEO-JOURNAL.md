@@ -10,6 +10,39 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-16 :**
+
+- Vérifié en production avant d'agir : `git log` sur `main` s'arrêtait à
+  `7ee625b` (journal du 09-14) — **le commit du 09-15 (prerendering du
+  corps de page, `7703663`/`c002315`) n'avait jamais été mergé sur `main`**,
+  resté sur la branche de session `claude/cool-johnson-2048y0` sans PR.
+  Corrigé en tout début de run (fast-forward de `main`, déjà à jour côté
+  `origin` au moment du push — probablement synchronisé entre-temps par
+  un autre mécanisme). Sans cette vérification, le prerendering du 09-15
+  aurait été documenté comme "fait" alors qu'il n'était pas réellement en
+  ligne. Leçon retenue sous "Erreurs commises et corrigées".
+- `curl` en prod ensuite : pages villes (Saint-Julien, Annecy, Annemasse),
+  page prix, homepage — title/description/canonical corrects, corps de
+  page bien pré-rendu (vérifié texte réel dans le HTML brut de la page
+  Annemasse, ex. la FAQ bureau). `sitemap.xml`, `llms.txt`, `robots.txt`
+  conformes à ce qui est documenté le 09-15.
+- Recherche des 7 requêtes commerciales + 2 informationnelles :
+  **kotastudio.fr toujours absent partout**, attendu (1 jour depuis le
+  dernier run). Kreaxion toujours présent sur plusieurs requêtes
+  Haute-Savoie/Genevois, rien de nouveau côté concurrence.
+- En préparant le chantier du jour (page ville Lyon, voir plus bas), gap
+  trouvé dans `llms.txt` **antérieur au suivi de ce journal** (présent
+  depuis le tout premier commit SEO, `7216b4e`) : les fiches
+  "Markus Immobilier" et "Sensoria" affirmaient des localisations
+  précises ("Lyon/Villeurbanne", "Belgique") qui n'existent nulle part
+  ailleurs sur le site (`content.js` ne contient aucune de ces deux
+  informations). Donner comme fait établi à un crawler IA une localisation
+  client jamais vérifiée est exactement le type d'erreur interdit par la
+  règle "n'invente jamais" — corrigé aujourd'hui (voir "Chantiers faits").
+- Chantier du jour : **5e page ville, "Agence web à Lyon"**, priorité n°1
+  de "Chantiers en attente" depuis le 09-10. Respecte l'alternance
+  (dernier chantier, 09-15, était technique).
+
 **Au 2026-09-15 :**
 
 - Vérifié en production avant d'agir : `git log` confirmait que rien n'avait
@@ -134,6 +167,103 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-09-16 — Cinquième page ville : "Agence web à Lyon" + correction llms.txt
+
+**Pourquoi ce chantier :** priorité n°1 de la liste "Chantiers en attente"
+laissée le 09-15 (Lyon, angle "agence web Lyon" explicitement noté). Continue
+l'alternance (dernier chantier, 09-15, était technique).
+
+**Point d'attention traité explicitement (même règle anti-doorway-page que
+pour Annecy/Annemasse) :** Kota Studio n'a pas de bureau à Lyon (à ~1h30 de
+route de Saint-Julien-en-Genevois, distance vérifiée par recherche web avant
+d'écrire le contenu — 138 km, ~1h30-1h40 selon le trafic). La FAQ #1 pose la
+question directement et répond honnêtement. Contenu non dupliqué depuis les
+3 pages existantes : angle "agence web" (comme Annemasse) mais surtout une
+FAQ #2 propre à Lyon, absente des autres pages — "Pourquoi choisir une agence
+de Haute-Savoie plutôt qu'une agence lyonnaise ?", qui reconnaît honnêtement
+que Lyon est un marché avec de nombreuses agences installées (confirmé par
+la recherche à l'étape 2 : Beaucoup Studio, Digital Unicorn, Alteo, Les
+Globules, etc.) plutôt que d'ignorer la question, et répond avec des faits
+déjà publics sur le site (prix fixe annoncé, délai de 14 jours, interlocuteur
+unique) — aucun dénigrement des concurrents, aucune donnée inventée.
+
+**Fait précisément :**
+- `src/data/cities.js` : nouvelle entrée `agence-web-lyon` (5 FAQ, intro et
+  meta title/description propres à Lyon). Réutilise le gabarit `CityPage.jsx`
+  existant — route `/:citySlug` automatique, `crossLinkLabel` renseigné
+  ("Agence web à Lyon") pour le maillage interne côté guide prix. Prix/délai/
+  inclus toujours importés de `content.js` (`offer`, `process`), jamais
+  dupliqués en dur.
+- `src/data/content.js` : lien "Agence web à Lyon" ajouté dans le footer,
+  colonne "Services".
+- `public/sitemap.xml` et `public/llms.txt` : nouvelle page ajoutée.
+- **Correction `llms.txt` (gap pré-existant, pas un ajout lié à Lyon) :**
+  retrait de "(Lyon/Villeurbanne)" sur la fiche Markus Immobilier et de
+  "(Belgique)" sur la fiche Sensoria — aucune des deux localisations
+  n'apparaît dans `content.js` (source de vérité du contenu des projets,
+  qui ne contient que `sector`/`badge`, jamais de ville). Présentes depuis
+  le commit `7216b4e` (fondation SEO, avant le début de ce journal),
+  jamais vérifiées. Remplacé par la description du secteur seule, qui est,
+  elle, vérifiable dans le code. Voir "Hypothèses à vérifier" pour ce que
+  Yanis doit confirmer s'il souhaite que ces localisations réapparaissent.
+- `scripts/generate-static-heads.mjs` et `scripts/prerender-body.mjs` :
+  aucune modification nécessaire, les deux bouclent déjà sur `cities.js` —
+  confirmé dans les logs de build (`/agence-web-lyon` généré et pré-rendu
+  automatiquement, 16 599 caractères de HTML injectés).
+
+**Contrôle qualité fait avant de pousser :**
+- `npm install` (node_modules absent au démarrage de cette session, comme
+  systématiquement) puis `npm run build` : OK, les 3 étapes s'enchaînent
+  sans erreur, `/agence-web-lyon` apparaît dans les logs des deux scripts
+  de post-traitement.
+- Script Playwright (Chromium préinstallé `/opt/pw-browsers/chromium`,
+  symlink `node_modules/playwright` vers le paquet global, technique
+  documentée le 09-10) contre `serve dist` en local, viewport mobile
+  390×844 :
+  - Comparaison programmatique JSON-LD `FAQPage` vs texte visible du DOM
+    après scroll par paliers (déclenchement des animations `.reveal`) :
+    **0 écart** sur les 5 questions/réponses.
+  - `Service.areaServed` correct (`Lyon`).
+  - H1 correct sur `/`, `/agence-web-lyon` et `/combien-coute-un-site-internet`.
+  - 0 `pageerror`/`console.error` applicatif (seules erreurs : polices/
+    Iconify bloquées par le réseau du bac à sable, comme tous les runs
+    précédents).
+  - Screenshot pleine page mobile : mise en page crème/encre/or intacte,
+    tableau prix/inclus/options, étapes du process, les 5 FAQ (dont la
+    nouvelle FAQ #2 "Haute-Savoie vs agence lyonnaise") et footer (avec
+    le nouveau lien Lyon) tous rendus correctement.
+- `curl` sur `dist` servi en local (sans JS) : title/canonical corrects sur
+  `/agence-web-lyon`, corps de page (texte des FAQ) présent dans le HTML
+  brut — prerendering du 09-15 fonctionne bien pour cette nouvelle page
+  sans modification du script.
+- `git diff --stat` avant commit : uniquement les 4 fichiers attendus
+  (`cities.js`, `content.js`, `sitemap.xml`, `llms.txt`). Aucune section
+  de la home, aucun composant partagé touché.
+- Après déploiement sur `main` (push direct), revérifié en production avec
+  `curl` : title/canonical corrects sur `/agence-web-lyon`, corps de page
+  pré-rendu présent (18 920 octets de HTML brut, texte de la FAQ Lyon
+  vérifié mot pour mot), `sitemap.xml` et `llms.txt` à jour (localisations
+  Lyon/Villeurbanne et Belgique bien retirées), page d'accueil inchangée.
+
+**Commit :** `a52d8e1` — poussé sur `main`, déployé et vérifié en prod.
+
+**Ce qui n'a pas été fait, et pourquoi :**
+- Pas de page Genève ni Haute-Savoie (régionale) aujourd'hui : une page
+  ville par jour, pattern déjà établi. Genève reste bloqué sur une
+  clarification de positionnement (freelance vs agence, voir "Hypothèses
+  à vérifier") — Haute-Savoie (régionale) est la dernière ville de la
+  liste initiale, à traiter ensuite.
+
+**Ce qui reste, et pourquoi :**
+- Prerendering du JSON-LD structuré : toujours en tête des "Chantiers en
+  attente", inchangé depuis le 09-15 — pas traité aujourd'hui, chantier
+  du jour choisi pour respecter l'alternance (technique hier, ville
+  aujourd'hui).
+- Genève et Haute-Savoie (régionale) : dernières pages villes de la liste
+  initiale, restent en attente.
+
+---
 
 ### 2026-09-15 — Prerendering du contenu texte (corps de page) pour les crawlers sans JS
 
@@ -725,10 +855,11 @@ Par ordre de priorité pour les prochains runs :
 1. **Pages villes suivantes** (gabarit déjà prêt dans `cities.js` +
    `CityPage.jsx`) — un jour = une ville, angle de requête différent à
    respecter (ne pas copier-coller le même texte). **Annecy faite le
-   2026-09-09, Annemasse faite le 2026-09-14** (voir "Chantiers faits") :
-   - Lyon → angle "agence web Lyon"
+   2026-09-09, Annemasse faite le 2026-09-14, Lyon faite le 2026-09-16**
+   (voir "Chantiers faits") :
    - Genève → angle "freelance création site internet Genève" (ton freelance/
-     indépendant, pas agence — la requête réelle est différente)
+     indépendant, pas agence — la requête réelle est différente) — **bloqué
+     sur une clarification de Yanis, voir "Hypothèses à vérifier"**
    - Haute-Savoie (page régionale, pas une ville) → angle "création site
      vitrine Haute-Savoie" / "refonte site internet Haute-Savoie" (deux
      intentions différentes : création vs refonte — possiblement 2 pages,
@@ -783,6 +914,15 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
   requête réelle ("freelance création site internet Genève") suggère un
   positionnement différent de "agence" utilisé ailleurs — à clarifier avant
   d'écrire cette page pour ne pas sonner faux.
+- **Localisation réelle des clients "Markus Immobilier" et "Sensoria"**
+  (2026-09-16) : `llms.txt` affirmait depuis le premier commit SEO
+  "Lyon/Villeurbanne" pour Markus Immobilier et "Belgique" pour Sensoria,
+  sans que cette info existe ailleurs sur le site — retiré aujourd'hui
+  (voir "Chantiers faits" et "Erreurs commises et corrigées"). Si ces
+  localisations sont exactes, Yanis peut les confirmer pour qu'elles
+  soient réintégrées (utile pour un futur maillage géographique, ex. un
+  lien vers la page Lyon depuis la fiche Markus Immobilier si le client
+  est bien basé à Lyon/Villeurbanne).
 - **Coût de la maintenance mensuelle et du pack SEO** (2026-09-10) :
   `content.js > offer.extras` liste "Maintenance mensuelle" et "SEO avancé"
   avec le prix "sur devis" pour les deux — jamais un montant réel. La
@@ -794,6 +934,32 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 ---
 
 ## Erreurs commises et corrigées
+
+- **2026-09-16** — Le commit du 09-15 (`7703663`/`c002315`, prerendering du
+  corps de page) avait été poussé sur la branche de session
+  `claude/cool-johnson-2048y0` et jamais mergé sur `main` — aucune PR
+  ouverte, aucun merge. Autrement dit, le chantier du 09-15, documenté
+  dans ce journal comme "fait" et "poussé sur main", **n'était en réalité
+  jamais allé en production**. Trouvé uniquement parce que l'étape 2
+  (mesurer avant d'agir) a comparé `git log` de `main` au dernier commit
+  de journal, pas seulement lu le journal. Corrigé en tout début de ce
+  run (fast-forward de `main`). Leçon pour les prochains runs : la
+  vérification "`git log` sur `main`" à l'étape 2 doit explicitement
+  confirmer que HEAD de `main` correspond au dernier commit documenté
+  dans le journal — pas seulement que le code est cohérent avec ce que le
+  journal décrit, qui peut être vrai même si le commit n'est que sur une
+  branche non fusionnée.
+- **2026-09-16** — Gap trouvé dans du code antérieur au journal (même
+  catégorie que le bug de canonical du 09-08) : `llms.txt` affirmait des
+  localisations clients précises ("Lyon/Villeurbanne", "Belgique")
+  jamais présentes dans `content.js` ni vérifiées par Yanis, en place
+  depuis le tout premier commit SEO. Un crawler IA lisant `llms.txt` (le
+  fichier pensé justement pour être une source fiable pour les LLM)
+  aurait pu citer ces localisations comme des faits. Corrigé aujourd'hui.
+  Leçon : `llms.txt` doit être audité pour des affirmations non sourcées
+  ailleurs sur le site, pas seulement tenu à jour au fil des nouvelles
+  pages — à refaire une fois, en lisant chaque ligne de `llms.txt` contre
+  `content.js`, si un futur run a du temps disponible.
 
 - **2026-09-08** — Ce n'est pas une technique appliquée par un run
   précédent qui s'est avérée mauvaise, mais un gap trouvé dans du code
@@ -1081,6 +1247,32 @@ de mise en ligne de chaque page (la plus récente, Annemasse, date du 09-14).
 
 ---
 
+### 2026-09-16
+
+| Requête | Position kotastudio.fr |
+|---|---|
+| création site internet Saint-Julien-en-Genevois | absent |
+| agence web Annemasse | absent |
+| création site internet Annecy | absent |
+| agence web Lyon | absent |
+| création site vitrine Haute-Savoie | absent |
+| freelance création site internet Genève | absent |
+| refonte site internet Haute-Savoie | absent |
+| combien coûte un site internet (informationnelle) | absent |
+| combien coûte un site vitrine (informationnelle) | absent |
+
+Toujours absent partout — attendu, un seul jour depuis le dernier relevé
+(09-15). Kreaxion toujours présent sur plusieurs requêtes Haute-Savoie/
+Genevois, rien de nouveau côté concurrence. Recherche "agence web Lyon" :
+marché très concurrentiel confirmé (Beaucoup Studio, Digital Unicorn,
+Alteo, Les Globules, Kailimer, entre autres), cohérent avec la FAQ ajoutée
+aujourd'hui sur la page Lyon qui adresse directement cet argument. Premier
+relevé qui comptera vraiment sur les 7 requêtes locales : toujours dans
+plusieurs semaines à partir des dates de mise en ligne de chaque page (la
+plus récente, Lyon, date d'aujourd'hui).
+
+---
+
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 
 1. Adresse postale complète du siège (mentions légales + cohérence Google
@@ -1095,3 +1287,7 @@ de mise en ligne de chaque page (la plus récente, Annemasse, date du 09-14).
 6. Coût de la maintenance mensuelle et du pack SEO avancé (actuellement
    "sur devis" dans `content.js > offer.extras`) — permettrait de compléter
    la page `/combien-coute-un-site-internet` avec une réponse chiffrée.
+7. Localisation réelle des clients "Markus Immobilier" (Lyon/Villeurbanne ?)
+   et "Sensoria" (Belgique ?) — retirées de `llms.txt` le 2026-09-16 car
+   non vérifiées et absentes de `content.js`. À confirmer pour réintégration
+   et, pour Markus Immobilier, pour un éventuel lien vers la page Lyon.
