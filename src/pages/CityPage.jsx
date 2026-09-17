@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
+import { buildCityJsonLd, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
 import { cities } from "../data/cities";
 import { offer, process, whatsapp } from "../data/content";
 import Logo from "../components/Logo";
@@ -28,8 +29,14 @@ export default function CityPage() {
   }, [citySlug, city]);
 
   /* SEO : titre, meta description, canonical + JSON-LD (Service, BreadcrumbList,
-     FAQPage) par ville. SPA sans SSR -> injectés côté client au montage, retirés
-     au démontage. Le FAQPage reprend mot pour mot le texte affiché (city.faqs). */
+     FAQPage) par ville. Le JSON-LD est maintenant aussi pré-rendu statiquement
+     par scripts/generate-static-heads.mjs (même fonction buildCityJsonLd) pour
+     les crawlers sans JS. Ce useEffect retire d'abord tout <script
+     data-page-schema> déjà présent — qu'il vienne de ce pré-rendu statique (cas
+     d'un chargement direct sur cette URL) ou d'une page précédente visitée en
+     SPA — avant d'ajouter le sien, pour ne jamais laisser deux schémas ou un
+     schéma obsolète en même temps dans le <head>. Le FAQPage reprend mot pour
+     mot le texte affiché (city.faqs). */
   useEffect(() => {
     if (!city) return;
     const pageUrl = `${SITE_URL}/${city.slug}`;
@@ -45,50 +52,11 @@ export default function CityPage() {
     const prevCanonical = canonical ? canonical.getAttribute("href") : null;
     if (canonical) canonical.setAttribute("href", pageUrl);
 
-    const jsonLd = {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "BreadcrumbList",
-          itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE_URL}/` },
-            { "@type": "ListItem", position: 2, name: city.h1, item: pageUrl },
-          ],
-        },
-        {
-          "@type": "Service",
-          serviceType: "Création de site internet sur-mesure",
-          name: city.h1,
-          url: pageUrl,
-          areaServed: { "@type": "City", name: city.cityName },
-          provider: {
-            "@type": "ProfessionalService",
-            name: "Kota Studio",
-            url: `${SITE_URL}/`,
-            telephone: "+33668823396",
-          },
-          offers: offer.plans.map((p) => ({
-            "@type": "Offer",
-            name: p.name,
-            price: p.price.replace(/[^\d]/g, ""),
-            priceCurrency: "EUR",
-          })),
-        },
-        {
-          "@type": "FAQPage",
-          mainEntity: city.faqs.map((f) => ({
-            "@type": "Question",
-            name: f.q,
-            acceptedAnswer: { "@type": "Answer", text: f.a },
-          })),
-        },
-      ],
-    };
-
+    document.querySelectorAll(`script[${PAGE_SCHEMA_ATTR}]`).forEach((el) => el.remove());
     const script = document.createElement("script");
     script.type = "application/ld+json";
-    script.setAttribute("data-city-schema", city.slug);
-    script.textContent = JSON.stringify(jsonLd);
+    script.setAttribute(PAGE_SCHEMA_ATTR, `city:${city.slug}`);
+    script.textContent = JSON.stringify(buildCityJsonLd(city));
     document.head.appendChild(script);
 
     return () => {

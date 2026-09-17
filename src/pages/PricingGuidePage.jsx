@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
+import { buildPricingGuideJsonLd, pricingGuideFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
 import { offer, process, whatWeDo, promises, whatsapp } from "../data/content";
 import { cities } from "../data/cities";
 import Logo from "../components/Logo";
@@ -18,31 +19,10 @@ const META_DESCRIPTION =
 const UPDATED_AT = "10 septembre 2026";
 
 /* Les 5 questions/réponses affichées ci-dessous + reprises mot pour mot dans
-   le JSON-LD FAQPage (voir useEffect). Toute donnée chiffrée vient de
-   content.js (offer / process / whatWeDo / promises) : une seule source de
-   vérité, jamais dupliquée en dur. Même principe que CityPage.jsx. */
-const faqs = [
-  {
-    q: "Combien coûte un site internet chez Kota Studio ?",
-    a: `Une landing page démarre à ${offer.plans[0].price.replace("à partir de ", "")} et un site sur-mesure complet à partir de ${offer.plans[1].price.replace("à partir de ", "")}, tout compris. Le montant exact dépend du nombre de pages et des options choisies (langue supplémentaire, logo, rédaction de contenu…). Un devis précis est donné après un appel de 15 minutes, sans engagement.`,
-  },
-  {
-    q: "Combien de temps faut-il pour avoir son site ?",
-    a: "Le délai annoncé dès le premier échange est de 14 jours, du brief initial à la mise en ligne. Ce délai est tenu grâce à un processus cadré en 6 étapes, détaillé ci-dessous.",
-  },
-  {
-    q: "Qu'est-ce qui est inclus dans le prix, sans surprise ?",
-    a: "Chaque projet Kota Studio inclut un site 100% codé sur-mesure (aucun template), un design responsive mobile/tablette/desktop, un espace admin pour modifier le contenu, l'optimisation des performances et des révisions illimitées jusqu'à validation. Rien de cette liste n'est facturé en supplément.",
-  },
-  {
-    q: "Landing page ou site sur-mesure : lequel choisir ?",
-    a: "Une landing page est une page unique, taillée pour une offre et un seul objectif : convertir — adaptée à un lancement, une offre ponctuelle ou un test rapide. Un site sur-mesure est un site complet, structuré en plusieurs pages, pensé pour représenter toute l'activité sur la durée. Le choix dépend du nombre de messages à faire passer, pas seulement du budget.",
-  },
-  {
-    q: "Le prix inclut-il le référencement (SEO) ?",
-    a: "Oui pour les fondations : chaque site part avec une base technique SEO soignée (structure, vitesse, contenu) posée dès le développement. Mais Kota Studio ne vend jamais de classement Google garanti — personne ne peut sérieusement s'engager là-dessus. Pour un accompagnement SEO plus poussé que les fondations de base, l'option « SEO avancé » est disponible sur devis.",
-  },
-];
+   le JSON-LD FAQPage. Définies une seule fois dans lib/jsonld.js (source de
+   vérité partagée avec le pré-rendu statique), réutilisées ici pour
+   l'affichage sous le nom `faqs`. */
+const faqs = pricingGuideFaqs;
 
 export default function PricingGuidePage() {
   const mainRef = useRef(null);
@@ -57,9 +37,12 @@ export default function PricingGuidePage() {
   }, []);
 
   /* SEO : titre, meta description, canonical + JSON-LD (BreadcrumbList, FAQPage,
-     HowTo) — même pattern que CityPage.jsx / ProjectPage.jsx (SPA sans SSR,
-     donc injecté côté client au montage, retiré au démontage). Le FAQPage et
-     le HowTo reprennent mot pour mot le texte affiché plus bas. */
+     HowTo). Le JSON-LD est aussi pré-rendu statiquement par
+     scripts/generate-static-heads.mjs (même fonction buildPricingGuideJsonLd)
+     pour les crawlers sans JS — voir le commentaire équivalent dans
+     CityPage.jsx pour pourquoi on retire d'abord tout <script
+     data-page-schema> existant avant d'ajouter le sien. Le FAQPage et le
+     HowTo reprennent mot pour mot le texte affiché plus bas. */
   useEffect(() => {
     const pageUrl = `${SITE_URL}${PAGE_PATH}`;
 
@@ -74,42 +57,11 @@ export default function PricingGuidePage() {
     const prevCanonical = canonical ? canonical.getAttribute("href") : null;
     if (canonical) canonical.setAttribute("href", pageUrl);
 
-    const jsonLd = {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "BreadcrumbList",
-          itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE_URL}/` },
-            { "@type": "ListItem", position: 2, name: "Combien coûte un site internet ?", item: pageUrl },
-          ],
-        },
-        {
-          "@type": "FAQPage",
-          mainEntity: faqs.map((f) => ({
-            "@type": "Question",
-            name: f.q,
-            acceptedAnswer: { "@type": "Answer", text: f.a },
-          })),
-        },
-        {
-          "@type": "HowTo",
-          name: "Comment se déroule un projet de création de site avec Kota Studio",
-          description: process.subtitle,
-          totalTime: "P14D",
-          step: process.steps.map((s) => ({
-            "@type": "HowToStep",
-            name: s.title,
-            text: s.text,
-          })),
-        },
-      ],
-    };
-
+    document.querySelectorAll(`script[${PAGE_SCHEMA_ATTR}]`).forEach((el) => el.remove());
     const script = document.createElement("script");
     script.type = "application/ld+json";
-    script.setAttribute("data-pricing-guide-schema", "true");
-    script.textContent = JSON.stringify(jsonLd);
+    script.setAttribute(PAGE_SCHEMA_ATTR, "pricing-guide");
+    script.textContent = JSON.stringify(buildPricingGuideJsonLd());
     document.head.appendChild(script);
 
     return () => {

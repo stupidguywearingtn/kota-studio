@@ -22,6 +22,15 @@
    fichier statique existant dans outputDirectory avant d'appliquer les
    rewrites de vercel.json, donc dist/<route>/index.html prend le dessus sur
    le fallback SPA pour cette route exacte.
+
+   Depuis le 2026-09-17, ce script injecte aussi dans ce même <head> le
+   JSON-LD par page (Service/BreadcrumbList/FAQPage pour les villes,
+   BreadcrumbList/FAQPage/HowTo pour la page prix), jusqu'ici posé uniquement
+   côté client (useEffect, donc invisible pour GPTBot/ClaudeBot/PerplexityBot
+   qui n'exécutent pas le JS). Les fonctions de construction du JSON-LD
+   (src/lib/jsonld.js) sont partagées avec le code client : mêmes objets des
+   deux côtés, aucun risque d'écart entre le schema vu par un crawler sans JS
+   et celui vu par un navigateur après hydratation.
    ============================================================================ */
 
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
@@ -30,6 +39,7 @@ import path from "node:path";
 
 import { cities } from "../src/data/cities.js";
 import { projects } from "../src/data/content.js";
+import { buildCityJsonLd, buildPricingGuideJsonLd, PAGE_SCHEMA_ATTR } from "../src/lib/jsonld.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.join(__dirname, "..", "dist");
@@ -81,21 +91,39 @@ function renderHead(html, { title, description, url }) {
   return out;
 }
 
-function writeRoute(routePath, { title, description }) {
+/* Échappe le JSON sérialisé avant de l'injecter dans un <script> HTML brut :
+   neutralise toute séquence "</script" qui casserait la balise (aucune des
+   données actuelles n'en contient, mais un contenu futur pourrait). Pratique
+   standard (ex. Next.js fait la même chose pour son JSON-LD injecté côté
+   serveur). */
+function escapeForInlineScript(json) {
+  return json.replace(/</g, "\\u003c");
+}
+
+function injectSchema(html, schemaId, jsonLdObject) {
+  const json = escapeForInlineScript(JSON.stringify(jsonLdObject));
+  const scriptTag = `<script type="application/ld+json" ${PAGE_SCHEMA_ATTR}="${schemaId}">${json}</script>\n  </head>`;
+  return html.replace("</head>", scriptTag);
+}
+
+function writeRoute(routePath, { title, description, schemaId, jsonLd }) {
   const url = `${SITE_URL}${routePath}`;
-  const html = renderHead(template, { title, description, url });
+  let html = renderHead(template, { title, description, url });
+  if (jsonLd) html = injectSchema(html, schemaId, jsonLd);
   const dir = path.join(distDir, routePath.replace(/^\//, ""));
   mkdirSync(dir, { recursive: true });
   writeFileSync(path.join(dir, "index.html"), html);
-  console.log(`  ${routePath} -> ${title}`);
+  console.log(`  ${routePath} -> ${title}${jsonLd ? " (+ JSON-LD)" : ""}`);
 }
 
-console.log("Génération des <head> statiques par route (title/description/canonical/OG)...");
+console.log("Génération des <head> statiques par route (title/description/canonical/OG/JSON-LD)...");
 
 for (const city of cities) {
   writeRoute(`/${city.slug}`, {
     title: city.metaTitle,
     description: city.metaDescription,
+    schemaId: `city:${city.slug}`,
+    jsonLd: buildCityJsonLd(city),
   });
 }
 
@@ -110,6 +138,8 @@ writeRoute("/combien-coute-un-site-internet", {
   title: "Combien coûte un site internet ? Prix, délais, inclus | Kota Studio",
   description:
     "Prix réels d'un site internet chez Kota Studio : landing page à partir de 790 €, site sur-mesure à partir de 1 290 €. Délai de 14 jours, ce qui est inclus, ce qui est en option.",
+  schemaId: "pricing-guide",
+  jsonLd: buildPricingGuideJsonLd(),
 });
 
 writeRoute("/mentions-legales", {
