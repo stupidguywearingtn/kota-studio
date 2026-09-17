@@ -10,6 +10,35 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-17 :**
+
+- Vérifié en production avant d'agir : `git ls-remote origin` confirmait
+  `refs/heads/main` = `2be4acf` (commit de journal du 09-16), donc le run
+  d'hier était bien réellement déployé (pas une répétition du problème du
+  09-16 : ici tout était cohérent). Note de process : `git fetch origin main
+  claude/cool-johnson-6ko7n7` a échoué (branche de session absente côté
+  origin) et a laissé `origin/main` local sur un ref périmé — un
+  `git fetch origin main` seul, sans deuxième réf inexistante dans la même
+  commande, donne le bon résultat. À refaire simplement la prochaine fois
+  si le même faux-positif apparaît.
+- `curl` en prod : page Lyon (title/description/canonical corrects, JSON-LD
+  `ProfessionalService` présent), page d'accueil (corps de page bien
+  pré-rendu dans le HTML brut, `<div id="root">` non vide). `sitemap.xml`,
+  `llms.txt`, `robots.txt` conformes à ce qui est documenté le 09-16.
+- Recherche des 7 requêtes commerciales + 2 informationnelles : **kotastudio.fr
+  toujours absent partout**, attendu (1 jour depuis le dernier run, la page
+  la plus récente — Lyon — n'a qu'un jour). Kreaxion toujours présent sur
+  plusieurs requêtes Haute-Savoie/Genevois. Marché "agence web Lyon"
+  toujours aussi concurrentiel (mêmes acteurs qu'hier : Beaucoup Studio,
+  Digital Unicorn, Alteo, Les Globules, Kailimer). Rien de nouveau côté
+  concurrence.
+- Chantier du jour : **prerendering du JSON-LD structuré** (Service/
+  BreadcrumbList/FAQPage/HowTo), priorité n°1 des "Chantiers en attente"
+  depuis le 09-15 — jusqu'ici injecté uniquement côté client (`useEffect`),
+  donc invisible pour GPTBot/ClaudeBot/PerplexityBot alors même que le corps
+  de page (texte visible) est pré-rendu depuis le 09-15. Respecte
+  l'alternance (dernier chantier, 09-16, était une page ville).
+
 **Au 2026-09-16 :**
 
 - Vérifié en production avant d'agir : `git log` sur `main` s'arrêtait à
@@ -167,6 +196,108 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-09-17 — Prerendering du JSON-LD structuré (Service/BreadcrumbList/FAQPage/HowTo)
+
+**Pourquoi ce chantier :** priorité n°1 des "Chantiers en attente" depuis le
+09-15. Le corps de page (texte visible) est pré-rendu depuis le 09-15, mais
+le JSON-LD (`Service`, `BreadcrumbList`, `FAQPage` sur les 4 pages villes ;
+`BreadcrumbList`, `FAQPage`, `HowTo` sur la page prix) restait injecté
+uniquement côté client (`useEffect`), donc invisible pour GPTBot/ClaudeBot/
+PerplexityBot — un manque direct pour le volet GEO puisque ce schema est
+justement ce qui aide un LLM à extraire une réponse structurée. Continue
+l'alternance (dernier chantier, 09-16, était une page ville).
+
+**Fait précisément :**
+- Nouveau fichier `src/lib/jsonld.js` : extrait la construction du JSON-LD
+  (jusqu'ici dupliquée en dur dans `CityPage.jsx` et `PricingGuidePage.jsx`)
+  en deux fonctions pures sans dépendance au DOM — `buildCityJsonLd(city)` et
+  `buildPricingGuideJsonLd()` — réutilisables aussi bien côté client que dans
+  un script Node de build. Les 5 FAQ de la page prix (`pricingGuideFaqs`),
+  jusqu'ici définies séparément dans `PricingGuidePage.jsx`, vivent maintenant
+  aussi dans ce fichier : une seule source pour l'affichage ET le schema,
+  pour qu'un futur écart FAQ visible / JSON-LD (le mismatch explicitement
+  interdit par les instructions de cette routine) soit structurellement
+  impossible plutôt que juste "à ne pas oublier de garder synchronisé".
+- `scripts/generate-static-heads.mjs` : importe ces mêmes fonctions et
+  injecte le JSON-LD sérialisé dans le `<head>` statique de chaque
+  `dist/<route>/index.html` concerné (4 pages villes + page prix), juste
+  avant `</head>`. Échappement `<` → `<` dans le JSON injecté (comme le
+  fait Next.js pour son JSON-LD serveur) pour empêcher toute séquence
+  `</script>` de casser la balise si un futur contenu en contenait.
+- `src/pages/CityPage.jsx` et `src/pages/PricingGuidePage.jsx` : le
+  `useEffect` d'injection appelle maintenant `buildCityJsonLd`/
+  `buildPricingGuideJsonLd` au lieu de reconstruire l'objet en dur, et
+  **retire d'abord tout `<script data-page-schema>` déjà présent** avant
+  d'ajouter le sien. Nécessaire pour éviter un problème sinon réel : sur un
+  chargement direct de l'URL (pas une navigation SPA), le JSON-LD statique
+  est déjà dans le HTML reçu — sans ce retrait, le montage React en
+  ajouterait un deuxième identique juste à côté. Vérifié aussi le cas
+  inverse : navigation cliente Lyon → Annecy (même composant, `slug`
+  différent) ne laisse jamais deux schemas ni un schema obsolète, grâce au
+  nettoyage à l'effet précédent qui s'exécute avant le montage du suivant
+  (voir "Contrôle qualité").
+- Pages non concernées, volontairement inchangées : `ProjectPage.jsx` n'a
+  aucun JSON-LD par page (seulement title/description/canonical) — rien à
+  pré-rendre, pas dans le périmètre de ce chantier. `Home.jsx` n'a que le
+  `ProfessionalService` déjà statique dans `index.html`, déjà servi à froid
+  sur toutes les routes.
+
+**Contrôle qualité fait avant de pousser :**
+- `npm install` (node_modules absent au démarrage de session, comme
+  systématiquement) puis `npm run build` : les 3 étapes s'enchaînent sans
+  erreur, `generate-static-heads.mjs` logue "(+ JSON-LD)" pour les 5 routes
+  attendues (4 villes + page prix), aucune autre route.
+- Script Python sur les fichiers `dist/<route>/index.html` générés : JSON-LD
+  extrait et parsé (`json.loads`) sans erreur sur les 3 routes testées
+  (Lyon, Annecy, page prix), exactement 1 `<script data-page-schema>` par
+  route (en plus du `ProfessionalService` générique), et **toutes les
+  questions de chaque `FAQPage` retrouvées mot pour mot dans le HTML pré-rendu
+  de la page** — donc dans le texte réellement visible, pas seulement dans le
+  schema.
+- Script Playwright (Chromium préinstallé, technique du 09-10) contre `serve
+  dist` en local, viewport mobile 390×844, sur les 4 pages villes + la page
+  prix : après hydratation JS, **exactement 1** `<script data-page-schema>`
+  par page (pas de doublon), contenu JSON-LD reparsé sans erreur, `@graph`
+  avec les bons `@type`. Testé aussi une séquence de navigation SPA sans
+  rechargement (accueil → Lyon → Annecy → accueil) : à chaque étape, 0 ou 1
+  schema selon la page affichée, jamais 2, jamais celui d'une page
+  précédente laissé par erreur. 0 `pageerror`/`console.error` applicatif.
+- Screenshot pleine page mobile de la page Lyon et de l'accueil : mise en
+  page crème/encre/or intacte, aucune régression visuelle (le chantier ne
+  touche que la génération du `<head>` statique et l'injection du schema,
+  jamais le JSX affiché).
+- `git diff --stat` avant commit : `src/lib/jsonld.js` (nouveau),
+  `scripts/generate-static-heads.mjs`, `src/pages/CityPage.jsx`,
+  `src/pages/PricingGuidePage.jsx`. Aucune section de la home, aucun
+  composant partagé touché.
+- Après déploiement sur `main` (push direct), revérifié en production avec
+  `curl` : `data-page-schema="city:agence-web-lyon"` et
+  `data-page-schema="pricing-guide"` bien présents dans le HTML brut de
+  leurs pages respectives, JSON valide, `@graph` avec les bons `@type`
+  (`BreadcrumbList`/`Service`/`FAQPage` pour Lyon, `BreadcrumbList`/
+  `FAQPage`/`HowTo` pour la page prix).
+
+**Commit :** `991e3bd` — poussé sur `main`, déployé et vérifié en prod.
+
+**Ce qui n'a pas été fait, et pourquoi :**
+- Pas de JSON-LD ajouté sur `ProjectPage.jsx` (aucun n'existe aujourd'hui,
+  ni côté client ni statique) : ce chantier portait sur le **prerendering**
+  d'un schema déjà en place côté client, pas sur l'ajout d'un nouveau type
+  de schema à un nouveau type de page — hors périmètre du jour.
+- Pas de page ville aujourd'hui (Genève reste bloqué, voir "Hypothèses à
+  vérifier" ; Haute-Savoie régionale reste la prochaine de la liste) :
+  alternance respectée, dernier chantier ville était hier.
+
+**Ce qui reste, et pourquoi :**
+- Pages villes suivantes (Genève bloqué, Haute-Savoie régionale ensuite) —
+  inchangé.
+- Auditer `llms.txt` ligne par ligne contre `content.js` pour d'autres
+  affirmations non sourcées du même type que celle corrigée le 09-16 —
+  toujours pas fait, pas prioritaire par rapport au chantier technique du
+  jour.
+
+---
 
 ### 2026-09-16 — Cinquième page ville : "Agence web à Lyon" + correction llms.txt
 
@@ -856,24 +987,22 @@ Par ordre de priorité pour les prochains runs :
    `CityPage.jsx`) — un jour = une ville, angle de requête différent à
    respecter (ne pas copier-coller le même texte). **Annecy faite le
    2026-09-09, Annemasse faite le 2026-09-14, Lyon faite le 2026-09-16**
-   (voir "Chantiers faits") :
-   - Genève → angle "freelance création site internet Genève" (ton freelance/
-     indépendant, pas agence — la requête réelle est différente) — **bloqué
-     sur une clarification de Yanis, voir "Hypothèses à vérifier"**
+   (voir "Chantiers faits") — **en tête de liste maintenant que le
+   prerendering (contenu + JSON-LD) est fait** :
    - Haute-Savoie (page régionale, pas une ville) → angle "création site
      vitrine Haute-Savoie" / "refonte site internet Haute-Savoie" (deux
      intentions différentes : création vs refonte — possiblement 2 pages,
-     à trancher un de ces jours selon le volume constaté)
-2. ~~Prerendering du CONTENU (corps de page)~~ — **fait le 2026-09-15**
-   (voir "Chantiers faits") : `scripts/prerender-body.mjs` +
-   `src/entry-server.jsx`, `ReactDOMServer.renderToStaticMarkup` sans
-   Chromium/Playwright. **Reste ouvert, en tête de liste** :
-   prerendering du **JSON-LD structuré** (`Service`/`BreadcrumbList`/
-   `FAQPage`/`ProfessionalService`), toujours injecté uniquement côté
-   client (`useEffect`) donc toujours invisible pour les crawlers sans JS
-   — voir "Ce qui reste" du 09-15 pour le détail technique (nécessite un
-   refactor de la logique JSON-LD en fonctions pures réutilisables côté
-   serveur).
+     à trancher un de ces jours selon le volume constaté) — **prochaine
+     ville à faire, rien ne la bloque**
+   - Genève → angle "freelance création site internet Genève" (ton freelance/
+     indépendant, pas agence — la requête réelle est différente) — **bloqué
+     sur une clarification de Yanis, voir "Hypothèses à vérifier"**
+2. ~~Prerendering du CONTENU (corps de page)~~ — **fait le 2026-09-15**.
+   ~~Prerendering du JSON-LD structuré~~ (`Service`/`BreadcrumbList`/
+   `FAQPage`/`HowTo`) — **fait le 2026-09-17** (voir "Chantiers faits") :
+   `src/lib/jsonld.js` + injection dans `scripts/generate-static-heads.mjs`.
+   Les deux volets du prerendering (contenu texte + données structurées)
+   sont maintenant complets sur toutes les pages qui en ont besoin.
 3. ~~Contenu de fond "combien coûte un site / combien de temps / ce qui est
    inclus" en page dédiée~~ — **fait le 2026-09-10** (voir "Chantiers
    faits") : page `/combien-coute-un-site-internet`.
@@ -1097,6 +1226,29 @@ ChatGPT / Perplexity)_
   build intermédiaire à nettoyer après usage (`dist-server/`, jamais servi
   ni commité). À réutiliser si un futur run a besoin d'un rendu React côté
   serveur ponctuel sur ce projet, plutôt que de retenter `ssrLoadModule`.
+- **2026-09-17** — Sur une SPA où le `<head>` par route est déjà pré-rendu
+  statiquement (title/description/canonical/JSON-LD) mais où `main.jsx`
+  utilise `createRoot().render()` (pas d'hydratation), tout `useEffect` qui
+  injecte un `<script>`/tag dans `<head>` doit **retirer l'existant avant
+  d'ajouter le sien**, identifié par un attribut commun (ex.
+  `data-page-schema`), plutôt que de vérifier "est-ce que MON tag existe
+  déjà". Sinon deux cas cassent silencieusement : (1) un chargement direct
+  de l'URL affiche le tag statique + celui ajouté par React = doublon ; (2)
+  une navigation SPA d'une page A vers une page B qui réutilise le même
+  composant (ex. deux villes via `/:citySlug`) peut laisser le tag de A si
+  le nettoyage ne cible que "son propre" tag par une clé qui change avec les
+  props. Un `querySelectorAll('[attribut-commun]').forEach(remove)`
+  systématique en tête de l'effet, suivi d'un ajout inconditionnel, est plus
+  simple et plus sûr que de la logique de réconciliation par identifiant. À
+  réutiliser pour tout futur tag de `<head>` prérendu + réinjecté côté
+  client sur ce site.
+- **2026-09-17** — Une seule fonction de construction du JSON-LD (pure,
+  sans DOM) importée à la fois par le composant React et par le script Node
+  de post-build élimine structurellement le risque de mismatch FAQPage/texte
+  visible évoqué dans les instructions de cette routine — pas besoin de
+  contrôle qualité manuel pour vérifier que les deux sont synchronisés
+  puisqu'ils ne peuvent pas diverger (une seule source). Pattern à reprendre
+  pour toute future page avec schema structuré sur ce site.
 
 ## Historique des positions mesurées
 
@@ -1270,6 +1422,27 @@ aujourd'hui sur la page Lyon qui adresse directement cet argument. Premier
 relevé qui comptera vraiment sur les 7 requêtes locales : toujours dans
 plusieurs semaines à partir des dates de mise en ligne de chaque page (la
 plus récente, Lyon, date d'aujourd'hui).
+
+### 2026-09-17
+
+| Requête | Position kotastudio.fr |
+|---|---|
+| création site internet Saint-Julien-en-Genevois | absent |
+| agence web Annemasse | absent |
+| création site internet Annecy | absent |
+| agence web Lyon | absent |
+| création site vitrine Haute-Savoie | absent |
+| freelance création site internet Genève | absent |
+| refonte site internet Haute-Savoie | absent |
+| combien coûte un site internet (informationnelle) | absent |
+| combien coûte un site vitrine (informationnelle) | absent |
+
+Toujours absent partout — attendu, un seul jour depuis le dernier relevé
+(09-16), et le chantier du jour était technique (JSON-LD), pas une nouvelle
+page. Kreaxion toujours présent sur plusieurs requêtes Haute-Savoie/
+Genevois, rien de nouveau côté concurrence. Aucun mouvement à attendre avant
+plusieurs semaines à partir de la mise en ligne de chaque page (Lyon,
+la plus récente, date d'hier).
 
 ---
 
