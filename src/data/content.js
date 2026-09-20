@@ -457,6 +457,10 @@ export const footer = {
           href: "/agence-web-lyon",
         },
         {
+          label: "Création & refonte de site en Haute-Savoie",
+          href: "/creation-refonte-site-internet-haute-savoie",
+        },
+        {
           label: "Combien coûte un site ?",
           href: "/combien-coute-un-site-internet",
         },

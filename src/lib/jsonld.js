@@ -38,7 +38,7 @@ export function buildCityJsonLd(city) {
         serviceType: "Création de site internet sur-mesure",
         name: city.h1,
         url: pageUrl,
-        areaServed: { "@type": "City", name: city.cityName },
+        areaServed: { "@type": city.areaType || "City", name: city.cityName },
         provider: {
           "@type": "ProfessionalService",
           name: "Kota Studio",

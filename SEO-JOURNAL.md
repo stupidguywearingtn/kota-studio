@@ -10,6 +10,38 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-20 (dimanche — 3 jours depuis le dernier run, pas de run les 18/19) :**
+
+- Avant toute chose, vérification de process : `origin/main` en HEAD était bien
+  `8d774a3` (dernier commit de journal du 09-17), donc le run précédent était
+  réellement déployé — pas de répétition du problème du 09-16. Une première
+  tentative de `git push origin HEAD:main` a semblé indiquer "Everything
+  up-to-date" avant même la vérification, ce qui a bien failli être interprété
+  à tort comme un signe que 3 jours de commits locaux non poussés existaient :
+  en réalité un `git fetch` combiné avait échoué sur une deuxième réf absente
+  (même piège que documenté le 09-17) et laissé un `origin/main` local
+  périmé en cache un instant. Un `git fetch origin main` seul a confirmé que
+  tout était bien à jour. Aucune perte de travail, juste une fausse alerte —
+  reconfirme la note du 09-17 : ne jamais combiner `git fetch origin <branche
+  A> <branche-de-session-absente>` dans une seule commande.
+- `curl` en prod : homepage (corps de page pré-rendu, JSON-LD `ProfessionalService`
+  statique), les 4 pages villes (title/canonical corrects, `data-page-schema`
+  présent), page prix (title correct). `sitemap.xml` et `llms.txt` conformes à
+  ce qui est documenté le 09-17. Rien n'a bougé côté code depuis le 09-17.
+- Recherche des 7 requêtes commerciales + 2 informationnelles (WebSearch, sans
+  connexion, jamais le nom de marque) : **kotastudio.fr toujours absent
+  partout**, attendu (3 jours depuis le dernier run, la page la plus récente
+  avant aujourd'hui — Lyon — n'a que 4 jours, largement sous le délai
+  d'indexation Google). Kreaxion toujours présent sur "création site internet
+  Saint-Julien-en-Genevois", "création site vitrine Haute-Savoie" et "refonte
+  site internet Haute-Savoie". Aucun nouveau concurrent observé par rapport
+  aux runs précédents sur les 9 requêtes.
+- Chantier du jour : **6e page, régionale cette fois — "Création et refonte de
+  site internet en Haute-Savoie"**, priorité n°1 de "Chantiers en attente"
+  depuis le 09-16 (Haute-Savoie était notée "prochaine ville à faire, rien ne
+  la bloque"). Respecte l'alternance (dernier chantier, 09-17, était
+  technique).
+
 **Au 2026-09-17 :**
 
 - Vérifié en production avant d'agir : `git ls-remote origin` confirmait
@@ -196,6 +228,119 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-09-20 — Sixième page, régionale : "Création et refonte de site internet en Haute-Savoie"
+
+**Pourquoi ce chantier :** priorité n°1 de "Chantiers en attente" depuis le
+09-16, notée "prochaine ville à faire, rien ne la bloque" une fois les deux
+volets du prerendering terminés. Contrairement aux 4 pages précédentes,
+Haute-Savoie n'est pas une ville mais le département entier — nécessite de
+trancher la question laissée ouverte depuis le 09-10 : une page ou deux
+(création vs refonte) ? Décidé pour **une seule page couvrant les deux
+intentions**, pas deux pages séparées : sans donnée de volume de recherche
+réelle pour trancher, et avec un contenu différenciateur limité entre
+"création" et "refonte" pour cette agence (même prix, même délai, même
+process), deux pages le même jour auraient risqué une duplication de contenu
+proche d'une doorway page — contraire à la règle anti-doorway déjà appliquée
+sur Annecy/Annemasse/Lyon. Une page qui traite honnêtement la différence
+réelle entre les deux (voir FAQ #4) est plus utile à un prospect et plus
+défendable côté qualité que deux pages quasi identiques.
+
+**Fait précisément :**
+- `src/data/cities.js` : nouvelle entrée `creation-refonte-site-internet-haute-savoie`
+  (5 FAQ, intro et meta title/description couvrant les deux intentions).
+  Réutilise le gabarit `CityPage.jsx` existant sans aucune modification de
+  composant — route `/:citySlug` automatique. Prix/délai/inclus toujours
+  importés de `content.js` (`offer`, `process`), jamais dupliqués en dur.
+  FAQ #3 ("Quelle est la différence entre une création et une refonte de site
+  internet ?") est le contenu différenciateur propre à cette page, absent des
+  4 pages villes existantes.
+- **Nouveau champ `areaType` sur les entrées de `cities.js`** (optionnel,
+  défaut `"City"` géré dans `jsonld.js`) : Haute-Savoie est un département,
+  pas une ville — `areaServed` dans le JSON-LD `Service` doit être de type
+  schema.org `AdministrativeArea`, pas `City`, pour rester exact. Les 4
+  entrées villes existantes n'ont pas ce champ et continuent à utiliser
+  `City` par défaut, aucune régression pour elles.
+- **Prix de la refonte, vérifié pour ne rien inventer** : `content.js >
+  offer.plans` ne contient que "Landing page" et "Site sur-mesure", aucune
+  ligne "refonte" séparée. La page dit explicitement qu'une refonte suit la
+  même grille que le site sur-mesure (à partir de 1 290 €) "le travail de
+  conception et de code étant comparable" — vrai reflet de l'offre actuelle,
+  pas un prix inventé pour une prestation qui n'existe pas en tant que ligne
+  tarifaire distincte.
+- FAQ #0 ("Kota Studio intervient-il dans toute la Haute-Savoie ?") mentionne
+  des communes réelles du département (Thonon-les-Bains, Cluses, Sallanches,
+  La Roche-sur-Foron) à titre de zone de couverture géographique générale
+  (fait vérifiable, ce sont des communes de Haute-Savoie), **sans jamais
+  affirmer y avoir des clients** — et renvoie explicitement vers les pages
+  dédiées Saint-Julien/Annecy/Annemasse existantes plutôt que de dupliquer
+  leur contenu.
+- `src/data/content.js` : lien "Création & refonte de site en Haute-Savoie"
+  ajouté dans le footer, colonne Services.
+- `public/sitemap.xml` et `public/llms.txt` : nouvelle page ajoutée.
+- `scripts/generate-static-heads.mjs` et `scripts/prerender-body.mjs` :
+  aucune modification nécessaire (bouclent déjà sur `cities.js`), confirmé
+  dans les logs de build (`/creation-refonte-site-internet-haute-savoie`
+  généré et pré-rendu automatiquement avec JSON-LD, 17 279 caractères de HTML
+  injectés).
+
+**Contrôle qualité fait avant de pousser :**
+- `npm install` (node_modules absent au démarrage de cette session, comme
+  systématiquement) puis `npm run build` : les 3 étapes s'enchaînent sans
+  erreur, nouvelle route listée avec "(+ JSON-LD)" dans les deux scripts de
+  post-traitement.
+- Script Python sur `dist/creation-refonte-site-internet-haute-savoie/index.html` :
+  JSON-LD extrait et parsé sans erreur, les 5 questions/réponses du `FAQPage`
+  retrouvées mot pour mot dans le HTML pré-rendu, exactement 1
+  `<script data-page-schema>`, `areaServed` bien `{"@type":
+  "AdministrativeArea", "name": "Haute-Savoie"}` (pas `City`).
+- Playwright (Chromium préinstallé, `serve dist` en local, viewport mobile
+  390×844) : H1 correct sur la nouvelle page, l'accueil et Lyon ; exactement 1
+  schema par page (0 sur l'accueil, qui n'a pas de schema par page) ; séquence
+  de navigation SPA Lyon → accueil → Haute-Savoie testée par clic
+  programmatique : le schema affiche bien `city:creation-refonte-site-internet-
+  haute-savoie` après navigation, aucun schema de Lyon laissé derrière. 0
+  `pageerror`/`console.error` applicatif (seules erreurs : polices/Iconify
+  bloquées par le réseau du bac à sable, comme tous les runs précédents ; un
+  404 sur `/vite.svg`, pré-existant sur tout le site, pas une régression).
+- Screenshot pleine page mobile après scroll par paliers : mise en page
+  crème/encre/or intacte, breadcrumb, badge, FAQ (dont le tableau prix/inclus
+  et les étapes du process), bloc de maillage vers le guide prix, CTA final et
+  footer (avec le nouveau lien) tous rendus correctement. Aucune des 9
+  sections de la home ni le slider avant/après touchés.
+- `git diff --stat` avant commit : uniquement les 5 fichiers attendus
+  (`cities.js`, `content.js`, `jsonld.js`, `sitemap.xml`, `llms.txt`).
+- Après déploiement sur `main` (push direct), revérifié en production avec
+  `curl` : title/canonical corrects, `data-page-schema` présent et JSON valide
+  sur `/creation-refonte-site-internet-haute-savoie`, `sitemap.xml` et
+  `llms.txt` à jour, page d'accueil et pages villes existantes inchangées.
+
+**Commit :** voir hash ci-dessous — poussé sur `main`, déployé et vérifié en
+prod.
+
+**Ce qui n'a pas été fait, et pourquoi :**
+- Pas de 2e page séparée "refonte" : voir raison ci-dessus (risque de
+  duplication de contenu / doorway page sans réel contenu différenciateur
+  supplémentaire). Si un futur run observe un volume de recherche distinct
+  clair pour "refonte site internet Haute-Savoie" qui justifierait une page
+  dédiée avec un contenu vraiment différent (études de cas de refonte
+  spécifiques, par exemple), cette décision pourra être révisée — pas de
+  signal pour l'instant.
+- Pas de lien cliquable depuis la FAQ #0 vers les pages Saint-Julien/Annecy/
+  Annemasse mentionnées : `CityPage.jsx` affiche les réponses de FAQ en texte
+  brut (`<p>{f.a}</p>`), pas en JSX enrichi — ajouter des liens inline aurait
+  demandé de modifier le composant partagé par les 6 pages villes, plus
+  risqué qu'utile pour un seul chantier du jour. Les 3 pages sont déjà
+  accessibles depuis le footer sur cette même page.
+
+**Ce qui reste, et pourquoi :**
+- Genève reste bloqué sur la clarification de positionnement (freelance vs
+  agence, voir "Hypothèses à vérifier") — inchangé.
+- Note technique pour un futur run (pas un chantier SEO, un incident
+  d'environnement) : voir "Erreurs commises et corrigées" ci-dessous
+  concernant `/dev/null`.
+
+---
 
 ### 2026-09-17 — Prerendering du JSON-LD structuré (Service/BreadcrumbList/FAQPage/HowTo)
 
@@ -986,17 +1131,14 @@ Par ordre de priorité pour les prochains runs :
 1. **Pages villes suivantes** (gabarit déjà prêt dans `cities.js` +
    `CityPage.jsx`) — un jour = une ville, angle de requête différent à
    respecter (ne pas copier-coller le même texte). **Annecy faite le
-   2026-09-09, Annemasse faite le 2026-09-14, Lyon faite le 2026-09-16**
-   (voir "Chantiers faits") — **en tête de liste maintenant que le
-   prerendering (contenu + JSON-LD) est fait** :
-   - Haute-Savoie (page régionale, pas une ville) → angle "création site
-     vitrine Haute-Savoie" / "refonte site internet Haute-Savoie" (deux
-     intentions différentes : création vs refonte — possiblement 2 pages,
-     à trancher un de ces jours selon le volume constaté) — **prochaine
-     ville à faire, rien ne la bloque**
+   2026-09-09, Annemasse faite le 2026-09-14, Lyon faite le 2026-09-16,
+   Haute-Savoie (régionale, création + refonte) faite le 2026-09-20** (voir
+   "Chantiers faits") — il ne reste que :
    - Genève → angle "freelance création site internet Genève" (ton freelance/
      indépendant, pas agence — la requête réelle est différente) — **bloqué
-     sur une clarification de Yanis, voir "Hypothèses à vérifier"**
+     sur une clarification de Yanis, voir "Hypothèses à vérifier"**. C'est
+     la seule ville/page géographique encore en attente sur la liste
+     initiale.
 2. ~~Prerendering du CONTENU (corps de page)~~ — **fait le 2026-09-15**.
    ~~Prerendering du JSON-LD structuré~~ (`Service`/`BreadcrumbList`/
    `FAQPage`/`HowTo`) — **fait le 2026-09-17** (voir "Chantiers faits") :
@@ -1015,6 +1157,29 @@ Par ordre de priorité pour les prochains runs :
    page `/combien-coute-un-site-internet` dès que Yanis fournit ces
    montants (voir "Hypothèses à vérifier") — la page est structurée pour
    accueillir cet ajout sans refonte.
+7. **Auditer `llms.txt` ligne par ligne contre `content.js`** pour d'autres
+   affirmations non sourcées du même type que celle corrigée le 09-16
+   (localisations clients Markus Immobilier/Sensoria) — toujours pas fait,
+   noté en attente depuis le 09-17. Maintenant que les pages villes sont
+   quasiment toutes faites (seule Genève reste), un run avec moins de
+   contenu à produire pourrait s'y consacrer entièrement.
+8. **Schema.org à enrichir sur la home** (étape 4 des instructions,
+   pas encore fait) : la home n'a que le `ProfessionalService` générique
+   statique dans `index.html`, sans `Organization` distincte, sans
+   `BreadcrumbList`, et sans `Service` par prestation (site vitrine /
+   landing page / refonte / SEO — actuellement une seule ligne
+   `serviceType` générique sur les pages villes, jamais un `Service` par
+   offre sur la home elle-même). Impact GEO potentiel réel (un LLM qui lit
+   le JSON-LD de la home verrait une liste structurée des prestations),
+   mais demande de choisir une structure (probablement `hasOfferCatalog`
+   sur le `ProfessionalService`) sans rien inventer côté contenu — à faire
+   avec soin sur un run dédié plutôt qu'ajouté à la hâte.
+9. Maintenant que les 5 pages géographiques prévues sont quasiment toutes
+   faites (Genève excepté, bloqué), les prochains chantiers de contenu
+   "page + requête" devront venir d'une vraie recherche de nouvelles
+   requêtes (pas seulement la liste initiale du 09-07) — à envisager un
+   lundi, lors de la recherche de l'étape 5, plutôt que de forcer une
+   nouvelle page sans requête cible identifiée.
 
 ---
 
@@ -1064,6 +1229,22 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 
 ## Erreurs commises et corrigées
 
+- **2026-09-20** — Incident d'environnement (pas un bug du site) : en testant
+  une technique pour rendre le module `playwright` global résolvable en ESM
+  depuis un script de test temporaire, une commande `ln -sfn <cible mal
+  formée> /dev/null` a écrasé le device `/dev/null` par un symlink cassé
+  (pointant vers `/`), cassant toute redirection shell et, plus grave,
+  `git status`/`git diff` eux-mêmes (qui ouvrent `/dev/null` en interne).
+  Corrigé dans la foulée (`rm -f /dev/null && mknod -m 666 /dev/null c 1 3`),
+  aucun impact sur le dépôt ni sur le site. Leçon pour les prochains runs :
+  ne **jamais** utiliser `/dev/null` comme nom de lien de destination dans une
+  commande `ln`/`mv`/`cp` sans vérifier au préalable que la cible source est
+  un chemin absolu correct et déjà testé isolément — une erreur de chemin
+  relatif suffit à transformer une commande anodine en incident qui bloque
+  Git. Pour rendre `playwright` (préinstallé globalement) résolvable en ESM
+  depuis un script, préférer créer le symlink dans `node_modules/playwright`
+  du projet (technique déjà documentée le 09-10/09-14), jamais toucher à quoi
+  que ce soit sous `/dev`.
 - **2026-09-16** — Le commit du 09-15 (`7703663`/`c002315`, prerendering du
   corps de page) avait été poussé sur la branche de session
   `claude/cool-johnson-2048y0` et jamais mergé sur `main` — aucune PR
@@ -1443,6 +1624,29 @@ page. Kreaxion toujours présent sur plusieurs requêtes Haute-Savoie/
 Genevois, rien de nouveau côté concurrence. Aucun mouvement à attendre avant
 plusieurs semaines à partir de la mise en ligne de chaque page (Lyon,
 la plus récente, date d'hier).
+
+### 2026-09-20
+
+| Requête | Position kotastudio.fr |
+|---|---|
+| création site internet Saint-Julien-en-Genevois | absent |
+| agence web Annemasse | absent |
+| création site internet Annecy | absent |
+| agence web Lyon | absent |
+| création site vitrine Haute-Savoie | absent |
+| freelance création site internet Genève | absent |
+| refonte site internet Haute-Savoie | absent |
+| combien coûte un site internet (informationnelle) | absent |
+| combien coûte un site vitrine (informationnelle) | absent |
+
+Toujours absent partout — attendu, 3 jours depuis le dernier relevé (09-17,
+pas de run les 18/19), et la page la plus récente avant ce run (Lyon) n'a que
+4 jours, largement sous le délai d'indexation Google. Kreaxion toujours
+présent sur "création site internet Saint-Julien-en-Genevois", "création site
+vitrine Haute-Savoie" et "refonte site internet Haute-Savoie". Aucun nouveau
+concurrent observé sur les 9 requêtes par rapport aux runs précédents.
+Premier relevé qui comptera vraiment pour la nouvelle page Haute-Savoie :
+dans plusieurs semaines à partir d'aujourd'hui.
 
 ---
 

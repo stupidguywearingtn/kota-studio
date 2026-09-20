@@ -150,4 +150,40 @@ export const cities = [
       },
     ],
   },
+  {
+    slug: "creation-refonte-site-internet-haute-savoie",
+    cityName: "Haute-Savoie",
+    badge: "Haute-Savoie",
+    areaType: "AdministrativeArea",
+    crossLinkLabel: "Création & refonte de site en Haute-Savoie",
+    metaTitle: "Création et refonte de site internet en Haute-Savoie | Kota Studio",
+    metaDescription:
+      "Agence basée à Saint-Julien-en-Genevois : création et refonte de sites vitrine et sites sur-mesure pour toute la Haute-Savoie. Livraison en 14 jours, prix fixe, révisions illimitées.",
+    h1: "Création et refonte de site internet en Haute-Savoie",
+    intro:
+      "Kota Studio conçoit et refond des sites internet sur-mesure pour les entreprises, artisans et indépendants de toute la Haute-Savoie. L'agence est basée à Saint-Julien-en-Genevois : les rendez-vous se font en visio pour l'essentiel du projet, avec un présentiel possible selon votre localisation dans le département.",
+    updatedAt: "20 septembre 2026",
+    faqs: [
+      {
+        q: "Kota Studio intervient-il dans toute la Haute-Savoie ?",
+        a: "Oui. Basée à Saint-Julien-en-Genevois, l'agence conçoit des sites internet pour des entreprises, artisans et indépendants dans tout le département : Genevois, bassin annécien, Chablais, Faucigny (Annecy, Annemasse, Thonon-les-Bains, Cluses, Sallanches, La Roche-sur-Foron…). Des pages dédiées existent déjà pour Saint-Julien-en-Genevois, Annecy et Annemasse ; cette page centralise les informations valables pour le reste du département.",
+      },
+      {
+        q: "Combien coûte un site internet en Haute-Savoie ?",
+        a: "Une landing page démarre à 790 € et un site sur-mesure complet à partir de 1 290 €, tout compris, quelle que soit la commune de Haute-Savoie où vous êtes basé. Une refonte de site existant suit la même grille tarifaire qu'un site sur-mesure, le travail de conception et de code étant comparable : le montant exact est donné après un appel de 15 minutes, sans engagement.",
+      },
+      {
+        q: "Combien de temps pour une création ou une refonte de site en Haute-Savoie ?",
+        a: "14 jours du premier échange à la mise en ligne, que ce soit pour une création ou une refonte, grâce à un processus cadré en 6 étapes détaillé ci-dessous. Une refonte démarre par un audit rapide du site existant (contenu, structure, ce qui est conservé ou refait), sans rallonger ce délai dans la plupart des cas.",
+      },
+      {
+        q: "Quelle est la différence entre une création et une refonte de site internet ?",
+        a: "Une création part de zéro : arborescence, design et contenu sont pensés dès le départ pour votre activité. Une refonte reprend un site existant jugé daté, lent ou mal positionné sur Google, et le reconstruit avec le même niveau de soin (design, code, structure), en conservant ce qui fonctionne déjà (contenu, images, nom de domaine) plutôt que de tout jeter.",
+      },
+      {
+        q: "Qu'est-ce qui est inclus dans un projet Kota Studio ?",
+        a: "Un site 100% codé sur-mesure (aucun template), un design responsive pensé mobile en premier, un espace admin pour modifier le contenu vous-même, l'optimisation des performances et des révisions illimitées jusqu'à validation. Une refonte inclut les mêmes garanties, en plus d'une reprise de vos contenus existants quand ils sont valables.",
+      },
+    ],
+  },
 ];
