@@ -10,6 +10,43 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-21 (lundi — 1 jour depuis le dernier run) :**
+
+- Vérification de process, plus poussée que d'habitude suite à une fausse
+  alerte pendant ce run : `git fetch origin main --quiet` (réf unique) a
+  pourtant renvoyé un `origin/main` local **périmé** (`7ee625b`, commit du
+  09-14) alors que le vrai `main` distant était déjà à `3ca1b15` (commit du
+  09-20, tip de la branche de session). Un `git fetch origin --quiet` complet
+  (toutes les branches) a corrigé le cache local et révélé le bon état :
+  `origin/main` == `3ca1b15` == HEAD de la branche de session, **aucun retard
+  réel**. Nouvelle leçon (voir "Erreurs commises et corrigées") : même un
+  fetch à réf unique documenté comme fiable le 09-17/09-20 peut laisser un
+  cache périmé sur ce dépôt — la vérification fiable est de comparer le SHA
+  d'`origin/main` (après un fetch complet, pas partiel) au dernier commit de
+  ce journal, jamais de se fier au seul message "Everything up-to-date" d'un
+  `git push`.
+- `curl` en prod (`kotastudio.fr`) : confirmé que le travail du 09-20 est bien
+  déployé — `/creation-refonte-site-internet-haute-savoie` et `/agence-web-lyon`
+  répondent 200, `data-page-schema` présent et JSON valide sur les deux,
+  `sitemap.xml` à jour (6 pages villes/régionale + guide prix + 4 projets),
+  corps de page (texte des FAQ) présent dans le HTML brut sans JS. Rien de
+  cassé, rien de régressé depuis le 09-20.
+- Recherche des 7 requêtes commerciales + 2 informationnelles (WebSearch,
+  sans connexion, jamais le nom de marque) : **kotastudio.fr toujours absent
+  partout**, attendu (1 jour depuis le dernier run, page la plus récente —
+  Haute-Savoie — n'a qu'un jour). Kreaxion toujours présent sur "création
+  site internet Saint-Julien-en-Genevois", "création site vitrine
+  Haute-Savoie" et "refonte site internet Haute-Savoie" (3/9 requêtes,
+  inchangé). Aucun nouveau concurrent observé.
+- Recherche du lundi (étape 5) faite avant de choisir le chantier : rien qui
+  remette en cause la stratégie actuelle. Détail sous "Techniques apprises".
+- Chantier du jour : **enrichissement du schema.org de la page d'accueil**
+  (`Service` par prestation + `hasOfferCatalog` sur le `ProfessionalService`),
+  priorité n°8 de "Chantiers en attente" depuis le 09-17 — la home n'avait
+  qu'un `ProfessionalService` générique, sans détail des offres. Respecte
+  l'alternance (dernier chantier, 09-20, était une page ville/régionale).
+  Genève reste la seule page ville bloquée (positionnement à clarifier).
+
 **Au 2026-09-20 (dimanche — 3 jours depuis le dernier run, pas de run les 18/19) :**
 
 - Avant toute chose, vérification de process : `origin/main` en HEAD était bien
@@ -228,6 +265,124 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-09-21 — Enrichissement schema.org de la page d'accueil (Service + hasOfferCatalog)
+
+**Pourquoi ce chantier :** priorité n°8 de "Chantiers en attente" depuis le
+09-17 — la home ne portait que le `ProfessionalService` générique statique
+dans `index.html` (nom, description, téléphone, `areaServed: "FR"`), sans
+détail des prestations. Les 6 pages villes/régionale ont déjà un `Service`
+par page via `jsonld.js`, mais la home elle-même n'avait aucun `Service` ni
+catalogue d'offres — un manque direct pour le volet GEO (un LLM lisant le
+JSON-LD de la home ne voyait aucune structure listant "Landing page" vs
+"Site sur-mesure" avec leurs prix). Respecte l'alternance (dernier chantier,
+09-20, était une page ville/régionale).
+
+**Décision de conception, notée explicitement :** pas de node `Organization`
+séparé du `ProfessionalService`. Dans la hiérarchie schema.org,
+`ProfessionalService` hérite déjà de `LocalBusiness` qui hérite
+d'`Organization` — ajouter un second node `@type: Organization` pour la même
+entité (même nom, même URL) aurait créé deux enregistrements distincts pour
+une seule société, un vrai risque de confusion d'entité plutôt qu'un gain.
+Le `ProfessionalService` existant porte déjà ce rôle.
+
+**Fait précisément :**
+- `index.html` (le seul fichier modifié) : le `<script type="application/ld+json">`
+  statique passe d'un objet `ProfessionalService` unique à un `@graph` de 3
+  nodes :
+  - `ProfessionalService` (`@id` ajouté, `#organisation`) — mêmes champs
+    qu'avant (`name`, `description`, `url`, `telephone`, `areaServed`,
+    `sameAs`) + `priceRange: "790€-1290€"` (calculé directement depuis les 2
+    prix réels ci-dessous, rien d'inventé) + `hasOfferCatalog` (type
+    `OfferCatalog`) qui référence les 2 `Service` par `@id`.
+  - `Service` "Landing page" (`@id` `#service-landing-page`) : `serviceType`,
+    `description` reprise **mot pour mot** du texte affiché sur la home
+    (`whatWeDo.cards[1].text` dans `content.js` : "Une page unique,
+    redoutablement efficace, taillée pour une offre et un seul objectif :
+    convertir."), `provider` référencé par `@id`, `offers` avec le prix réel
+    (`offer.plans[0]`, 790 €, même transformation `price.replace(/[^\d]/g,"")`
+    que `buildCityJsonLd` dans `jsonld.js` — cohérence de pattern).
+  - `Service` "Site sur-mesure" (`@id` `#service-sur-mesure`) : même
+    structure, description mot pour mot de `whatWeDo.cards[0].text`, prix
+    réel 1 290 € (`offer.plans[1]`).
+- **Pas de `FAQPage` ajouté sur la home** : vérifié dans `Home.jsx` (les 9
+  composants de section : Hero, MarqueeLogos, WhatWeDo, Promises, Work,
+  Process, Testimonials, Offer, FinalCta) qu'aucune section FAQ n'existe sur
+  cette page — ajouter un `FAQPage` sans FAQ visible correspondante aurait
+  été exactement le mismatch interdit par les instructions de cette routine.
+- **Choix délibéré de ne pas passer par `src/lib/jsonld.js` / un nouveau
+  script de build** : contrairement aux pages villes et à la page prix (où
+  le JSON-LD est calculé par une fonction pure partagée client/build pour
+  éliminer tout risque de mismatch), la home n'a aujourd'hui aucune
+  injection JSON-LD côté client (pas de `useEffect` dans `Home.jsx`) — son
+  JSON-LD est et reste 100% statique dans `index.html`, exactement comme le
+  title/description/OG de la même page le sont déjà (jamais générés depuis
+  `content.js`). Générer ce bloc dynamiquement aurait été cohérent avec le
+  reste du site mais était hors du périmètre nécessaire pour ce chantier
+  (les prix affichés ne changent pas souvent) — noté ci-dessous sous "Ce qui
+  reste" comme amélioration possible, pas un risque immédiat : les valeurs
+  ont été recopiées une fois depuis `content.js`, vérifiées identiques mot
+  pour mot et chiffre pour chiffre au moment du commit.
+
+**Contrôle qualité fait avant de pousser :**
+- JSON-LD validé en isolation (`JSON.parse` sur le bloc extrait d'`index.html`
+  avant tout build) : 3 nodes, `hasOfferCatalog.itemListElement` de longueur
+  2, aucune erreur de syntaxe.
+- `npm install` (node_modules absent au démarrage de cette session, comme
+  systématiquement) puis `npm run build` : les 3 étapes s'enchaînent sans
+  erreur, aucun changement dans les logs des deux scripts de post-traitement
+  (ce chantier ne touche aucune route qu'ils traitent).
+- Script Python sur `dist/index.html` généré : JSON-LD ré-extrait et parsé,
+  les 2 `Service` retrouvés avec leurs prix exacts (790/1290, EUR), le
+  `hasOfferCatalog` du `ProfessionalService` référence bien les 2 `@id`.
+- Playwright (Chromium préinstallé, technique du 09-10, symlink
+  `node_modules/playwright`), `serve dist` en local, viewport mobile
+  390×844, page d'accueil : **exactement 1** `<script type="application/
+  ld+json">` (pas de doublon, le bloc statique remplacé proprement, aucun
+  `useEffect` n'en ajoute un second), H1 correct, 0 `pageerror`/
+  `console.error` applicatif (seules erreurs : `ERR_CERT_AUTHORITY_INVALID`
+  sur polices/Iconify bloquées par le réseau du bac à sable, comme tous les
+  runs précédents, et le 404 `/vite.svg` pré-existant).
+- Screenshot pleine page mobile après scroll par paliers : les 9 sections de
+  la home rendues normalement, mise en page crème/encre/or intacte, aucune
+  section ni le slider avant/après du hero touchés (ce chantier ne modifie
+  aucun composant React, uniquement `index.html`).
+- `git diff --stat` avant commit : uniquement `index.html`.
+- Symlink de test `node_modules/playwright` et script de test Playwright
+  temporaires supprimés après usage (jamais commités).
+
+**Commit :** voir hash ci-dessous — poussé, déployé et vérifié en prod.
+
+**Ce qui n'a pas été fait, et pourquoi :**
+- Pas de node `Organization` séparé : voir décision de conception ci-dessus.
+- Pas de `Service` pour les options "SEO avancé" / "Maintenance mensuelle"
+  (`offer.extras`) : les deux sont à prix "sur devis" dans `content.js`,
+  aucun montant réel disponible — publier un `Offer` sans prix (ou avec un
+  prix inventé) aurait été contraire à la règle "n'invente jamais". Dès que
+  Yanis fournit ces montants (déjà demandé sous "Hypothèses à vérifier"
+  depuis le 09-10), un `Service` dédié pourra être ajouté.
+- Pas de `BreadcrumbList` sur la home : un breadcrumb à un seul niveau
+  ("Accueil") n'apporte aucun signal réel, contrairement aux pages villes où
+  il a 2 niveaux utiles.
+
+**Ce qui reste, et pourquoi :**
+- Genève reste bloqué sur la clarification de positionnement (freelance vs
+  agence, voir "Hypothèses à vérifier") — inchangé.
+- Amélioration possible non urgente : faire calculer le JSON-LD de la home
+  par une fonction pure dans `jsonld.js` (comme les autres pages) plutôt que
+  de le garder recopié à la main dans `index.html`, pour éliminer tout
+  risque futur de dérive si les prix de `content.js` changent sans que
+  quelqu'un pense à répercuter le changement ici. Pas fait aujourd'hui car
+  cela aurait demandé de créer un nouveau point d'injection pour une route
+  qui n'est actuellement générée par aucun script de post-build (`/` sort
+  directement de `vite build`) — plus risqué que nécessaire pour ce chantier,
+  et le reste d'`index.html` (title/description/OG) suit déjà ce même
+  pattern 100% statique depuis le début du projet.
+- Item n°7 de "Chantiers en attente" (audit ligne par ligne de `llms.txt`
+  contre `content.js`) toujours pas fait, pas choisi aujourd'hui — chantier
+  technique différent priorisé (impact GEO plus direct).
+
+---
 
 ### 2026-09-20 — Sixième page, régionale : "Création et refonte de site internet en Haute-Savoie"
 
@@ -1163,23 +1318,22 @@ Par ordre de priorité pour les prochains runs :
    noté en attente depuis le 09-17. Maintenant que les pages villes sont
    quasiment toutes faites (seule Genève reste), un run avec moins de
    contenu à produire pourrait s'y consacrer entièrement.
-8. **Schema.org à enrichir sur la home** (étape 4 des instructions,
-   pas encore fait) : la home n'a que le `ProfessionalService` générique
-   statique dans `index.html`, sans `Organization` distincte, sans
-   `BreadcrumbList`, et sans `Service` par prestation (site vitrine /
-   landing page / refonte / SEO — actuellement une seule ligne
-   `serviceType` générique sur les pages villes, jamais un `Service` par
-   offre sur la home elle-même). Impact GEO potentiel réel (un LLM qui lit
-   le JSON-LD de la home verrait une liste structurée des prestations),
-   mais demande de choisir une structure (probablement `hasOfferCatalog`
-   sur le `ProfessionalService`) sans rien inventer côté contenu — à faire
-   avec soin sur un run dédié plutôt qu'ajouté à la hâte.
+8. ~~Schema.org à enrichir sur la home~~ — **fait le 2026-09-21** (voir
+   "Chantiers faits") : `Service` "Landing page" + `Service` "Site
+   sur-mesure" avec prix réels, `hasOfferCatalog` sur le `ProfessionalService`.
+   Pas de node `Organization` séparé (décision documentée), pas de
+   `BreadcrumbList` (un seul niveau sur la home, aucun signal), pas de
+   `Service` pour les extras "sur devis" (pas de prix réel disponible).
 9. Maintenant que les 5 pages géographiques prévues sont quasiment toutes
    faites (Genève excepté, bloqué), les prochains chantiers de contenu
    "page + requête" devront venir d'une vraie recherche de nouvelles
    requêtes (pas seulement la liste initiale du 09-07) — à envisager un
    lundi, lors de la recherche de l'étape 5, plutôt que de forcer une
    nouvelle page sans requête cible identifiée.
+10. Faire calculer le JSON-LD de la home par une fonction pure dans
+    `jsonld.js` (comme les autres pages) plutôt que le garder recopié à la
+    main dans `index.html` — pas urgent (voir "Ce qui reste" du chantier du
+    09-21), utile si les prix de `content.js` changent un jour.
 
 ---
 
@@ -1229,6 +1383,22 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 
 ## Erreurs commises et corrigées
 
+- **2026-09-21** — `git fetch origin main --quiet` (réf unique) a laissé un
+  `origin/main` local **périmé** en tout début de ce run (7ee625b, commit du
+  09-14, alors que le vrai `main` distant était déjà à 3ca1b15, le tip du
+  09-20) — a bien failli faire croire à tort à 6 jours de retard entre
+  `main` et la production (voir "État des lieux"). Seul un `git fetch origin
+  --quiet` complet (toutes les branches, pas seulement `main`) a rafraîchi le
+  cache correctement. C'est le 4e run consécutif (09-16, 09-17, 09-20, 09-21)
+  où un fetch partiel donne un résultat périmé sur ce dépôt, malgré des
+  formulations différentes à chaque fois (réf unique, réf unique + réf
+  absente) — la leçon du 09-17/09-20 ("ne jamais combiner 2 réfs dans un seul
+  fetch") était donc incomplète : le vrai risque n'est pas la combinaison de
+  réfs, c'est **tout fetch partiel** sur ce dépôt. Nouvelle règle pour les
+  prochains runs : toujours vérifier l'état de `main` avec un `git fetch
+  origin --quiet` **complet** (sans restriction de réf) avant toute
+  conclusion sur son SHA, jamais un fetch restreint à une seule branche, même
+  documenté comme fiable par un run précédent.
 - **2026-09-20** — Incident d'environnement (pas un bug du site) : en testant
   une technique pour rendre le module `playwright` global résolvable en ESM
   depuis un script de test temporaire, une commande `ln -sfn <cible mal
@@ -1288,6 +1458,40 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 
 _(à compléter chaque lundi après recherche sur l'état de l'art AI Overviews /
 ChatGPT / Perplexity)_
+
+- **2026-09-21 (recherche du lundi)** — Rien trouvé qui justifie de changer
+  la stratégie actuelle. Détail :
+  - Confirmé (recherche croisée, cohérent avec la doc Google actuelle) :
+    **il n'existe aucun schema.org spécifique aux AI Overviews** — ils
+    puisent dans le même index que la recherche organique classique, donc le
+    balisage standard déjà posé sur ce site (`Service`/`FAQPage`/`HowTo`/
+    `BreadcrumbList`, prérendu depuis le 09-17) reste la bonne approche, rien
+    à ajouter de nouveau côté types de schema pour ce motif.
+  - **Non retenu, mise en garde méthodologique répétée du 09-14** : plusieurs
+    sources secondaires (mocobin.com, stackmatix.com, protoneffect.com,
+    grupainsight.com, clickforest.com, heeya.fr — blogs de contenu SEO
+    généraliste, pas des sources officielles) affirment un changement précis
+    du parseur JSON-LD de Google le 21 août 2026 (passage à un unique passage
+    de "unescaping" HTML, entités doublement échappées non résolues,
+    recommandation de préférer les échappements Unicode type `&`).
+    Recherche complémentaire ciblée sur `developers.google.com` (Search
+    Central) : **aucune trace officielle de ce changement trouvée**. Non
+    retenu comme fait confirmé, conformément à la règle "sources sérieuses
+    uniquement". Vérifié que ça ne change rien de toute façon : `jsonld.js`
+    (`escapeForInlineScript`) échappe déjà `<` en `<` (échappement
+    Unicode, pas une entité HTML) depuis le 09-17 — la pratique déjà en place
+    sur ce site est celle recommandée par ces sources, qu'elles soient
+    fiables ou non. Aucun changement de code nécessaire.
+  - Confirmé par Search Engine Land (source sérieuse) : ChatGPT et Perplexity
+    n'utilisent pas de graphe de liens classique, ils évaluent la profondeur
+    thématique et la résolution réelle de la requête — cohérent avec
+    l'approche déjà suivie sur ce site (réponse directe en tête de chaque
+    H2, contenu spécifique à chaque page plutôt que dupliqué). Aucun
+    changement de pratique nécessaire.
+  - Point non actionnable pour ce site, noté pour mémoire seulement :
+    Perplexity cite Reddit dans plus de 46% des cas sur les requêtes qu'il
+    couvre (Search Engine Land) — aucune présence Reddit réaliste à
+    construire pour une agence locale, hors périmètre.
 
 - **2026-09-14 (recherche du lundi)** — **Google a supprimé les FAQ rich
   results (le déroulant FAQ dans les résultats de recherche) le 7 mai
@@ -1647,6 +1851,29 @@ vitrine Haute-Savoie" et "refonte site internet Haute-Savoie". Aucun nouveau
 concurrent observé sur les 9 requêtes par rapport aux runs précédents.
 Premier relevé qui comptera vraiment pour la nouvelle page Haute-Savoie :
 dans plusieurs semaines à partir d'aujourd'hui.
+
+---
+
+### 2026-09-21
+
+| Requête | Position kotastudio.fr |
+|---|---|
+| création site internet Saint-Julien-en-Genevois | absent |
+| agence web Annemasse | absent |
+| création site internet Annecy | absent |
+| agence web Lyon | absent |
+| création site vitrine Haute-Savoie | absent |
+| freelance création site internet Genève | absent |
+| refonte site internet Haute-Savoie | absent |
+| combien coûte un site internet (informationnelle) | absent |
+| combien coûte un site vitrine (informationnelle) | absent |
+
+Toujours absent partout — attendu, 1 jour depuis le dernier relevé (09-20),
+page la plus récente (Haute-Savoie) n'a qu'un jour. Kreaxion toujours présent
+sur les 3 mêmes requêtes qu'hier (Saint-Julien, vitrine Haute-Savoie, refonte
+Haute-Savoie), aucun nouveau concurrent observé sur les 9 requêtes. Chantier
+du jour (schema.org home) ne cible aucune de ces 9 requêtes directement — pas
+de mouvement attendu sur ce tableau avant la prochaine page ville/contenu.
 
 ---
 

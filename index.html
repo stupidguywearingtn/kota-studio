@@ -25,13 +25,45 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "ProfessionalService",
-      "name": "Kota Studio",
-      "description": "Agence de création de sites web sur-mesure : sites vitrine, landing pages, refonte et design.",
-      "url": "https://kotastudio.fr/",
-      "telephone": "+33668823396",
-      "areaServed": "FR",
-      "sameAs": []
+      "@graph": [
+        {
+          "@type": "ProfessionalService",
+          "@id": "https://kotastudio.fr/#organisation",
+          "name": "Kota Studio",
+          "description": "Agence de création de sites web sur-mesure : sites vitrine, landing pages, refonte et design.",
+          "url": "https://kotastudio.fr/",
+          "telephone": "+33668823396",
+          "areaServed": "FR",
+          "priceRange": "790€-1290€",
+          "sameAs": [],
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Prestations Kota Studio",
+            "itemListElement": [
+              { "@type": "Offer", "itemOffered": { "@id": "https://kotastudio.fr/#service-landing-page" } },
+              { "@type": "Offer", "itemOffered": { "@id": "https://kotastudio.fr/#service-sur-mesure" } }
+            ]
+          }
+        },
+        {
+          "@type": "Service",
+          "@id": "https://kotastudio.fr/#service-landing-page",
+          "name": "Landing page",
+          "serviceType": "Création de landing page",
+          "description": "Une page unique, redoutablement efficace, taillée pour une offre et un seul objectif : convertir.",
+          "provider": { "@id": "https://kotastudio.fr/#organisation" },
+          "offers": { "@type": "Offer", "price": "790", "priceCurrency": "EUR" }
+        },
+        {
+          "@type": "Service",
+          "@id": "https://kotastudio.fr/#service-sur-mesure",
+          "name": "Site sur-mesure",
+          "serviceType": "Création de site internet sur-mesure",
+          "description": "Un site complet, codé à la main, à votre image. Structure, design et performances pensés pour durer.",
+          "provider": { "@id": "https://kotastudio.fr/#organisation" },
+          "offers": { "@type": "Offer", "price": "1290", "priceCurrency": "EUR" }
+        }
+      ]
     }
     </script>
   </head>
