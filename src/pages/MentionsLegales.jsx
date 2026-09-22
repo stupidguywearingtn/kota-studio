@@ -22,7 +22,7 @@ export default function MentionsLegales() {
           <li>Capital social : <Ph>{c.capital}</Ph></li>
           <li>N° TVA intracommunautaire : <Ph>{c.vat}</Ph></li>
           <li>Siège social : <Ph>{c.address}</Ph></li>
-          <li>E-mail : <Ph>{c.email}</Ph></li>
+          <li>E-mail : {c.email}</li>
           <li>Téléphone : {c.phone}</li>
           <li>Directeur de la publication : <Ph>{c.director}</Ph></li>
         </ul>

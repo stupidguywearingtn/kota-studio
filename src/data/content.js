@@ -407,7 +407,7 @@ export const legal = {
     capital: "[Capital social — si société]",
     vat: "[N° TVA intracommunautaire — si applicable]",
     address: "[Adresse complète du siège]",
-    email: "[adresse e-mail de contact]",
+    email: "hello@kota.studio",
     phone: "+33 6 68 82 33 96",
     director: "[Nom du directeur / de la directrice de la publication]",
   },

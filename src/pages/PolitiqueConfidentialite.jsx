@@ -14,7 +14,7 @@ export default function PolitiqueConfidentialite() {
       <LegalSection n={1} title="Responsable du traitement">
         <p>
           Le responsable du traitement des données collectées sur ce site est{" "}
-          <Ph>{c.name}</Ph>, joignable à l'adresse <Ph>{c.email}</Ph>.
+          <Ph>{c.name}</Ph>, joignable à l'adresse {c.email}.
         </p>
       </LegalSection>
 
@@ -91,7 +91,7 @@ export default function PolitiqueConfidentialite() {
           Conformément au RGPD, vous disposez d'un droit d'accès, de
           rectification, d'effacement, de limitation, d'opposition et de
           portabilité de vos données. Pour les exercer, écrivez-nous à{" "}
-          <Ph>{c.email}</Ph>.
+          {c.email}.
         </p>
         <p>
           Vous pouvez également introduire une réclamation auprès de la CNIL (
@@ -127,7 +127,7 @@ export default function PolitiqueConfidentialite() {
       <LegalSection n={10} title="Contact">
         <p>
           Pour toute question relative à cette politique ou à vos données,
-          contactez-nous à <Ph>{c.email}</Ph> ou au {c.phone}.
+          contactez-nous à {c.email} ou au {c.phone}.
         </p>
       </LegalSection>
     </LegalLayout>

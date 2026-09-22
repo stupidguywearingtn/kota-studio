@@ -16,8 +16,8 @@
 
 ## Réalisations
 
-- [Tel & Cash](/projets/tel-and-cash): E-commerce — smartphones reconditionnés. Boutique en ligne complète (back-office, SEO, statistiques) construite de A à Z.
-- [Markus Immobilier](/projets/markus-immobilier): Agence immobilière premium. Site vitrine avec estimation immobilière en ligne et SEO local.
+- [Tel & Cash](/projets/tel-and-cash): E-commerce — smartphones reconditionnés.
+- [Markus Immobilier](/projets/markus-immobilier): Agence immobilière premium.
 - [Sensoria](/projets/sensoria): Expérience immersive — escape game premium.
 - [Margaux CDR](/projets/margaux-cdr): Soins du corps — beauté / bien-être.
 
