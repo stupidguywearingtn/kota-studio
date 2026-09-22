@@ -10,6 +10,35 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-22 (mardi — 1 jour depuis le dernier run) :**
+
+- Process de vérification (leçon du 09-21 appliquée) : `git fetch origin
+  --quiet` complet (toutes les branches, pas de réf unique) dès le début du
+  run. `origin/main` = `566db0e` = dernier commit de journal (09-21) = HEAD
+  de la branche de session : aucun retard, aucune fausse alerte cette fois.
+- `curl` en prod (`kotastudio.fr`) : homepage, page Haute-Savoie et page Lyon
+  répondent 200 ; `hasOfferCatalog` bien présent dans le JSON-LD statique de
+  la home (vérifié par `grep` sur le HTML brut) ; `llms.txt` servi en prod
+  identique octet pour octet au fichier local avant modification. Rien de
+  cassé, rien de régressé depuis le 09-21.
+- Recherche des 7 requêtes commerciales + 2 informationnelles (WebSearch,
+  sans connexion, jamais le nom de marque) : **kotastudio.fr toujours absent
+  partout**, attendu (1 jour depuis le dernier run, aucune nouvelle page
+  entre-temps). Kreaxion toujours présent sur "création site internet
+  Saint-Julien-en-Genevois", "création site vitrine Haute-Savoie" et
+  "refonte site internet Haute-Savoie" (3/9 requêtes, inchangé depuis
+  plusieurs runs). Aucun nouveau concurrent observé sur les 9 requêtes.
+- Pas de recherche lundi (étape 5) : aujourd'hui est un mardi, cette étape
+  ne s'applique pas à ce run (déjà faite le 09-21).
+- Chantier du jour : **audit ligne par ligne de `llms.txt` contre
+  `content.js`/`cities.js`**, priorité n°7 de "Chantiers en attente" depuis
+  le 09-17, repoussée depuis parce que les pages villes prenaient la
+  priorité — maintenant que 5 des 6 pages géographiques prévues sont faites
+  (seule Genève reste, bloquée), c'était le bon moment pour un chantier de
+  fond plutôt que de contenu. Respecte l'alternance (dernier chantier,
+  09-21, était technique/schema.org — celui-ci est un audit de contenu,
+  pas une nouvelle page, donc angle différent).
+
 **Au 2026-09-21 (lundi — 1 jour depuis le dernier run) :**
 
 - Vérification de process, plus poussée que d'habitude suite à une fausse
@@ -265,6 +294,84 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-09-22 — Audit `llms.txt` vs `content.js`/`cities.js` + sync email de contact
+
+**Pourquoi ce chantier :** priorité n°7 de "Chantiers en attente" depuis le
+09-17, jamais fait faute de temps disponible (les pages villes/régionale
+prenaient la priorité). Le 09-16, deux affirmations non sourcées avaient
+déjà été trouvées et retirées de `llms.txt` (localisations clients) — sans
+audit complet, rien ne garantissait qu'il n'y en avait pas d'autres. `llms.txt`
+est justement le fichier pensé pour être une source fiable pour les
+crawlers IA (GPTBot, PerplexityBot, ClaudeBot) : une affirmation non
+vérifiable ailleurs sur le site, si elle y reste, peut être citée comme un
+fait par une IA.
+
+**Fait précisément :**
+- Relu `llms.txt` ligne par ligne contre `content.js` (identité, marquee,
+  promesses, offre, projets, contact) et `cities.js` (pages villes/
+  régionale) :
+  - Tagline (ligne 3), liste des 8 pages et leurs descriptions (distances,
+    "Chablais, Faucigny", clientèle transfrontalière France/Suisse) :
+    tout correspond exactement au contenu réel de `cities.js` — rien à
+    corriger.
+  - Section "Réalisations" : **2 des 4 descriptions de projet affirmaient
+    des fonctionnalités jamais mentionnées ailleurs sur le site** —
+    "Boutique en ligne complète (back-office, SEO, statistiques) construite
+    de A à Z" pour Tel & Cash, et "Site vitrine avec estimation immobilière
+    en ligne et SEO local" pour Markus Immobilier. `content.js > projects`
+    ne contient que le secteur d'activité pour ces 2 projets (pages projet
+    encore en "Bientôt disponible"), rien sur ces fonctionnalités précises.
+    Ces phrases dataient du tout premier commit SEO (`7216b4e`, avant le
+    début de ce journal) — même origine et même catégorie que les
+    localisations "Lyon/Villeurbanne"/"Belgique" retirées le 09-16, jamais
+    traitées à ce moment-là car le fix du 09-16 ne portait que sur les
+    localisations. Sensoria et Margaux CDR, elles, n'avaient qu'une
+    description correspondant exactement à leur `sector` — déjà propres.
+  - Contact (WhatsApp) : cohérent avec `whatsapp.number`/`legal.company.phone`.
+- **Fix :** `public/llms.txt` réduit ces 2 descriptions au seul secteur
+  d'activité vérifiable, à l'identique du traitement déjà appliqué à
+  Sensoria/Margaux CDR : "E-commerce — smartphones reconditionnés." et
+  "Agence immobilière premium.".
+- **Trouvaille annexe (même audit, cible différente) :** `legal.company.email`
+  était encore un placeholder `"[adresse e-mail de contact]"` alors que
+  `hello@kota.studio` est publié en clair dans le footer (`content.js >
+  footer.columns`) depuis le tout premier commit du site (`ade68f2`,
+  antérieur au suivi SEO) — donc une donnée réelle déjà en ligne, pas une
+  invention. Synchronisé dans `legal.company.email`, et l'affichage
+  (`MentionsLegales.jsx`, `PolitiqueConfidentialite.jsx`, 4 occurrences)
+  passe du surlignage doré `<Ph>` (réservé aux champs encore à compléter) à
+  un texte normal, exactement le traitement déjà appliqué à `c.phone`.
+  Contribue à la cohérence NAP (le téléphone et maintenant l'email sont
+  identiques partout sur le site).
+- Build (`npm run build`, Vite + prerendering `<head>` + prerendering corps
+  de page) : 0 erreur, 13 routes prérendues. Vérifié dans le HTML généré que
+  les 4 occurrences de l'email s'affichent en clair et sans le style de
+  surlignage `<Ph>` (`grep` sur `dist/mentions-legales/index.html` et
+  `dist/politique-de-confidentialite/index.html`), pendant que les autres
+  champs légaux non fournis (nom, adresse, SIRET...) restent bien surlignés.
+
+**Commit :** `ba014bf` — poussé directement sur `main`.
+
+**Ce qui n'a pas été fait aujourd'hui, et pourquoi :**
+- Pas de nouvelle page ville/contenu : ce chantier était volontairement un
+  audit de fond, pas une page (voir "État des lieux" — alternance
+  respectée par le changement d'angle, pas par un contenu supplémentaire).
+- Pas de réintégration des fonctionnalités retirées de `llms.txt` (back-
+  office/stats pour Tel & Cash, estimation immobilière en ligne/SEO local
+  pour Markus Immobilier) : ce sont peut-être des faits réels, mais rien
+  sur le site ne les confirme et la règle "n'invente jamais" s'applique
+  aussi à ce qui existait avant le suivi SEO. Noté sous "Hypothèses à
+  vérifier" pour que Yanis confirme — si c'est exact, ça pourra aussi
+  enrichir les pages projet (`defi`/`approche`/`resultat`) qui sont encore
+  en "Bientôt disponible".
+- Pas de remplissage des placeholders légaux restants (adresse, SIRET,
+  forme juridique, TVA, directeur de publication) : contrairement à
+  l'email, aucune de ces valeurs n'est publiée ailleurs sur le site pour
+  être "synchronisée" sans invention — toujours bloqué sur Yanis (voir
+  "Hypothèses à vérifier", inchangé).
+
+---
 
 ### 2026-09-21 — Enrichissement schema.org de la page d'accueil (Service + hasOfferCatalog)
 
@@ -1312,12 +1419,10 @@ Par ordre de priorité pour les prochains runs :
    page `/combien-coute-un-site-internet` dès que Yanis fournit ces
    montants (voir "Hypothèses à vérifier") — la page est structurée pour
    accueillir cet ajout sans refonte.
-7. **Auditer `llms.txt` ligne par ligne contre `content.js`** pour d'autres
-   affirmations non sourcées du même type que celle corrigée le 09-16
-   (localisations clients Markus Immobilier/Sensoria) — toujours pas fait,
-   noté en attente depuis le 09-17. Maintenant que les pages villes sont
-   quasiment toutes faites (seule Genève reste), un run avec moins de
-   contenu à produire pourrait s'y consacrer entièrement.
+7. ~~Auditer `llms.txt` ligne par ligne contre `content.js`~~ — **fait le
+   2026-09-22** (voir "Chantiers faits") : 2 autres affirmations non
+   sourcées trouvées et retirées (fonctionnalités inventées pour Tel & Cash
+   et Markus Immobilier), reste du fichier vérifié conforme.
 8. ~~Schema.org à enrichir sur la home~~ — **fait le 2026-09-21** (voir
    "Chantiers faits") : `Service` "Landing page" + `Service` "Site
    sur-mesure" avec prix réels, `hasOfferCatalog` sur le `ProfessionalService`.
@@ -1371,6 +1476,17 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
   soient réintégrées (utile pour un futur maillage géographique, ex. un
   lien vers la page Lyon depuis la fiche Markus Immobilier si le client
   est bien basé à Lyon/Villeurbanne).
+- **Fonctionnalités réelles des projets Tel & Cash et Markus Immobilier**
+  (2026-09-22) : `llms.txt` affirmait depuis le tout premier commit SEO un
+  "back-office" avec "SEO, statistiques" pour Tel & Cash, et une
+  "estimation immobilière en ligne" avec "SEO local" pour Markus
+  Immobilier — sans que `content.js` (ni aucune autre page) ne confirme ces
+  fonctionnalités. Retiré aujourd'hui par prudence (voir "Chantiers faits"
+  et "Erreurs commises et corrigées"). Si ces fonctionnalités sont bien
+  réelles, Yanis peut les confirmer pour qu'elles soient réintégrées dans
+  `llms.txt` et, idéalement, utilisées pour remplir les sections `defi`/
+  `approche`/`resultat` de ces 2 pages projet (actuellement "Bientôt
+  disponible").
 - **Coût de la maintenance mensuelle et du pack SEO** (2026-09-10) :
   `content.js > offer.extras` liste "Maintenance mensuelle" et "SEO avancé"
   avec le prix "sur devis" pour les deux — jamais un montant réel. La
@@ -1383,6 +1499,20 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 
 ## Erreurs commises et corrigées
 
+- **2026-09-22** — Gap trouvé dans du code antérieur au journal (même
+  catégorie que le 09-16 et le 09-08) : `llms.txt` affirmait depuis le tout
+  premier commit SEO (`7216b4e`) des fonctionnalités précises pour 2
+  projets du portfolio (back-office/statistiques pour Tel & Cash,
+  estimation immobilière en ligne/SEO local pour Markus Immobilier) sans
+  qu'aucune autre partie du site ne les confirme. Le fix du 09-16 avait
+  retiré les localisations clients non sourcées du même fichier mais
+  n'avait pas audité le reste des descriptions de projet — preuve qu'un
+  correctif ciblé sur un type d'erreur trouvé par hasard ne garantit pas
+  qu'il n'y en a pas d'autres du même type ailleurs dans le même fichier.
+  Corrigé aujourd'hui par un audit complet, ligne par ligne. Leçon pour les
+  prochains runs : quand une affirmation non sourcée est trouvée dans un
+  fichier, traiter ça comme un signal pour auditer tout le fichier, pas
+  seulement corriger la ligne fautive trouvée par hasard.
 - **2026-09-21** — `git fetch origin main --quiet` (réf unique) a laissé un
   `origin/main` local **périmé** en tout début de ce run (7ee625b, commit du
   09-14, alors que le vrai `main` distant était déjà à 3ca1b15, le tip du
@@ -1875,6 +2005,29 @@ Haute-Savoie), aucun nouveau concurrent observé sur les 9 requêtes. Chantier
 du jour (schema.org home) ne cible aucune de ces 9 requêtes directement — pas
 de mouvement attendu sur ce tableau avant la prochaine page ville/contenu.
 
+### 2026-09-22
+
+| Requête | Position kotastudio.fr |
+|---|---|
+| création site internet Saint-Julien-en-Genevois | absent |
+| agence web Annemasse | absent |
+| création site internet Annecy | absent |
+| agence web Lyon | absent |
+| création site vitrine Haute-Savoie | absent |
+| freelance création site internet Genève | absent |
+| refonte site internet Haute-Savoie | absent |
+| combien coûte un site internet (informationnelle) | absent |
+| combien coûte un site vitrine (informationnelle) | absent |
+
+Toujours absent partout — attendu, 1 jour depuis le dernier relevé (09-21),
+aucune nouvelle page entre-temps (chantier du jour : audit de contenu, pas
+une page ciblant une nouvelle requête). Kreaxion toujours présent sur les 3
+mêmes requêtes que les runs précédents (Saint-Julien, vitrine Haute-Savoie,
+refonte Haute-Savoie), aucun nouveau concurrent observé sur les 9 requêtes.
+Pas de mouvement attendu sur ce tableau avant la prochaine page ville/
+contenu ou avant le délai d'indexation Google de plusieurs semaines pour
+les pages déjà en ligne.
+
 ---
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
@@ -1895,3 +2048,8 @@ de mouvement attendu sur ce tableau avant la prochaine page ville/contenu.
    et "Sensoria" (Belgique ?) — retirées de `llms.txt` le 2026-09-16 car
    non vérifiées et absentes de `content.js`. À confirmer pour réintégration
    et, pour Markus Immobilier, pour un éventuel lien vers la page Lyon.
+8. Fonctionnalités réelles des projets Tel & Cash (back-office avec SEO et
+   statistiques ?) et Markus Immobilier (estimation immobilière en ligne,
+   SEO local ?) — retirées de `llms.txt` le 2026-09-22 car non vérifiées et
+   absentes de `content.js`. À confirmer pour réintégration dans `llms.txt`
+   et, idéalement, pour remplir les pages projet correspondantes.
