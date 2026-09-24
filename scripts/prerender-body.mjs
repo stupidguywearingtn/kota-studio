@@ -58,6 +58,10 @@ const routes = [
     filePath: path.join(distDir, "combien-coute-un-site-internet", "index.html"),
   },
   {
+    routePath: "/comment-choisir-une-agence-web",
+    filePath: path.join(distDir, "comment-choisir-une-agence-web", "index.html"),
+  },
+  {
     routePath: "/mentions-legales",
     filePath: path.join(distDir, "mentions-legales", "index.html"),
   },

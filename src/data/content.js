@@ -464,6 +464,10 @@ export const footer = {
           label: "Combien coûte un site ?",
           href: "/combien-coute-un-site-internet",
         },
+        {
+          label: "Comment choisir une agence web ?",
+          href: "/comment-choisir-une-agence-web",
+        },
       ],
     },
     {

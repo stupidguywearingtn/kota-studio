@@ -39,7 +39,12 @@ import path from "node:path";
 
 import { cities } from "../src/data/cities.js";
 import { projects } from "../src/data/content.js";
-import { buildCityJsonLd, buildPricingGuideJsonLd, PAGE_SCHEMA_ATTR } from "../src/lib/jsonld.js";
+import {
+  buildCityJsonLd,
+  buildPricingGuideJsonLd,
+  buildAgencyGuideJsonLd,
+  PAGE_SCHEMA_ATTR,
+} from "../src/lib/jsonld.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.join(__dirname, "..", "dist");
@@ -140,6 +145,14 @@ writeRoute("/combien-coute-un-site-internet", {
     "Prix réels d'un site internet chez Kota Studio : landing page à partir de 790 €, site sur-mesure à partir de 1 290 €. Délai de 14 jours, ce qui est inclus, ce qui est en option.",
   schemaId: "pricing-guide",
   jsonLd: buildPricingGuideJsonLd(),
+});
+
+writeRoute("/comment-choisir-une-agence-web", {
+  title: "Comment choisir une agence de création de site internet ? | Kota Studio",
+  description:
+    "Les critères concrets pour choisir une agence web (prix, délai, interlocuteur, signaux d'alerte) et les 5 questions à poser avant de signer, en Haute-Savoie ou ailleurs.",
+  schemaId: "agency-guide",
+  jsonLd: buildAgencyGuideJsonLd(),
 });
 
 writeRoute("/mentions-legales", {
