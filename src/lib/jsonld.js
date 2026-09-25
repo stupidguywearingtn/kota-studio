@@ -159,6 +159,41 @@ export const agencyGuideFaqs = [
   },
 ];
 
+/* Portfolio (ProjectPage.jsx) : jusqu'ici aucune donnée structurée (ni
+   client, ni pré-rendue) sur les 4 pages projet — trouvé le 2026-09-25 en
+   auditant chaque type de page individuellement (leçon du 09-08 : ne jamais
+   supposer qu'un pattern posé sur un type de page est appliqué partout).
+   CreativeWork reprend uniquement des champs déjà affichés sur la page
+   (nom, secteur, année, visuel) — jamais de `url` externe tant que
+   `project.liveUrl` reste "#" (placeholder), pour ne pas publier un lien
+   cassé ou trompeur dans le schema. */
+export function buildProjectJsonLd(project) {
+  const pageUrl = `${SITE_URL}/projets/${project.slug}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE_URL}/` },
+          { "@type": "ListItem", position: 2, name: "Réalisations", item: `${SITE_URL}/#realisations` },
+          { "@type": "ListItem", position: 3, name: project.name, item: pageUrl },
+        ],
+      },
+      {
+        "@type": "CreativeWork",
+        name: project.name,
+        description: `${project.sector} — réalisation Kota Studio, agence de création de sites web sur-mesure.`,
+        url: pageUrl,
+        image: `${SITE_URL}${project.cover}`,
+        dateCreated: project.year,
+        genre: project.badge,
+        creator: { "@type": "ProfessionalService", name: "Kota Studio", url: `${SITE_URL}/` },
+      },
+    ],
+  };
+}
+
 export function buildAgencyGuideJsonLd() {
   const pageUrl = `${SITE_URL}${AGENCY_GUIDE_PATH}`;
   return {

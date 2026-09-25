@@ -43,6 +43,7 @@ import {
   buildCityJsonLd,
   buildPricingGuideJsonLd,
   buildAgencyGuideJsonLd,
+  buildProjectJsonLd,
   PAGE_SCHEMA_ATTR,
 } from "../src/lib/jsonld.js";
 
@@ -136,6 +137,8 @@ for (const project of projects) {
   writeRoute(`/projets/${project.slug}`, {
     title: `${project.name} — ${project.sector} | Kota Studio`,
     description: `${project.name} (${project.sector}) — réalisation Kota Studio, agence de création de sites web sur-mesure.`,
+    schemaId: `project:${project.slug}`,
+    jsonLd: buildProjectJsonLd(project),
   });
 }
 

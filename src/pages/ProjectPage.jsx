@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
+import { buildProjectJsonLd, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
 import { projects, projectPage } from "../data/content";
 import Logo from "../components/Logo";
 import Button from "../components/Button";
@@ -64,6 +65,25 @@ export default function ProjectPage() {
     };
   }, [project]);
 
+  /* SEO/GEO : données structurées (BreadcrumbList + CreativeWork), absentes
+     jusqu'ici sur les pages projet (voir commentaire dans lib/jsonld.js).
+     Même pré-rendu statique côté scripts/generate-static-heads.mjs (même
+     fonction buildProjectJsonLd) et même retrait de tout <script
+     data-page-schema> existant avant d'ajouter le sien, comme CityPage.jsx. */
+  useEffect(() => {
+    if (!project) return;
+    document.querySelectorAll(`script[${PAGE_SCHEMA_ATTR}]`).forEach((el) => el.remove());
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.setAttribute(PAGE_SCHEMA_ATTR, `project:${project.slug}`);
+    script.textContent = JSON.stringify(buildProjectJsonLd(project));
+    document.head.appendChild(script);
+
+    return () => {
+      script.remove();
+    };
+  }, [project]);
+
   /* Projet introuvable */
   if (!project) {
     return (
@@ -101,6 +121,14 @@ export default function ProjectPage() {
       <main>
         {/* ---- Hero projet ---- */}
         <section className="reveal mx-auto max-w-7xl px-6 pt-6 pb-10 lg:pt-12">
+          <nav aria-label="Fil d'Ariane" className="mb-6 flex flex-wrap items-center gap-2 text-sm text-taupe">
+            <Link to="/" className="hover:text-or">Accueil</Link>
+            <span aria-hidden="true">/</span>
+            <Link to="/#realisations" className="hover:text-or">Réalisations</Link>
+            <span aria-hidden="true">/</span>
+            <span className="text-encre">{project.name}</span>
+          </nav>
+
           <div className="flex flex-wrap items-center gap-3">
             <span className="rounded-full bg-encre px-3.5 py-1.5 text-xs font-bold text-creme">
               {project.badge}

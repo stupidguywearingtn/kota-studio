@@ -10,6 +10,58 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-25 (vendredi — 1 jour depuis le dernier run) :**
+
+- Process de vérification (comme chaque run) : `git fetch origin --quiet`
+  complet en tout début de run. `origin/main` = `16f9499` = dernier commit de
+  journal (09-24) = HEAD de la branche de session : aucun retard, poursuivi
+  sur `main` (même justification que le 09-24, pas besoin de la redocumenter
+  à chaque run — voir cette entrée si la tension revient).
+- `curl` en prod (`kotastudio.fr`) avant toute action : homepage, les 5 pages
+  villes/régionale, la page prix et la page "comment choisir une agence"
+  répondent toutes 200. `sitemap.xml` conforme (13 URLs, agence-choice guide
+  bien présente depuis hier). Rien de cassé, rien de régressé depuis le
+  09-24.
+- Vérification approfondie du maillage interne avant de choisir un chantier
+  (soupçon initial d'un vrai trou : un premier test rapide en `curl | grep`
+  semblait montrer que les pages villes/guides ne contenaient QUE des liens
+  `mailto:`/`wa.me`, aucun lien interne). Reproduit avec une sauvegarde du
+  HTML dans un fichier avant de grep (au lieu d'un pipe direct) : **faux
+  positif** — chaque page (villes, guide prix, guide agence) contient bien
+  la mesh complète vers les 5 pages villes + les 2 guides + les ancres home,
+  à la fois via le composant `Footer` (présent sur toutes les pages,
+  `content.js > footer.columns`) et via les blocs "maillage interne"
+  dédiés déjà ajoutés en body de page (`CityPage.jsx`, `PricingGuidePage.jsx`,
+  `ChooseAgencyGuidePage.jsx`). Aucune action nécessaire sur ce point — le
+  maillage interne stratégique est déjà solide, contrairement à l'hypothèse
+  de départ. Leçon de process notée sous "Erreurs commises et corrigées"
+  (le `curl | grep` en pipe direct sur ces pages a donné un résultat
+  incomplet/trompeur au moins une fois ; sauvegarder dans un fichier avant
+  de grep est plus fiable).
+- En cherchant un vrai chantier technique après ce faux positif, audit page
+  par page des données structurées (leçon du 09-08 : ne jamais supposer
+  qu'un pattern posé sur un type de page est appliqué sur tous les types de
+  page) : **les 4 pages projet (`ProjectPage.jsx`, portfolio) n'avaient
+  strictement aucune donnée structurée**, ni côté client (aucun `useEffect`
+  d'injection JSON-LD, contrairement à `CityPage.jsx`/`PricingGuidePage.jsx`/
+  `ChooseAgencyGuidePage.jsx`) ni côté pré-rendu statique (`scripts/
+  generate-static-heads.mjs` appelait bien `writeRoute` pour ces 4 pages,
+  mais sans jamais passer `schemaId`/`jsonLd`). Un vrai trou, présent depuis
+  la création de ces pages (bien avant le début de ce journal), jamais
+  détecté parce que les audits précédents (09-08 canonical, 09-16/09-22
+  llms.txt) portaient sur d'autres types de page ou d'autres fichiers.
+  Choisi comme chantier du jour — voir "Chantiers faits". Respecte
+  l'alternance (dernier chantier, 09-24, était une nouvelle page de
+  contenu ; celui-ci est un chantier technique/structuré, pas une page).
+- Recherche des 7 requêtes commerciales + 2 informationnelles (WebSearch,
+  sans connexion, jamais le nom de marque) : **kotastudio.fr toujours absent
+  partout**, attendu (1 jour depuis le dernier run, aucune nouvelle page
+  ciblant ces requêtes entre-temps). Kreaxion toujours présent sur les 3
+  mêmes requêtes que les runs précédents (Saint-Julien, vitrine Haute-Savoie,
+  refonte Haute-Savoie). Wiizup toujours présent sur "refonte site internet
+  Haute-Savoie" (2 guides, comme le 09-24). Aucun nouveau concurrent observé
+  sur les 9 requêtes par rapport au 09-24.
+
 **Au 2026-09-24 (jeudi — 2 jours depuis le dernier run) :**
 
 - **Note de process importante, à documenter une fois pour toutes** : cette
@@ -345,6 +397,75 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-09-25 — Données structurées manquantes sur les 4 pages projet (portfolio)
+
+**Pourquoi ce chantier :** en cherchant un chantier "renforcer le maillage
+interne" (soupçon initial, invalidé — voir "État des lieux" du 09-25 et
+"Erreurs commises et corrigées"), audit systématique de chaque type de page
+pour trouver un vrai trou technique. Trouvé : `ProjectPage.jsx` (4 pages
+portfolio : Tel & Cash, Markus Immobilier, Sensoria, Margaux CDR) n'avait
+aucune donnée structurée, ni client ni pré-rendue — le seul type de page du
+site dans ce cas. Un vrai signal manquant côté GEO/SEO (aucun moyen pour un
+crawler, avec ou sans JS, de comprendre que ces pages décrivent des
+réalisations réelles de l'agence) et côté "chantier technique découvert à
+l'étape 2" listé en étape 3 des instructions de cette routine.
+
+**Ce qui a été fait :**
+- `src/lib/jsonld.js` : nouvelle fonction pure `buildProjectJsonLd(project)`
+  (même pattern que `buildCityJsonLd`/`buildPricingGuideJsonLd`/
+  `buildAgencyGuideJsonLd` — une seule source de vérité partagée entre le
+  client et le pré-rendu statique, leçon du 09-17). Produit un `@graph` avec :
+  - `BreadcrumbList` (Accueil > Réalisations > nom du projet) ;
+  - `CreativeWork` (name, description, url, image, dateCreated, genre,
+    creator) — **uniquement des champs déjà affichés sur la page**
+    (`project.name`, `project.sector`, `project.badge`, `project.year`,
+    `project.cover`), jamais de champ inventé. Pas de `url` externe vers le
+    site du client (`project.liveUrl` vaut `"#"` pour les 4 projets
+    actuellement, un placeholder — publier ce lien dans le schema aurait été
+    trompeur).
+- `src/pages/ProjectPage.jsx` : ajout d'un `useEffect` d'injection JSON-LD
+  identique au pattern `CityPage.jsx` (retire tout `[data-page-schema]`
+  existant avant d'ajouter le sien). Ajout aussi d'un fil d'Ariane visible
+  ("Accueil / Réalisations / <nom du projet>") au-dessus du hero, absent
+  jusqu'ici sur ce type de page (les pages villes/guides en ont un depuis
+  leur création) — nécessaire pour que le `BreadcrumbList` corresponde à un
+  élément réellement visible, même règle de correspondance que pour
+  `FAQPage`.
+- `scripts/generate-static-heads.mjs` : les 4 routes `/projets/:slug`
+  passent maintenant `schemaId`/`jsonLd` à `writeRoute` (import de
+  `buildProjectJsonLd`) — jusqu'ici seul title/description étaient générés
+  pour ce type de page, jamais de JSON-LD statique.
+
+**Vérifié avant de pousser :**
+- `npm install` (node_modules absent en début de session, comme
+  systématiquement documenté) puis `npm run build` complet (Vite + les 2
+  scripts de post-build) : les 4 routes projet affichent bien "(+ JSON-LD)"
+  dans la sortie du script, alors qu'avant ce chantier elles n'affichaireint
+  que le titre.
+- JSON-LD extrait et parsé programmatiquement depuis
+  `dist/projets/tel-and-cash/index.html` : structure valide, tous les champs
+  correspondent exactement au contenu affiché (nom, secteur, année, image).
+- Texte du fil d'Ariane pré-rendu vérifié dans le HTML brut (`grep` sur
+  `dist/projets/tel-and-cash/index.html`) : "Accueil / Réalisations /
+  Tel & Cash", mot pour mot identique aux `name` du `BreadcrumbList`.
+- Rendu mobile vérifié avec Playwright (Chromium préinstallé de
+  l'environnement de session, technique du 09-10 réutilisée) : capture
+  d'écran à 390×844 sur `/projets/tel-and-cash` — fil d'Ariane bien visible,
+  compact, ne casse rien de la mise en page existante (badges, titre, bouton
+  CTA, capture du site inchangés).
+- `git status` après le build : seuls `scripts/generate-static-heads.mjs`,
+  `src/lib/jsonld.js` et `src/pages/ProjectPage.jsx` modifiés (3 fichiers,
+  66 lignes ajoutées, 0 supprimée) — `dist/`/`dist-server/` bien ignorés par
+  `.gitignore`, rien d'accidentel dans le commit.
+
+**Ce qui reste :** les 4 pages projet restent par ailleurs largement
+"Bientôt disponible" (défi/approche/résultat/recette, `liveUrl`) — bloqué
+sur du contenu réel que seul Yanis peut fournir (déjà noté sous "Hypothèses
+à vérifier", aucun changement de statut sur ce point aujourd'hui). Une fois
+ce contenu fourni, le `CreativeWork` pourra être enrichi (`about`, un
+`review`/`aggregateRating` uniquement si un vrai avis existe un jour — jamais
+inventé).
 
 ### 2026-09-24 — Nouvelle page de fond "Comment choisir une agence de création de site internet ?"
 
@@ -1622,6 +1743,16 @@ Par ordre de priorité pour les prochains runs :
     `jsonld.js` (comme les autres pages) plutôt que le garder recopié à la
     main dans `index.html` — pas urgent (voir "Ce qui reste" du chantier du
     09-21), utile si les prix de `content.js` changent un jour.
+11. ~~Données structurées manquantes sur les 4 pages projet~~ — **fait le
+    2026-09-25** (voir "Chantiers faits") : `BreadcrumbList` + `CreativeWork`
+    par projet, client + pré-rendu statique, fil d'Ariane visible ajouté sur
+    `ProjectPage.jsx`. Reste bloqué pour un enrichissement futur : contenu
+    réel des 4 pages projet (item 4 ci-dessus).
+12. Trouver une nouvelle requête réelle non couverte pour la prochaine page
+    de contenu (suite de l'item 9 — le backlog de pages non bloquées est de
+    nouveau vide après le chantier du 09-25, qui était technique et non une
+    page). Même méthode que le 09-24 : recherche ciblée avant de forcer une
+    page, jamais une page inventée sans demande réelle vérifiée derrière.
 
 ---
 
@@ -1682,6 +1813,22 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 
 ## Erreurs commises et corrigées
 
+- **2026-09-25** — Faux positif de process (pas une erreur poussée en
+  production, rattrapée avant tout chantier) : un premier test du maillage
+  interne avec `curl "<url>" | grep -oE '<a href="[^"]*"' | sort -u` sur
+  plusieurs pages a semblé montrer qu'elles ne contenaient QUE des liens
+  `mailto:`/`wa.me`, suggérant un trou de maillage interne majeur. En
+  sauvegardant la même page dans un fichier (`curl -o page.html` puis `grep`
+  sur le fichier) au lieu d'un pipe direct, le même `grep` a retrouvé tous
+  les liens internes réels (villes, guides, ancres home) — le pipe direct
+  avait donné un résultat tronqué ou incohérent au moins une fois sur ce
+  dépôt, cause exacte non identifiée (buffering de `curl`/`grep` en pipe sur
+  une réponse volumineuse ?). Leçon pour les prochains runs : pour tout
+  contrôle de contenu HTML en production via `curl | grep`, si le résultat
+  semble anormalement pauvre ou contredit ce que montre le code source,
+  refaire le test en sauvegardant la réponse dans un fichier avant de
+  grep — ne jamais conclure à un vrai problème sur la seule base d'un
+  `curl | grep` en pipe direct qui donne un résultat surprenant.
 - **2026-09-22** — Gap trouvé dans du code antérieur au journal (même
   catégorie que le 09-16 et le 09-08) : `llms.txt` affirmait depuis le tout
   premier commit SEO (`7216b4e`) des fonctionnalités précises pour 2
@@ -2239,6 +2386,32 @@ agence web" du jour ne cible aucune de ces 9 requêtes (requête
 informationnelle différente, non trackée dans ce tableau) — à ajouter à un
 futur tableau si elle montre un signal de visibilité propre une fois
 indexée.
+
+---
+
+### 2026-09-25
+
+| Requête | Position kotastudio.fr |
+|---|---|
+| création site internet Saint-Julien-en-Genevois | absent |
+| agence web Annemasse | absent |
+| création site internet Annecy | absent |
+| agence web Lyon | absent |
+| création site vitrine Haute-Savoie | absent |
+| freelance création site internet Genève | absent |
+| refonte site internet Haute-Savoie | absent |
+| combien coûte un site internet (informationnelle) | absent |
+| combien coûte un site vitrine (informationnelle) | absent |
+
+Toujours absent partout — attendu, 1 jour depuis le dernier relevé (09-24),
+et le chantier du jour était technique (JSON-LD des pages projet), pas une
+nouvelle page ciblant l'une de ces requêtes. Kreaxion toujours présent sur
+les 3 mêmes requêtes que les runs précédents (Saint-Julien, vitrine
+Haute-Savoie, refonte Haute-Savoie). Wiizup toujours présent sur "refonte
+site internet Haute-Savoie" (2 guides), comme le 09-24. Aucun nouveau
+concurrent observé sur les 9 requêtes. La page "comment choisir une agence
+web" (09-24) n'a qu'un jour, toujours largement sous le délai d'indexation
+Google — pas encore de signal de visibilité propre à ajouter à ce tableau.
 
 ---
 
