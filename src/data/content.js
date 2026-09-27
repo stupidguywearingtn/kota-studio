@@ -468,6 +468,10 @@ export const footer = {
           label: "Comment choisir une agence web ?",
           href: "/comment-choisir-une-agence-web",
         },
+        {
+          label: "Quand refaire son site internet ?",
+          href: "/quand-refaire-son-site-internet",
+        },
       ],
     },
     {

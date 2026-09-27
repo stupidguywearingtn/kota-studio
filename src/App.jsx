@@ -11,6 +11,7 @@ import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
 import CityPage from "./pages/CityPage";
 import PricingGuidePage from "./pages/PricingGuidePage";
 import ChooseAgencyGuidePage from "./pages/ChooseAgencyGuidePage";
+import RefonteSignsPage from "./pages/RefonteSignsPage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -81,6 +82,10 @@ export default function App() {
         <Route
           path="/comment-choisir-une-agence-web"
           element={<ChooseAgencyGuidePage />}
+        />
+        <Route
+          path="/quand-refaire-son-site-internet"
+          element={<RefonteSignsPage />}
         />
         {/* Pages villes SEO local (src/data/cities.js) — catch-all volontaire,
             gère aussi le 404 propre pour un slug inconnu (comme /projets/:slug). */}

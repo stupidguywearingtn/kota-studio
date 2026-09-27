@@ -222,3 +222,69 @@ export function buildAgencyGuideJsonLd() {
     ],
   };
 }
+
+export const REFONTE_SIGNS_PATH = "/quand-refaire-son-site-internet";
+
+/* Les 5 questions/réponses affichées sur RefonteSignsPage.jsx, reprises mot
+   pour mot dans le JSON-LD FAQPage — même principe que pricingGuideFaqs /
+   agencyGuideFaqs. Page trouvée le 2026-09-27 par recherche ciblée (requête
+   réelle et non couverte, angle différent de la page Haute-Savoie qui traite
+   déjà prix/délai/différence création-refonte pour la requête "refonte site
+   internet Haute-Savoie" : cette page répond à la question amont, "est-ce que
+   j'ai besoin d'une refonte", avant qu'un prospect ne cherche un prestataire.
+   Q4 réutilise les faits déjà publiés sur la page Haute-Savoie (grille
+   tarifaire, délai, audit de départ) reformulés brièvement + lien vers cette
+   page pour le détail, afin de ne pas dupliquer le même texte à l'identique
+   sur deux pages. Q5 reprend mot pour mot `promises.items[3].text`, comme
+   `agencyGuideFaqs[3]`. */
+export const refonteSignsFaqs = [
+  {
+    q: "Faut-il refaire son site internet ?",
+    a: "Il n'existe pas de durée de vie fixée à l'avance : un site a besoin d'une refonte quand plusieurs signes concrets s'accumulent en même temps, pas à cause d'un seul détail isolé. Si vous n'en repérez qu'un dans la liste ci-dessous, une simple mise à jour suffit généralement. Si plusieurs se cumulent, une refonte complète devient la meilleure option.",
+  },
+  {
+    q: "Quels sont les signes qu'une refonte est nécessaire ?",
+    a: "Six signes reviennent le plus souvent : un site pas adapté au mobile, un chargement lent, un design visiblement daté, un contenu impossible à modifier sans appeler un prestataire, un site qui ne reflète plus l'activité actuelle, et des prospects qui hésitent à cause du site avant même de contacter. Passez-les en revue un par un ci-dessous.",
+  },
+  {
+    q: "Refonte complète ou simple mise à jour : comment choisir ?",
+    a: "Si la base technique est saine — le site est déjà rapide, adapté au mobile et bien structuré — et qu'il s'agit seulement de rafraîchir des textes ou quelques visuels, une mise à jour suffit, sans tout reconstruire. Si plusieurs signes de la liste précédente sont réunis en même temps, une refonte complète devient plus pertinente qu'un rafistolage progressif.",
+  },
+  {
+    q: "Comment se passe une refonte de site internet chez Kota Studio ?",
+    a: "Une refonte suit la même grille tarifaire qu'un site sur-mesure et le même délai de 14 jours, en démarrant par un audit rapide du site existant. Ce qui fonctionne déjà — contenu, images, nom de domaine — est repris plutôt que jeté ; le reste est reconstruit avec le même niveau de soin qu'une création.",
+  },
+  {
+    q: "Perdre son référencement Google en changeant de site, un vrai risque ?",
+    a: `C'est un risque réel si la refonte est mal préparée (pages qui rankaient supprimées, URLs cassées), mais pas une fatalité : conserver la structure d'URL existante ou mettre en place les redirections nécessaires évite l'essentiel de la perte. Chez Kota Studio, les fondations techniques (structure, vitesse, contenu) sont posées avec le même soin lors d'une refonte que pour une création — mais comme ailleurs, personne ne peut sérieusement promettre un classement Google garanti : "${promises.items[3].text}"`,
+  },
+];
+
+export function buildRefonteSignsJsonLd() {
+  const pageUrl = `${SITE_URL}${REFONTE_SIGNS_PATH}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE_URL}/` },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Quand refaire son site internet ?",
+            item: pageUrl,
+          },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: refonteSignsFaqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+    ],
+  };
+}

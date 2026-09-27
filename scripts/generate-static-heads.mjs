@@ -43,6 +43,7 @@ import {
   buildCityJsonLd,
   buildPricingGuideJsonLd,
   buildAgencyGuideJsonLd,
+  buildRefonteSignsJsonLd,
   buildProjectJsonLd,
   PAGE_SCHEMA_ATTR,
 } from "../src/lib/jsonld.js";
@@ -156,6 +157,14 @@ writeRoute("/comment-choisir-une-agence-web", {
     "Les critères concrets pour choisir une agence web (prix, délai, interlocuteur, signaux d'alerte) et les 5 questions à poser avant de signer, en Haute-Savoie ou ailleurs.",
   schemaId: "agency-guide",
   jsonLd: buildAgencyGuideJsonLd(),
+});
+
+writeRoute("/quand-refaire-son-site-internet", {
+  title: "Quand refaire son site internet ? Les signes d'une refonte | Kota Studio",
+  description:
+    "Les 6 signes qui indiquent qu'une refonte est nécessaire, la différence avec une simple mise à jour, et comment se passe une refonte chez Kota Studio (prix, délai, référencement).",
+  schemaId: "refonte-signs",
+  jsonLd: buildRefonteSignsJsonLd(),
 });
 
 writeRoute("/mentions-legales", {
