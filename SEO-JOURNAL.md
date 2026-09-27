@@ -10,6 +10,47 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-27 (dimanche — 2 jours depuis le dernier run, pas de run le 09-26) :**
+
+- Pas de recherche du lundi (étape 5) : aujourd'hui est un dimanche, cette
+  étape ne s'applique pas à ce run.
+- Process de vérification (comme chaque run) : `git fetch origin --quiet`
+  complet en tout début de run. `origin/main` = `0d53f1a` = dernier commit
+  de journal (09-25) = HEAD de la branche de session : aucun retard.
+- `curl` en prod (`kotastudio.fr`) avant toute action : homepage, les 5
+  pages villes/régionale, la page prix et les 2 pages guide répondent
+  toutes 200. `sitemap.xml` conforme (14 URLs). `llms.txt` servi en prod
+  identique octet pour octet au fichier local avant modification. Vérifié
+  aussi le corps de page pré-rendu (texte réel présent dans le `<div
+  id="root">` brut, sans JS) sur la home et une page projet — toujours en
+  place depuis le 09-15/09-17. Rien de cassé, rien de régressé depuis le
+  09-25.
+- Recherche des 7 requêtes commerciales + 2 informationnelles (WebSearch,
+  sans connexion, jamais le nom de marque) : **kotastudio.fr toujours
+  absent partout**, attendu (2 jours depuis le dernier run, aucune nouvelle
+  page en ligne au moment de la mesure — mesurée avant le chantier du
+  jour). Kreaxion toujours présent sur les 3 mêmes requêtes que les runs
+  précédents (Saint-Julien, vitrine Haute-Savoie, refonte Haute-Savoie).
+  Wiizup toujours présent sur "refonte site internet Haute-Savoie" (2
+  guides, inchangé depuis le 09-24). Aucun nouveau concurrent observé sur
+  les 9 requêtes.
+- Chantier du jour : suite de l'item 12 de "Chantiers en attente" (trouver
+  une nouvelle requête réelle non couverte). Piste écartée d'abord :
+  "comment se passe un projet de création de site internet" — vérifié dans
+  `src/lib/jsonld.js` que cette requête est **déjà** couverte par le
+  `HowTo` existant sur la page prix (`buildPricingGuideJsonLd`, basé sur
+  `process.steps`) ; une page dédiée aurait dupliqué ce contenu presque mot
+  pour mot (cannibalisation), donc écartée avant d'écrire quoi que ce soit.
+  Piste retenue après recherche web ciblée (confirmant une vraie demande,
+  non couverte) : **"quand refaire son site internet" / "quels sont les
+  signes qu'une refonte est nécessaire"**. Vérifié avant d'écrire que ça ne
+  duplique pas non plus la page Haute-Savoie (qui couvre déjà prix/délai/
+  différence création-refonte pour la refonte, mais jamais "à quel moment
+  ai-je besoin d'une refonte" — question en amont, angle différent).
+  Respecte l'alternance (dernier chantier, 09-25, était technique/données
+  structurées — celui-ci est une nouvelle page de contenu). Voir "Chantiers
+  faits" pour le détail.
+
 **Au 2026-09-25 (vendredi — 1 jour depuis le dernier run) :**
 
 - Process de vérification (comme chaque run) : `git fetch origin --quiet`
@@ -397,6 +438,93 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-09-27 — Nouvelle page de fond "Quand refaire son site internet ?"
+
+**Pourquoi ce chantier :** suite de l'item 12 de "Chantiers en attente"
+(trouver une nouvelle requête réelle non couverte pour la prochaine page de
+contenu, backlog vide depuis le 09-25). Deux requêtes évaluées :
+- "comment se passe un projet de création de site internet" — **écartée** :
+  déjà couverte quasi mot pour mot par le `HowTo` existant sur la page prix
+  (`buildPricingGuideJsonLd`, basé sur `process.steps` — "Comment se
+  déroule un projet de création de site avec Kota Studio"). Une page
+  dédiée aurait cannibalisé ce contenu.
+- "quand refaire son site internet" / "quels sont les signes qu'une
+  refonte est nécessaire" — **retenue**, après double vérification :
+  recherche web confirmant une vraie demande non couverte par Kota Studio
+  (plusieurs agences publient déjà ce type de guide), et lecture de
+  `src/data/cities.js` (page Haute-Savoie) confirmant que cette page ne
+  duplique pas le contenu existant : la page Haute-Savoie répond déjà à
+  "combien coûte/combien de temps pour une refonte" et "différence
+  création vs refonte" pour la requête locale "refonte site internet
+  Haute-Savoie" (sur laquelle Wiizup publie 2 guides concurrents, observé
+  depuis le 09-24) ; la nouvelle page répond à la question **en amont** —
+  "ai-je seulement besoin d'une refonte ?" — avant qu'un prospect ne
+  cherche un prestataire. Intention de recherche différente, angle GEO
+  différent, aucun chevauchement de FAQ.
+
+**Ce qui a été fait :**
+- Nouvelle page `/quand-refaire-son-site-internet`
+  (`src/pages/RefonteSignsPage.jsx`, calquée sur
+  `ChooseAgencyGuidePage.jsx`/`PricingGuidePage.jsx`) avec 5 questions au
+  format GEO (réponse directe en 2-3 phrases en tête de chaque H2,
+  développement ensuite) :
+  1. Faut-il refaire son site internet ? (repère : signe isolé vs signes
+     cumulés)
+  2. Quels sont les signes qu'une refonte est nécessaire ? (checklist de 6
+     signes : mobile, vitesse, design daté, contenu impossible à modifier
+     soi-même, activité qui a changé, prospects qui hésitent)
+  3. Refonte complète ou simple mise à jour : comment choisir ? (2 cartes
+     comparatives)
+  4. Comment se passe une refonte chez Kota Studio ? (prix/délai réels
+     réutilisés — `offer.plans[1].price`, "14 jours" — **reformulés
+     brièvement, pas copiés mot pour mot**, avec lien vers la page
+     Haute-Savoie pour le détail complet, pour éviter tout contenu quasi
+     dupliqué entre les deux pages)
+  5. Perdre son référencement en changeant de site, un vrai risque ?
+     (reprend mot pour mot `promises.items[3].text`, même pattern que
+     `agencyGuideFaqs[3]` — jamais de promesse de résultat inventée)
+- `src/lib/jsonld.js` : `REFONTE_SIGNS_PATH`, `refonteSignsFaqs` (source de
+  vérité unique, partagée affichage + JSON-LD + pré-rendu statique, même
+  pattern que `pricingGuideFaqs`/`agencyGuideFaqs`), `buildRefonteSignsJsonLd()`
+  → `BreadcrumbList` + `FAQPage` (pas de `HowTo` : ce n'est pas un contenu
+  procédural, contrairement à la page prix — schema choisi pour coller
+  exactement à la nature du contenu, pas posé par réflexe).
+- `scripts/generate-static-heads.mjs` + `scripts/prerender-body.mjs` :
+  route ajoutée aux deux scripts (tête statique + JSON-LD pré-rendu, corps
+  de page pré-rendu) — même mécanique que les guides existants.
+- `src/App.jsx` : route `/quand-refaire-son-site-internet`.
+- Maillage interne : section dédiée sur la nouvelle page vers la page
+  Haute-Savoie et le guide prix ; lien ajouté dans `content.js >
+  footer.columns` (colonne "Services"), donc visible sur **toutes** les
+  pages du site immédiatement (contrairement à un lien placé sur une seule
+  page source).
+- `public/sitemap.xml` (+1 URL, priorité 0.8 comme les autres guides) et
+  `public/llms.txt` (+1 ligne) mis à jour.
+- Vérification avant push : `npm run build` complet (vite build +
+  generate-static-heads + prerender-body) sans erreur ni warning nouveau ;
+  JSON-LD statique extrait et comparé caractère pour caractère au texte
+  affiché (`refonteSignsFaqs` — aucun écart, y compris la citation
+  `promises.items[3].text`) ; capture d'écran mobile (390px, via Chromium
+  pré-installé + `playwright-core` installé temporairement en `--no-save`,
+  jamais commité) après scroll complet pour déclencher les animations
+  `reveal` (GSAP/ScrollTrigger) — les 5 questions, la checklist, les cartes
+  comparatives, les pastilles prix/délai, l'encart SEO, le maillage interne
+  et le footer s'affichent correctement ; comparé à une capture identique
+  de la page agence existante pour confirmer que le rendu "vide" avant
+  scroll est le comportement normal du site (animation au scroll), pas une
+  régression introduite par cette page.
+- Poussé directement sur `main` (`a96cfa3`), déploiement Vercel vérifié en
+  prod : `/quand-refaire-son-site-internet` → 200, JSON-LD pré-rendu
+  présent et identique au texte visible, `sitemap.xml`/`llms.txt` à jour en
+  prod, lien footer visible sur la page Haute-Savoie (testé en `curl`).
+
+**Ce qui reste :**
+- Le backlog de pages "requête + contenu" non bloquées est de nouveau vide
+  après ce chantier — recherche ciblée à refaire au prochain run de
+  contenu (même méthode que le 09-24/09-27, voir "Chantiers en attente").
+- Genève reste la seule page géographique bloquée (positionnement
+  freelance vs agence à clarifier, voir "Hypothèses à vérifier").
 
 ### 2026-09-25 — Données structurées manquantes sur les 4 pages projet (portfolio)
 
@@ -1748,11 +1876,19 @@ Par ordre de priorité pour les prochains runs :
     par projet, client + pré-rendu statique, fil d'Ariane visible ajouté sur
     `ProjectPage.jsx`. Reste bloqué pour un enrichissement futur : contenu
     réel des 4 pages projet (item 4 ci-dessus).
-12. Trouver une nouvelle requête réelle non couverte pour la prochaine page
-    de contenu (suite de l'item 9 — le backlog de pages non bloquées est de
-    nouveau vide après le chantier du 09-25, qui était technique et non une
-    page). Même méthode que le 09-24 : recherche ciblée avant de forcer une
-    page, jamais une page inventée sans demande réelle vérifiée derrière.
+12. ~~Trouver une nouvelle requête réelle non couverte pour la prochaine page
+    de contenu~~ — **fait le 2026-09-27** (voir "Chantiers faits") : page
+    "Quand refaire son site internet ?" ("quels sont les signes qu'une
+    refonte est nécessaire"), trouvée par recherche ciblée après avoir
+    écarté une première piste ("comment se passe un projet") qui aurait
+    cannibalisé le `HowTo` déjà présent sur la page prix.
+13. Trouver une nouvelle requête réelle non couverte pour la prochaine page
+    de contenu (suite de l'item 9/12 — le backlog de pages non bloquées est
+    de nouveau vide après le chantier du 09-27, qui a comblé le seul écart
+    identifié ce jour-là). Même méthode qu'aux runs précédents : recherche
+    ciblée avant de forcer une page, en vérifiant aussi qu'elle ne duplique
+    pas une FAQ déjà publiée ailleurs sur le site (leçon du 09-27) — jamais
+    une page inventée sans demande réelle vérifiée derrière.
 
 ---
 
@@ -2412,6 +2548,34 @@ site internet Haute-Savoie" (2 guides), comme le 09-24. Aucun nouveau
 concurrent observé sur les 9 requêtes. La page "comment choisir une agence
 web" (09-24) n'a qu'un jour, toujours largement sous le délai d'indexation
 Google — pas encore de signal de visibilité propre à ajouter à ce tableau.
+
+---
+
+### 2026-09-27
+
+| Requête | Position kotastudio.fr |
+|---|---|
+| création site internet Saint-Julien-en-Genevois | absent |
+| agence web Annemasse | absent |
+| création site internet Annecy | absent |
+| agence web Lyon | absent |
+| création site vitrine Haute-Savoie | absent |
+| freelance création site internet Genève | absent |
+| refonte site internet Haute-Savoie | absent |
+| combien coûte un site internet (informationnelle) | absent |
+| combien coûte un site vitrine (informationnelle) | absent |
+
+Toujours absent partout — attendu, 2 jours depuis le dernier relevé
+(09-25), mesuré avant le chantier du jour donc aucune nouvelle page en
+ligne au moment de la mesure. Kreaxion toujours présent sur les 3 mêmes
+requêtes que les runs précédents (Saint-Julien, vitrine Haute-Savoie,
+refonte Haute-Savoie). Wiizup toujours présent sur "refonte site internet
+Haute-Savoie" (2 guides), inchangé depuis le 09-24. Aucun nouveau
+concurrent observé sur les 9 requêtes. La nouvelle page "quand refaire son
+site internet" (chantier du jour) ne cible aucune de ces 9 requêtes
+directement (requête informationnelle différente, non trackée dans ce
+tableau) — à surveiller pour un signal de visibilité propre une fois
+indexée, comme pour "comment choisir une agence web" le 09-24.
 
 ---
 
