@@ -472,6 +472,10 @@ export const footer = {
           label: "Quand refaire son site internet ?",
           href: "/quand-refaire-son-site-internet",
         },
+        {
+          label: "Site sur-mesure ou WordPress / Wix ?",
+          href: "/site-sur-mesure-ou-wordpress-wix",
+        },
       ],
     },
     {

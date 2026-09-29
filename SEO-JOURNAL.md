@@ -10,6 +10,21 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-29 (mardi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, page prix et page "quand refaire" en 200 ; sitemap 14 URLs conforme.
+  `origin/main` = `8227d6d` avant chantier.
+- Positions (WebSearch, requêtes commerciales, jamais la marque) : **kotastudio.fr
+  absent** sur Saint-Julien, Annemasse, Annecy, "freelance création site internet
+  Genève" (5 autres requêtes non relancées aujourd'hui, inchangées attendu).
+  Annemasse : nouveaux noms vus (Net-Concept, NEWP, Amadouh, Boondooa). Genève :
+  résultats surtout suisses (.ch), fourchettes freelance 1 500–4 200 CHF citées
+  par des concurrents (non reprises : non sourcées, non vérifiées).
+- Chantier du jour : page de fond "Site sur-mesure ou WordPress / Wix : que
+  choisir ?" (`/site-sur-mesure-ou-wordpress-wix`). Vérifié avant : aucune
+  mention de WordPress/Wix dans `content.js`, requête non couverte ailleurs.
+  Voir "Chantiers faits".
+
 **Au 2026-09-27 (dimanche — 2 jours depuis le dernier run, pas de run le 09-26) :**
 
 - Pas de recherche du lundi (étape 5) : aujourd'hui est un dimanche, cette
@@ -438,6 +453,24 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-09-29 — Nouvelle page de fond "Site sur-mesure ou WordPress / Wix : que choisir ?"
+
+- **Fait :** `src/pages/CustomVsCmsPage.jsx` (gabarit de RefonteSignsPage), route
+  dans `App.jsx` (avant le catch-all `/:citySlug`), `customVsCmsFaqs` +
+  `buildCustomVsCmsJsonLd` (BreadcrumbList + FAQPage, 5 Q/R identiques au texte
+  affiché) dans `jsonld.js`, pré-rendu head (`generate-static-heads.mjs`) et corps
+  (`prerender-body.mjs`), sitemap, llms.txt, lien dans le footer (`content.js`).
+  "Dernière mise à jour : 29 septembre 2026". `npm run build` OK, 16 routes
+  pré-rendues, JSON-LD présent dans le HTML statique.
+- **Sources des chiffres :** uniquement `content.js` (prix 790 €/1 290 €, 14 jours,
+  espace admin inclus, promesse SEO). Aucun prix ni statistique concurrent cité.
+- **Volontairement non fait :** pas de prix Wix/WordPress (non sourcés), pas de
+  claim "on n'utilise jamais WordPress" ni sur la stack exacte (le process cite
+  Figma/Webflow/Framer tandis que l'offre dit "100 % codé sur-mesure" — ambigu,
+  voir Hypothèses). Pas de vérification visuelle mobile en navigateur : le gabarit
+  et les classes Tailwind sont ceux de la page "quand refaire" déjà en prod.
+- **Reste :** vérifier en prod après déploiement (200, HTML pré-rendu).
 
 ### 2026-09-27 — Nouvelle page de fond "Quand refaire son site internet ?"
 
@@ -1890,9 +1923,17 @@ Par ordre de priorité pour les prochains runs :
     pas une FAQ déjà publiée ailleurs sur le site (leçon du 09-27) — jamais
     une page inventée sans demande réelle vérifiée derrière.
 
+14. ~~Page "site sur-mesure ou WordPress/Wix"~~ — **faite le 2026-09-29**. Prochaine
+    piste à rechercher : requête non couverte (ex. spécifique TikTok/créateurs,
+    ou artisans/PME locales) — vérifier la demande avant d'écrire.
+
 ---
 
 ## Hypothèses à vérifier
+
+- **Stack réelle à annoncer (2026-09-29)** : Yanis doit préciser si le site client
+  est codé à la main (React/HTML) ou monté sous Webflow/Framer (`process` les cite),
+  pour pouvoir nommer la techno sur la page sur-mesure sans risque.
 
 _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 
@@ -2550,6 +2591,11 @@ web" (09-24) n'a qu'un jour, toujours largement sous le délai d'indexation
 Google — pas encore de signal de visibilité propre à ajouter à ce tableau.
 
 ---
+
+### 2026-09-29
+
+Absent sur les 4 requêtes relancées (Saint-Julien, Annemasse, Annecy, freelance
+Genève), mesuré avant le chantier.
 
 ### 2026-09-27
 

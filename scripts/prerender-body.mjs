@@ -66,6 +66,10 @@ const routes = [
     filePath: path.join(distDir, "quand-refaire-son-site-internet", "index.html"),
   },
   {
+    routePath: "/site-sur-mesure-ou-wordpress-wix",
+    filePath: path.join(distDir, "site-sur-mesure-ou-wordpress-wix", "index.html"),
+  },
+  {
     routePath: "/mentions-legales",
     filePath: path.join(distDir, "mentions-legales", "index.html"),
   },

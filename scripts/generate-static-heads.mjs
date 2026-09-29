@@ -44,6 +44,7 @@ import {
   buildPricingGuideJsonLd,
   buildAgencyGuideJsonLd,
   buildRefonteSignsJsonLd,
+  buildCustomVsCmsJsonLd,
   buildProjectJsonLd,
   PAGE_SCHEMA_ATTR,
 } from "../src/lib/jsonld.js";
@@ -165,6 +166,14 @@ writeRoute("/quand-refaire-son-site-internet", {
     "Les 6 signes qui indiquent qu'une refonte est nécessaire, la différence avec une simple mise à jour, et comment se passe une refonte chez Kota Studio (prix, délai, référencement).",
   schemaId: "refonte-signs",
   jsonLd: buildRefonteSignsJsonLd(),
+});
+
+writeRoute("/site-sur-mesure-ou-wordpress-wix", {
+  title: "Site sur-mesure ou WordPress / Wix : que choisir ? | Kota Studio",
+  description:
+    "Site sur-mesure ou WordPress / Wix : différences, budget, référencement, autonomie. Quand un modèle suffit, quand le sur-mesure vaut le coup, et ce que propose Kota Studio.",
+  schemaId: "custom-vs-cms",
+  jsonLd: buildCustomVsCmsJsonLd(),
 });
 
 writeRoute("/mentions-legales", {

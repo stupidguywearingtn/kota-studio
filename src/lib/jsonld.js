@@ -288,3 +288,64 @@ export function buildRefonteSignsJsonLd() {
     ],
   };
 }
+
+export const CUSTOM_VS_CMS_PATH = "/site-sur-mesure-ou-wordpress-wix";
+
+/* Les 5 questions/réponses affichées sur CustomVsCmsPage.jsx, reprises mot
+   pour mot dans le JSON-LD FAQPage (même principe que les autres guides).
+   Page ajoutée le 2026-09-29 : requête réelle non couverte ("site sur-mesure
+   ou WordPress / Wix"), vérifiée absente des autres pages. Aucun prix ni
+   chiffre concurrent n'est cité (non sourcé) : seuls les faits publiés par
+   Kota Studio dans content.js (offre, inclus, délai, admin, promesse SEO)
+   sont chiffrés. */
+export const customVsCmsFaqs = [
+  {
+    q: "Site sur-mesure ou WordPress / Wix : quelle différence ?",
+    a: "Un site Wix ou WordPress part d'un modèle (template ou thème) que l'on personnalise ; un site sur-mesure est conçu et codé à partir d'une page blanche, autour de votre activité et de vos objectifs. Le premier est plus rapide à démarrer, le second offre plus de liberté de design et de structure, sans les contraintes d'un modèle.",
+  },
+  {
+    q: "Quand un site Wix ou WordPress suffit-il ?",
+    a: "Si vous avez besoin de tester une idée, d'un site très simple à petit budget ou d'une présence en ligne provisoire, un outil de création clé en main est une option raisonnable, surtout si vous êtes à l'aise pour l'installer et le maintenir vous-même. Le sur-mesure devient pertinent quand le site est un vrai outil d'acquisition de clients et doit se démarquer.",
+  },
+  {
+    q: "Un site sur-mesure coûte-t-il plus cher qu'un site Wix ou WordPress ?",
+    a: `À la création, un site sur-mesure demande généralement un budget de départ plus élevé qu'un modèle prêt à l'emploi. Chez Kota Studio, le site sur-mesure démarre ${offer.plans[1].price} et la landing page ${offer.plans[0].price}, avec livraison en 14 jours. Comparez toujours le coût total sur la durée (abonnements, extensions, temps passé à le gérer), pas seulement le prix de départ.`,
+  },
+  {
+    q: "Un site sur-mesure est-il mieux référencé sur Google ?",
+    a: `Pas automatiquement : le référencement dépend surtout du contenu, de la structure et de la vitesse, pas de l'outil utilisé. Un site sur-mesure permet en revanche de maîtriser ces points sans être limité par un modèle. Personne ne peut promettre un classement garanti : "${promises.items[3].text}"`,
+  },
+  {
+    q: "Pourrai-je modifier moi-même mon site sur-mesure ?",
+    a: "Oui. Chez Kota Studio, un espace admin pour modifier votre contenu est inclus dans l'offre, et sa prise en main a lieu à la livraison, au jour 14. Vous n'avez pas besoin d'appeler un développeur pour changer un texte ou une photo.",
+  },
+];
+
+export function buildCustomVsCmsJsonLd() {
+  const pageUrl = `${SITE_URL}${CUSTOM_VS_CMS_PATH}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE_URL}/` },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Site sur-mesure ou WordPress / Wix : que choisir ?",
+            item: pageUrl,
+          },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: customVsCmsFaqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+    ],
+  };
+}

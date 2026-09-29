@@ -12,6 +12,7 @@ import CityPage from "./pages/CityPage";
 import PricingGuidePage from "./pages/PricingGuidePage";
 import ChooseAgencyGuidePage from "./pages/ChooseAgencyGuidePage";
 import RefonteSignsPage from "./pages/RefonteSignsPage";
+import CustomVsCmsPage from "./pages/CustomVsCmsPage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -86,6 +87,10 @@ export default function App() {
         <Route
           path="/quand-refaire-son-site-internet"
           element={<RefonteSignsPage />}
+        />
+        <Route
+          path="/site-sur-mesure-ou-wordpress-wix"
+          element={<CustomVsCmsPage />}
         />
         {/* Pages villes SEO local (src/data/cities.js) — catch-all volontaire,
             gère aussi le 404 propre pour un slug inconnu (comme /projets/:slug). */}
