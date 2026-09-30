@@ -14,6 +14,7 @@
 - [Comment choisir une agence de création de site internet ?](/comment-choisir-une-agence-web): Guide de choix — critères concrets (prix, délai, interlocuteur, accompagnement), comparatif agence/freelance/plateforme, signaux d'alerte, 5 questions à poser avant de signer.
 - [Quand refaire son site internet ?](/quand-refaire-son-site-internet): Guide refonte — 6 signes qu'une refonte est nécessaire, différence avec une simple mise à jour, prix/délai d'une refonte chez Kota Studio, risque de perte de référencement lors d'un changement de site.
 - [Site sur-mesure ou WordPress / Wix : que choisir ?](/site-sur-mesure-ou-wordpress-wix): Guide technique — différence entre un modèle (Wix, WordPress) et un site sur-mesure, budget, référencement, autonomie de modification, prix de départ et délai chez Kota Studio.
+- [Quelles pages pour un site vitrine ?](/quelles-pages-pour-un-site-vitrine): Guide pratique — les pages de base d'un site vitrine, combien de pages prévoir, quand une landing page suffit, comment Kota Studio définit l'arborescence (phase stratégie, livraison en 14 jours).
 - [Mentions légales](/mentions-legales)
 - [Politique de confidentialité](/politique-de-confidentialite)
 

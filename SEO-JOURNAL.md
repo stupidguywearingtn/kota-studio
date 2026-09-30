@@ -10,6 +10,20 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-09-30 (mercredi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, page Saint-Julien, page prix, guides en 200 ; sitemap OK. `curl` GET sur
+  `/llms.txt` expire (HEAD = 200, WebFetch OK : fichier servi) — problème du proxy
+  sortant du run, pas du site ; comparaison octet à octet non faite aujourd'hui.
+  `origin/main` = `bf4026d` avant chantier.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur Saint-Julien,
+  Annemasse, vitrine Haute-Savoie (3 requêtes relancées ; les 4 autres inchangées
+  attendu). Saint-Julien : Boondooa, ABC Idea, Dieup'Art, WebFrance, Logitos, AMJ74
+  (Kreaxion non revu aujourd'hui). Fourchettes de prix concurrents vues, non reprises
+  (non vérifiées).
+- Chantier du jour : page de fond "Quelles pages pour un site vitrine ?"
+  (`/quelles-pages-pour-un-site-vitrine`). Voir "Chantiers faits".
+
 **Au 2026-09-29 (mardi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, page prix et page "quand refaire" en 200 ; sitemap 14 URLs conforme.
@@ -453,6 +467,23 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-09-30 — Nouvelle page de fond "Quelles pages pour un site vitrine ?"
+
+- **Pourquoi :** requête réelle ("quelles pages pour un site vitrine", "combien de
+  pages") non couverte ; angle distinct de la page prix (landing vs site déjà
+  traité là en une FAQ, ici on traite la structure/arborescence).
+- **Fait :** `src/pages/SitePagesGuidePage.jsx` (gabarit CustomVsCmsPage), route
+  `App.jsx`, `sitePagesFaqs` + `buildSitePagesJsonLd` (BreadcrumbList + FAQPage, 5 Q/R
+  identiques au texte visible) dans `jsonld.js`, pré-rendu head et corps, sitemap,
+  llms.txt, lien footer. "Dernière mise à jour : 30 septembre 2026". `npm run build`
+  OK, 17 routes pré-rendues, FAQPage présent dans le HTML statique. Grilles
+  `grid-cols-1 sm:grid-cols-2` (mobile d'abord), non testé visuellement en navigateur.
+- **Sources des chiffres :** uniquement `content.js` (790 €/1 290 €, 14 jours,
+  arborescence définie en phase stratégie, révisions illimitées). Aucun prix ni
+  statistique concurrent. Mentions légales obligatoires = règle générale française.
+- **Non fait :** aucune affirmation sur l'ajout de pages via l'espace admin (non
+  confirmé) ; aucun nombre de pages "inclus" (non fourni).
 
 ### 2026-09-29 — Nouvelle page de fond "Site sur-mesure ou WordPress / Wix : que choisir ?"
 
@@ -1923,6 +1954,8 @@ Par ordre de priorité pour les prochains runs :
     pas une FAQ déjà publiée ailleurs sur le site (leçon du 09-27) — jamais
     une page inventée sans demande réelle vérifiée derrière.
 
+15. ~~Page "quelles pages pour un site vitrine"~~ — faite le 2026-09-30. Pistes
+    suivantes à vérifier avant d'écrire : artisans/PME locales, créateurs TikTok.
 14. ~~Page "site sur-mesure ou WordPress/Wix"~~ — **faite le 2026-09-29**. Prochaine
     piste à rechercher : requête non couverte (ex. spécifique TikTok/créateurs,
     ou artisans/PME locales) — vérifier la demande avant d'écrire.
@@ -1931,6 +1964,9 @@ Par ordre de priorité pour les prochains runs :
 
 ## Hypothèses à vérifier
 
+- **Nombre de pages inclus (2026-09-30)** : Yanis doit dire combien de pages comprend
+  le "site sur-mesure" à 1 290 € et si l'espace admin permet d'ajouter des pages, pour
+  le préciser sur `/quelles-pages-pour-un-site-vitrine`.
 - **Stack réelle à annoncer (2026-09-29)** : Yanis doit préciser si le site client
   est codé à la main (React/HTML) ou monté sous Webflow/Framer (`process` les cite),
   pour pouvoir nommer la techno sur la page sur-mesure sans risque.
@@ -2622,6 +2658,11 @@ site internet" (chantier du jour) ne cible aucune de ces 9 requêtes
 directement (requête informationnelle différente, non trackée dans ce
 tableau) — à surveiller pour un signal de visibilité propre une fois
 indexée, comme pour "comment choisir une agence web" le 09-24.
+
+### 2026-09-30
+
+Absent sur Saint-Julien, Annemasse, vitrine Haute-Savoie (3 requêtes mesurées).
+Autres non relancées, inchangées attendu. Nouvelle page non encore indexée.
 
 ---
 

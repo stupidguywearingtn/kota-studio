@@ -349,3 +349,62 @@ export function buildCustomVsCmsJsonLd() {
     ],
   };
 }
+
+export const SITE_PAGES_PATH = "/quelles-pages-pour-un-site-vitrine";
+
+/* Les 5 questions/réponses affichées sur SitePagesGuidePage.jsx, reprises mot
+   pour mot dans le JSON-LD FAQPage. Page ajoutée le 2026-09-30 : requête
+   réelle ("quelles pages pour un site vitrine", "combien de pages") non
+   couverte ailleurs. Aucun chiffre concurrent ni statistique : conseils de
+   structure généraux + faits publiés par Kota Studio dans content.js. */
+export const sitePagesFaqs = [
+  {
+    q: "Quelles pages faut-il sur un site vitrine ?",
+    a: "Un site vitrine tient l'essentiel en cinq pages : une page d'accueil, une page services (ou offres), une page « à propos », une page réalisations ou références, et une page contact. À cela s'ajoute la page de mentions légales, obligatoire pour un site professionnel en France.",
+  },
+  {
+    q: "Combien de pages pour un site vitrine ?",
+    a: "Il n'y a pas de nombre magique : le bon nombre de pages est celui qui répond à chaque question que se pose un prospect avant de vous contacter. Pour une petite activité, quelques pages bien construites valent mieux qu'un site de vingt pages creuses. Le nombre monte quand vous avez plusieurs services distincts, chacun méritant sa propre page.",
+  },
+  {
+    q: "Une seule page (landing page) suffit-elle ?",
+    a: `Oui, si vous n'avez qu'une offre et un seul objectif : un lancement, une offre ponctuelle, un lien en bio à partager. Une landing page est une page unique pensée pour convertir. Chez Kota Studio, elle démarre ${offer.plans[0].price}. Dès que vous avez plusieurs services ou besoin de rassurer avec des références, un site en plusieurs pages (${offer.plans[1].price}) devient plus adapté.`,
+  },
+  {
+    q: "Pourquoi prévoir une page par service pour être trouvé sur Google ?",
+    a: `Parce qu'une page répond à une seule intention de recherche : un visiteur qui cherche un service précis atterrit plus facilement sur une page dédiée que sur une page d'accueil qui parle de tout. Cela n'assure aucun classement : "${promises.items[3].text}"`,
+  },
+  {
+    q: "Comment Kota Studio définit-il les pages de mon site ?",
+    a: "Le projet démarre par une phase de recherche et de stratégie : analyse de votre marché et de vos concurrents, puis définition de l'arborescence (la liste et l'organisation des pages) et des objectifs, avant tout design. La livraison a lieu en 14 jours, avec des révisions illimitées.",
+  },
+];
+
+export function buildSitePagesJsonLd() {
+  const pageUrl = `${SITE_URL}${SITE_PAGES_PATH}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE_URL}/` },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Quelles pages pour un site vitrine ?",
+            item: pageUrl,
+          },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: sitePagesFaqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+    ],
+  };
+}

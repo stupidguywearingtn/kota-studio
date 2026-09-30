@@ -476,6 +476,10 @@ export const footer = {
           label: "Site sur-mesure ou WordPress / Wix ?",
           href: "/site-sur-mesure-ou-wordpress-wix",
         },
+        {
+          label: "Quelles pages pour un site vitrine ?",
+          href: "/quelles-pages-pour-un-site-vitrine",
+        },
       ],
     },
     {

@@ -45,6 +45,7 @@ import {
   buildAgencyGuideJsonLd,
   buildRefonteSignsJsonLd,
   buildCustomVsCmsJsonLd,
+  buildSitePagesJsonLd,
   buildProjectJsonLd,
   PAGE_SCHEMA_ATTR,
 } from "../src/lib/jsonld.js";
@@ -174,6 +175,14 @@ writeRoute("/site-sur-mesure-ou-wordpress-wix", {
     "Site sur-mesure ou WordPress / Wix : différences, budget, référencement, autonomie. Quand un modèle suffit, quand le sur-mesure vaut le coup, et ce que propose Kota Studio.",
   schemaId: "custom-vs-cms",
   jsonLd: buildCustomVsCmsJsonLd(),
+});
+
+writeRoute("/quelles-pages-pour-un-site-vitrine", {
+  title: "Quelles pages pour un site vitrine ? Combien et lesquelles | Kota Studio",
+  description:
+    "Quelles pages prévoir sur un site vitrine, combien en faut-il, quand une landing page suffit et comment Kota Studio définit l'arborescence de votre site.",
+  schemaId: "site-pages",
+  jsonLd: buildSitePagesJsonLd(),
 });
 
 writeRoute("/mentions-legales", {

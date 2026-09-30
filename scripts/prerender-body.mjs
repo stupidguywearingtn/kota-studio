@@ -70,6 +70,10 @@ const routes = [
     filePath: path.join(distDir, "site-sur-mesure-ou-wordpress-wix", "index.html"),
   },
   {
+    routePath: "/quelles-pages-pour-un-site-vitrine",
+    filePath: path.join(distDir, "quelles-pages-pour-un-site-vitrine", "index.html"),
+  },
+  {
     routePath: "/mentions-legales",
     filePath: path.join(distDir, "mentions-legales", "index.html"),
   },
