@@ -408,3 +408,65 @@ export function buildSitePagesJsonLd() {
     ],
   };
 }
+
+export const AI_VISIBILITY_PATH = "/apparaitre-dans-chatgpt-et-ia-site-local";
+
+/* Les 5 questions/réponses affichées sur AiVisibilityPage.jsx, reprises mot
+   pour mot dans le JSON-LD FAQPage. Page ajoutée le 2026-10-01 (GEO) : seules
+   affirmations externes = documentation officielle Google (« Top ways to
+   ensure your content performs well in Google's AI experiences », màj
+   10 déc. 2025) et OpenAI (« Overview of OpenAI Crawlers »), consultées le
+   2026-10-01. Les faits "propres au studio" sont vérifiables dans le dépôt
+   (robots.txt, sitemap, llms.txt, JSON-LD, pré-rendu). Aucune promesse de
+   citation par une IA. */
+export const aiVisibilityFaqs = [
+  {
+    q: "Comment apparaître dans les réponses de ChatGPT et des IA quand on a une entreprise locale ?",
+    a: "Il n'existe pas de bouton magique : les moteurs IA reprennent des pages qu'ils peuvent explorer, lire et comprendre. Concrètement, il faut un site indexable, des pages en texte lisible qui répondent directement à des questions précises, et des informations vérifiables (prix, délais, zone d'intervention, date de mise à jour). Aucune méthode ne garantit d'être cité.",
+  },
+  {
+    q: "Faut-il un fichier ou un balisage spécial pour apparaître dans les AI Overviews de Google ?",
+    a: "Non. Selon la documentation officielle de Google (mise à jour le 10 décembre 2025), il n'y a pas d'exigence supplémentaire pour apparaître dans les AI Overviews ou l'AI Mode, ni de fichier, de texte « IA » ou de schema.org spécifique à ajouter. Il faut qu'une page soit indexée et éligible à l'affichage avec un extrait dans Google Search. Les données structurées restent utiles à condition de correspondre au texte visible de la page.",
+  },
+  {
+    q: "Faut-il autoriser les robots d'OpenAI dans le fichier robots.txt ?",
+    a: "Si vous voulez pouvoir être affiché dans les réponses de recherche de ChatGPT, oui : OpenAI indique qu'un site qui bloque OAI-SearchBot n'apparaît pas dans ces réponses (il peut seulement rester accessible par lien). OpenAI précise aussi que GPTBot sert à l'entraînement de ses modèles, et qu'un changement de robots.txt peut mettre environ 24 heures à être pris en compte.",
+  },
+  {
+    q: "Qu'est-ce qui rend une page facile à citer pour une IA ?",
+    a: "Une réponse nette dès le début de chaque section, des titres formulés comme de vraies questions, des chiffres précis et datés, et un contenu que personne d'autre ne publie (vos délais réels, votre méthode, ce qui est inclus ou non). Une IA extrait des passages isolés : un passage qui ne se comprend pas seul est rarement repris.",
+  },
+  {
+    q: "Que fait Kota Studio sur son propre site, et peut-il me garantir d'être cité par ChatGPT ?",
+    a: `Non, aucune garantie : ${promises.items[3].text} Sur son propre site, Kota Studio autorise tous les robots dans robots.txt, publie un sitemap et un fichier llms.txt, affiche des FAQ visibles reprises à l'identique dans des données structurées FAQPage, et rend le texte de chaque page directement dans le HTML, lisible sans JavaScript. Le délai de livraison d'un site est de 14 jours.`,
+  },
+];
+
+export function buildAiVisibilityJsonLd() {
+  const pageUrl = `${SITE_URL}${AI_VISIBILITY_PATH}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE_URL}/` },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Apparaître dans ChatGPT et les IA",
+            item: pageUrl,
+          },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: aiVisibilityFaqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+    ],
+  };
+}

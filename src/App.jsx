@@ -14,6 +14,7 @@ import ChooseAgencyGuidePage from "./pages/ChooseAgencyGuidePage";
 import RefonteSignsPage from "./pages/RefonteSignsPage";
 import CustomVsCmsPage from "./pages/CustomVsCmsPage";
 import SitePagesGuidePage from "./pages/SitePagesGuidePage";
+import AiVisibilityPage from "./pages/AiVisibilityPage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -96,6 +97,10 @@ export default function App() {
         <Route
           path="/quelles-pages-pour-un-site-vitrine"
           element={<SitePagesGuidePage />}
+        />
+        <Route
+          path="/apparaitre-dans-chatgpt-et-ia-site-local"
+          element={<AiVisibilityPage />}
         />
         {/* Pages villes SEO local (src/data/cities.js) — catch-all volontaire,
             gère aussi le 404 propre pour un slug inconnu (comme /projets/:slug). */}

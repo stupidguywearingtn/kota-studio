@@ -10,6 +10,18 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-10-01 (jeudi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home et page "quelles pages" en 200, sitemap OK ; `curl` sur
+  `/combien-coute-un-site-internet` a renvoyé 000 (timeout du proxy du run, déjà vu pour
+  llms.txt — non confirmé comme panne du site). `origin/main` = `b761000` avant chantier.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur Saint-Julien,
+  Annemasse, vitrine Haute-Savoie (inchangé). Nouveaux noms : Expressweb (Saint-Julien),
+  Arve Webdesign, Uniko Web, Cocliko, Altitude Dev (Annemasse) ; vitrine 74 : Mont-Site,
+  Kreaxion, Alpaweb, Anonyme-Studio, Wpop. Prix concurrents vus, non repris.
+- Chantier du jour : GEO — page `/apparaitre-dans-chatgpt-et-ia-site-local`. Voir
+  "Chantiers faits".
+
 **Au 2026-09-30 (mercredi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, page Saint-Julien, page prix, guides en 200 ; sitemap OK. `curl` GET sur
@@ -467,6 +479,25 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-10-01 — Page GEO "Comment apparaître dans ChatGPT et les IA quand on a un site local ?"
+
+- Choix : angle GEO (volet jamais traité en page dédiée), requête en hausse chez les
+  prospects ; après contenus/prix/pages, alternance vers un sujet à données propres vérifiables.
+- Fait : `AiVisibilityPage.jsx` (5 Q/R visibles = FAQPage JSON-LD via `aiVisibilityFaqs`,
+  BreadcrumbList), route, footer, sitemap, llms.txt, pré-rendu (head + body). Build OK, HTML
+  statique vérifié (h2 + FAQPage présents). Mise à jour affichée : 1er octobre 2026.
+- Sources citées (consultées 2026-10-01) : Google Search Central "AI features" (màj
+  10/12/2025 : aucune exigence/markup/fichier spécial pour les AI Overviews) ; OpenAI
+  "Overview of OpenAI Crawlers" (OAI-SearchBot pour la recherche ChatGPT, GPTBot = entraînement,
+  ~24 h pour prise en compte du robots.txt).
+- Faits propres au studio : uniquement vérifiables dans le dépôt (robots.txt Allow, sitemap,
+  llms.txt, FAQ+JSON-LD, pré-rendu). Aucune promesse de citation, aucun chiffre inventé.
+- Non fait : pas d'affirmation que llms.txt aide (Google dit non nécessaire) ; pas de claim
+  sur ce que reçoivent les sites clients ; non testé visuellement sur mobile (gabarit copié de
+  SitePagesGuidePage, aucun CSS nouveau) — à contrôler par Yanis.
+- Pistes suivantes : artisans/PME locales, créateurs TikTok (vérifier la demande d'abord).
+
 
 ### 2026-09-30 — Nouvelle page de fond "Quelles pages pour un site vitrine ?"
 
@@ -1963,6 +1994,9 @@ Par ordre de priorité pour les prochains runs :
 ---
 
 ## Hypothèses à vérifier
+
+- **Site client et GEO (2026-10-01)** : Yanis doit confirmer si les sites livrés aux clients
+  incluent bien FAQ/JSON-LD/sitemap/texte pré-rendu, pour pouvoir l'écrire sur la page GEO.
 
 - **Nombre de pages inclus (2026-09-30)** : Yanis doit dire combien de pages comprend
   le "site sur-mesure" à 1 290 € et si l'espace admin permet d'ajouter des pages, pour

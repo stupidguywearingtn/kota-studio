@@ -480,6 +480,10 @@ export const footer = {
           label: "Quelles pages pour un site vitrine ?",
           href: "/quelles-pages-pour-un-site-vitrine",
         },
+        {
+          label: "Apparaître dans ChatGPT et les IA",
+          href: "/apparaitre-dans-chatgpt-et-ia-site-local",
+        },
       ],
     },
     {

@@ -46,6 +46,7 @@ import {
   buildRefonteSignsJsonLd,
   buildCustomVsCmsJsonLd,
   buildSitePagesJsonLd,
+  buildAiVisibilityJsonLd,
   buildProjectJsonLd,
   PAGE_SCHEMA_ATTR,
 } from "../src/lib/jsonld.js";
@@ -183,6 +184,14 @@ writeRoute("/quelles-pages-pour-un-site-vitrine", {
     "Quelles pages prévoir sur un site vitrine, combien en faut-il, quand une landing page suffit et comment Kota Studio définit l'arborescence de votre site.",
   schemaId: "site-pages",
   jsonLd: buildSitePagesJsonLd(),
+});
+
+writeRoute("/apparaitre-dans-chatgpt-et-ia-site-local", {
+  title: "Apparaître dans ChatGPT et les IA quand on a un site local | Kota Studio",
+  description:
+    "Comment apparaître dans ChatGPT et les AI Overviews de Google : ce que disent Google et OpenAI, ce qui rend une page citable et ce que Kota Studio applique sur son site.",
+  schemaId: "ai-visibility",
+  jsonLd: buildAiVisibilityJsonLd(),
 });
 
 writeRoute("/mentions-legales", {
