@@ -14,6 +14,7 @@ import ChooseAgencyGuidePage from "./pages/ChooseAgencyGuidePage";
 import RefonteSignsPage from "./pages/RefonteSignsPage";
 import CustomVsCmsPage from "./pages/CustomVsCmsPage";
 import SitePagesGuidePage from "./pages/SitePagesGuidePage";
+import DomainOwnershipPage from "./pages/DomainOwnershipPage";
 import AiVisibilityPage from "./pages/AiVisibilityPage";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -97,6 +98,10 @@ export default function App() {
         <Route
           path="/quelles-pages-pour-un-site-vitrine"
           element={<SitePagesGuidePage />}
+        />
+        <Route
+          path="/nom-de-domaine-et-propriete-du-site"
+          element={<DomainOwnershipPage />}
         />
         <Route
           path="/apparaitre-dans-chatgpt-et-ia-site-local"

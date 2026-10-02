@@ -46,6 +46,7 @@ import {
   buildRefonteSignsJsonLd,
   buildCustomVsCmsJsonLd,
   buildSitePagesJsonLd,
+  buildDomainOwnershipJsonLd,
   buildAiVisibilityJsonLd,
   buildProjectJsonLd,
   PAGE_SCHEMA_ATTR,
@@ -184,6 +185,14 @@ writeRoute("/quelles-pages-pour-un-site-vitrine", {
     "Quelles pages prévoir sur un site vitrine, combien en faut-il, quand une landing page suffit et comment Kota Studio définit l'arborescence de votre site.",
   schemaId: "site-pages",
   jsonLd: buildSitePagesJsonLd(),
+});
+
+writeRoute("/nom-de-domaine-et-propriete-du-site", {
+  title: "Qui est propriétaire de mon site et de mon nom de domaine ? | Kota Studio",
+  description:
+    "Nom de domaine, hébergement, code et design : qui est propriétaire de quoi quand une agence crée votre site, et les questions à poser avant de signer.",
+  schemaId: "domain-ownership",
+  jsonLd: buildDomainOwnershipJsonLd(),
 });
 
 writeRoute("/apparaitre-dans-chatgpt-et-ia-site-local", {

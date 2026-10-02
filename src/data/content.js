@@ -481,6 +481,10 @@ export const footer = {
           href: "/quelles-pages-pour-un-site-vitrine",
         },
         {
+          label: "Qui possède mon site et mon domaine ?",
+          href: "/nom-de-domaine-et-propriete-du-site",
+        },
+        {
           label: "Apparaître dans ChatGPT et les IA",
           href: "/apparaitre-dans-chatgpt-et-ia-site-local",
         },

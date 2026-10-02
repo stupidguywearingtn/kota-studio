@@ -10,6 +10,17 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-10-02 (vendredi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, page prix et page GEO en 200 ; sitemap 18 URLs, robots.txt Allow, llms.txt
+  contient la page GEO ; HTML statique de la page GEO : FAQPage + BreadcrumbList + canonical OK.
+  `origin/main` = `7fea97a` avant chantier.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur Saint-Julien,
+  Annemasse, vitrine Haute-Savoie (inchangé). Mêmes concurrents (Boondooa, Dieup'Art, AMJ74,
+  Digicomarket, WebFrance, Expressweb ; Net Concept, NEWP, Arve Webdesign, Uniko Web ;
+  Mont-Site, Kreaxion, Alpaweb, DILO). Les 4 autres requêtes non relancées.
+- Chantier du jour : page `/nom-de-domaine-et-propriete-du-site`. Voir "Chantiers faits".
+
 **Au 2026-10-01 (jeudi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home et page "quelles pages" en 200, sitemap OK ; `curl` sur
@@ -479,6 +490,22 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-10-02 — Page "Qui est propriétaire de mon site et de mon nom de domaine ?"
+
+- Choix : requête de confiance réelle des prospects, non couverte (grep `content.js`/pages :
+  aucune page sur domaine/hébergement/droits) ; alternance après la page GEO.
+- Fait : `DomainOwnershipPage.jsx` (gabarit SitePagesGuidePage, aucun CSS nouveau, grilles
+  `grid-cols-1 sm:grid-cols-2`), `domainOwnershipFaqs` + `buildDomainOwnershipJsonLd`
+  (BreadcrumbList + FAQPage = 5 Q/R visibles), route, footer, sitemap, llms.txt, pré-rendu
+  head + body. Build OK, 19 routes, HTML statique vérifié. Mise à jour affichée : 2 octobre 2026.
+- Sources (consultées 2026-10-02) : Afnic, Charte de nommage et Guide pratique du titulaire
+  (.fr, titulaire identifié et joignable) ; Code de la propriété intellectuelle art. L131-3
+  (cession des droits d'auteur mentionnée distinctement). Le second est de mémoire juridique
+  générale, non re-fetché : à faire relire si doute.
+- Non fait : AUCUNE pratique contractuelle de Kota Studio affirmée (titulaire du domaine,
+  hébergement client, cession des droits : non fournis). Non testé visuellement sur mobile
+  (gabarit copié).
 
 ### 2026-10-01 — Page GEO "Comment apparaître dans ChatGPT et les IA quand on a un site local ?"
 
@@ -1987,6 +2014,7 @@ Par ordre de priorité pour les prochains runs :
 
 15. ~~Page "quelles pages pour un site vitrine"~~ — faite le 2026-09-30. Pistes
     suivantes à vérifier avant d'écrire : artisans/PME locales, créateurs TikTok.
+16. ~~Page propriété domaine~~ — faite le 2026-10-02. Pistes : artisans/PME, créateurs TikTok (vérifier la demande), Genève (bloqué).
 14. ~~Page "site sur-mesure ou WordPress/Wix"~~ — **faite le 2026-09-29**. Prochaine
     piste à rechercher : requête non couverte (ex. spécifique TikTok/créateurs,
     ou artisans/PME locales) — vérifier la demande avant d'écrire.
@@ -1995,6 +2023,9 @@ Par ordre de priorité pour les prochains runs :
 
 ## Hypothèses à vérifier
 
+- **Propriété domaine/hébergement/droits (2026-10-02)** : Yanis doit dire qui est titulaire du
+  domaine des sites clients, qui paie/gère l'hébergement, et si les droits sont cédés au
+  client (et quand), pour que `/nom-de-domaine-et-propriete-du-site` affirme la pratique réelle.
 - **Site client et GEO (2026-10-01)** : Yanis doit confirmer si les sites livrés aux clients
   incluent bien FAQ/JSON-LD/sitemap/texte pré-rendu, pour pouvoir l'écrire sur la page GEO.
 
@@ -2692,6 +2723,10 @@ site internet" (chantier du jour) ne cible aucune de ces 9 requêtes
 directement (requête informationnelle différente, non trackée dans ce
 tableau) — à surveiller pour un signal de visibilité propre une fois
 indexée, comme pour "comment choisir une agence web" le 09-24.
+
+### 2026-10-02
+
+Absent sur Saint-Julien, Annemasse, vitrine Haute-Savoie (3 requêtes mesurées). Autres non relancées.
 
 ### 2026-09-30
 

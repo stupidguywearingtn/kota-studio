@@ -409,6 +409,68 @@ export function buildSitePagesJsonLd() {
   };
 }
 
+export const DOMAIN_OWNERSHIP_PATH = "/nom-de-domaine-et-propriete-du-site";
+
+/* Les 5 questions/réponses affichées sur DomainOwnershipPage.jsx, reprises mot
+   pour mot dans le JSON-LD FAQPage. Page ajoutée le 2026-10-02. Sources
+   externes : Afnic, « Charte de nommage » et « Guide pratique du titulaire d'un
+   nom de domaine en .fr » (le titulaire est identifié lors de l'enregistrement,
+   doit être joignable et tenir ses coordonnées à jour via son bureau
+   d'enregistrement) ; Code de la propriété intellectuelle, art. L131-3 (la
+   cession de droits d'auteur doit être mentionnée distinctement dans l'acte).
+   Aucune pratique contractuelle de Kota Studio n'est affirmée : non fournie. */
+export const domainOwnershipFaqs = [
+  {
+    q: "Qui est propriétaire du nom de domaine de mon site ?",
+    a: "Le titulaire du nom de domaine est la personne ou l'entreprise enregistrée comme telle auprès du bureau d'enregistrement, et non celle qui a payé la facture ou créé le site. Si une agence enregistre le domaine à son propre nom, c'est elle qui en est titulaire. Pour un .fr, l'Afnic prévoit que le titulaire soit identifié, joignable et que ses coordonnées soient tenues à jour.",
+  },
+  {
+    q: "Comment vérifier que mon nom de domaine est bien à mon nom ?",
+    a: "Demandez à l'agence le nom du titulaire inscrit et le nom du bureau d'enregistrement, puis un accès à votre compte chez ce bureau d'enregistrement (ou une confirmation écrite de transfert à votre nom). C'est une vérification de cinq minutes, à faire avant le début du projet plutôt qu'au moment d'un désaccord.",
+  },
+  {
+    q: "Qui possède l'hébergement de mon site ?",
+    a: "L'hébergement est un abonnement distinct du domaine : il peut être au nom de l'agence ou au vôtre. Demandez qui l'héberge, qui le paie, et si vous pouvez déplacer le site chez un autre hébergeur sans le reconstruire. Un site hébergé sous le compte de l'agence reste accessible tant que ce compte est actif.",
+  },
+  {
+    q: "Suis-je propriétaire du code et du design de mon site ?",
+    a: "Pas automatiquement. En droit français, le créateur reste titulaire de ses droits d'auteur tant qu'une cession n'est pas prévue par écrit : l'article L131-3 du Code de la propriété intellectuelle exige que chaque droit cédé soit mentionné distinctement dans le contrat. Demandez donc quels droits vous sont cédés sur le design, le code et les textes, et à partir de quel moment (souvent après paiement complet).",
+  },
+  {
+    q: "Quelles questions poser à une agence avant de signer ?",
+    a: "Quatre questions suffisent : qui est titulaire du domaine, qui héberge et qui paie, quels droits vous sont cédés sur le code et le design, et ce que vous recevez si la collaboration s'arrête. Demandez les réponses par écrit. Chez Kota Studio, ces points se posent lors de l'appel de 15 minutes, avant tout engagement.",
+  },
+];
+
+export function buildDomainOwnershipJsonLd() {
+  const pageUrl = `${SITE_URL}${DOMAIN_OWNERSHIP_PATH}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE_URL}/` },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Qui est propriétaire de mon site internet ?",
+            item: pageUrl,
+          },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: domainOwnershipFaqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+    ],
+  };
+}
+
 export const AI_VISIBILITY_PATH = "/apparaitre-dans-chatgpt-et-ia-site-local";
 
 /* Les 5 questions/réponses affichées sur AiVisibilityPage.jsx, reprises mot

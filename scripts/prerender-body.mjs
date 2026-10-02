@@ -74,6 +74,10 @@ const routes = [
     filePath: path.join(distDir, "quelles-pages-pour-un-site-vitrine", "index.html"),
   },
   {
+    routePath: "/nom-de-domaine-et-propriete-du-site",
+    filePath: path.join(distDir, "nom-de-domaine-et-propriete-du-site", "index.html"),
+  },
+  {
     routePath: "/apparaitre-dans-chatgpt-et-ia-site-local",
     filePath: path.join(distDir, "apparaitre-dans-chatgpt-et-ia-site-local", "index.html"),
   },
