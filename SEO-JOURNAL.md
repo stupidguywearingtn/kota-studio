@@ -10,6 +10,15 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-10-04 (dimanche — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, sitemap (19 URLs), robots.txt en 200. `origin/main` = `388b971` avant chantier.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur Saint-Julien
+  (Boondooa, Digicomarket, Dieup'Art, AMJ74, WebFrance, Expressweb) et "agence web Lyon
+  création site vitrine" (Digital Unicorn, DILO, Alteo, Web-Konseil…). `site:kotastudio.fr`
+  ne renvoie que la page d'accueil : les sous-pages semblent NON indexées. Autres requêtes non relancées.
+- Chantier du jour : maillage interne des pages villes. Voir "Chantiers faits".
+
 **Au 2026-10-02 (vendredi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, page prix et page GEO en 200 ; sitemap 18 URLs, robots.txt Allow, llms.txt
@@ -490,6 +499,17 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-10-04 — Maillage interne entre pages villes/zones
+
+- Choix : `site:` ne montre que l'accueil ; les pages villes ne liaient que vers l'accueil et
+  la page prix (pas entre elles). Levier technique sans risque de contenu.
+- Fait : bloc "Nos autres zones d'intervention" dans `CityPage.jsx` (liens générés depuis
+  `cities.js`, h1 comme ancre, liste verticale donc OK mobile, aucun CSS nouveau). Build OK,
+  19 routes pré-rendues, liens présents dans le HTML statique.
+- Non fait : pas de modif de contenu rédigé ni de JSON-LD. Non testé visuellement sur mobile.
+- Piste : pour l'indexation, Yanis doit demander l'indexation des URLs dans Google Search
+  Console (je n'y ai pas accès) et vérifier le rapport "Pages".
 
 ### 2026-10-02 — Page "Qui est propriétaire de mon site et de mon nom de domaine ?"
 

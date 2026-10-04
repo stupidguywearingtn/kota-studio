@@ -213,6 +213,20 @@ export default function CityPage() {
                 Combien coûte un site internet ? Prix, délais et inclus détaillés →
               </Link>
             </p>
+            <h3 className="mt-5 text-sm font-bold uppercase tracking-widest text-encre">
+              Nos autres zones d'intervention
+            </h3>
+            <ul className="mt-2 flex flex-col gap-1.5 text-sm">
+              {cities
+                .filter((c) => c.slug !== city.slug)
+                .map((c) => (
+                  <li key={c.slug}>
+                    <Link to={`/${c.slug}`} className="font-semibold text-or hover:underline">
+                      {c.h1} →
+                    </Link>
+                  </li>
+                ))}
+            </ul>
           </div>
         </section>
 
