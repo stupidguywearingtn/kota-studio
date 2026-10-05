@@ -10,6 +10,12 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-10-05 (lundi — recherche du lundi faite, voir "Techniques apprises") :**
+
+- Prod : home, robots.txt 200 ; sitemap lu (19 URLs avant chantier ; un `curl` sur sitemap a expiré une fois, proxy). `origin/main` = `7120b24` avant chantier.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur Saint-Julien (Boondooa, Dieup'Art, AMJ74, WebFrance, Logitos, Expressweb, Prisma Création — nouveau), Annemasse (Boondooa, NEWP, Amadouh, Altitude Dev, Cocliko, Uniko Web, Arve Webdesign) et vitrine Haute-Savoie (Annecy Dev, Mont-Site, Kreaxion, Alpaweb, Wpop…). 4 autres requêtes non relancées. Aucun progrès mesurable : le blocage reste l'indexation/autorité, pas le volume de contenu.
+- Chantier du jour : page `/site-internet-ou-reseaux-sociaux` (public TikTok). Voir "Chantiers faits".
+
 **Au 2026-10-04 (dimanche — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, sitemap (19 URLs), robots.txt en 200. `origin/main` = `388b971` avant chantier.
@@ -499,6 +505,15 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-10-05 — Page "Site internet ou réseaux sociaux : faut-il les deux ?"
+
+- Pourquoi : angle jamais couvert, collé à l'audience réelle (trafic TikTok) ; demande vérifiée par recherche (résultats = blogs génériques de prestataires hors zone). Alternance : dernier chantier = maillage, celui-ci = nouvelle page de fond.
+- Fait : `SocialVsSitePage.jsx` (gabarit de DomainOwnershipPage), 5 Q/R en tête de réponse dans `jsonld.js` (`socialVsSiteFaqs`, FAQPage + BreadcrumbList identiques au texte visible), route App, pré-rendu head + body, sitemap, llms.txt, lien footer. Build OK, HTML statique vérifié (canonical, FAQPage, texte, lien footer).
+- Prix 790 €/1 290 € et 14 jours repris de `content.js`. Aucune statistique externe, aucun avis, aucune promesse de position.
+- Pas fait : lien depuis les pages villes/guides (autre que footer) ; pas de chiffres sur les réseaux (non sourcés).
+- Reste : maillage contextuel vers cette page depuis `/quelles-pages-pour-un-site-vitrine` ; Genève toujours bloquée.
+
 
 ### 2026-10-04 — Maillage interne entre pages villes/zones
 
@@ -2043,6 +2058,8 @@ Par ordre de priorité pour les prochains runs :
 
 ## Hypothèses à vérifier
 
+- **Pratique réelle (2026-10-05)** : pour `/site-internet-ou-reseaux-sociaux`, Yanis peut fournir un cas concret (client venu de TikTok → site) et dire si la landing page sert bien de lien en bio ; rien n'a été affirmé là-dessus.
+
 - **Propriété domaine/hébergement/droits (2026-10-02)** : Yanis doit dire qui est titulaire du
   domaine des sites clients, qui paie/gère l'hébergement, et si les droits sont cédés au
   client (et quand), pour que `/nom-de-domaine-et-propriete-du-site` affirme la pratique réelle.
@@ -2213,6 +2230,8 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 ---
 
 ## Techniques apprises
+
+- **2026-10-05 (lundi)** : recherche AI Overviews/local — sources trouvées = blogs marketing (netconnectdigital, digitalapplied…), non autoritaires ; affirmation reprise seulement par prudence : fusion AI Overviews/AI Mode annoncée à I/O 2026 (à vérifier sur blog.google avant de l'écrire sur le site). Rien d'applicable immédiatement ; la page GEO du 10-01 cite la doc officielle Google (déc. 2025), toujours la référence.
 
 _(à compléter chaque lundi après recherche sur l'état de l'art AI Overviews /
 ChatGPT / Perplexity)_

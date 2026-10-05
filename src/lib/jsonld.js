@@ -532,3 +532,63 @@ export function buildAiVisibilityJsonLd() {
     ],
   };
 }
+
+export const SOCIAL_VS_SITE_PATH = "/site-internet-ou-reseaux-sociaux";
+
+/* Les 5 questions/réponses affichées sur SocialVsSitePage.jsx, reprises mot
+   pour mot dans le JSON-LD FAQPage. Page ajoutée le 2026-10-05. Aucune
+   statistique externe : les affirmations sont structurelles (le compte
+   appartient à la plateforme, Google ne montre que ce qu'il indexe, le profil
+   d'établissement Google est gratuit). Faits propres au studio tirés de
+   content.js (prix de départ, délai de 14 jours). */
+export const socialVsSiteFaqs = [
+  {
+    q: "Faut-il un site internet quand on a déjà TikTok ou Instagram ?",
+    a: "Oui, dès que vous voulez être trouvé par des gens qui ne vous connaissent pas encore et qui cherchent sur Google. TikTok et Instagram montrent vos contenus à une audience qui scrolle ; un site répond à quelqu'un qui tape « création site internet à Saint-Julien » ou « électricien à Annecy » et décide de qui appeler. Les deux ne font pas le même travail : les réseaux attirent l'attention, le site transforme cette attention en demande de devis.",
+  },
+  {
+    q: "Quelle différence entre un site internet et un compte sur les réseaux sociaux ?",
+    a: "Un compte appartient à la plateforme, un site vous appartient. Sur un réseau social, la plateforme décide de la portée de vos publications, des règles du compte et peut le suspendre ; vos abonnés restent dans son écosystème. Sur votre site, vous décidez du texte, des prix affichés, du formulaire de contact et vous gardez la main sur votre nom de domaine, à condition qu'il soit enregistré à votre nom.",
+  },
+  {
+    q: "Un site internet est-il visible sur Google alors qu'un compte TikTok ne l'est pas toujours ?",
+    a: "Un site est conçu pour être exploré et indexé par Google : chaque page peut cibler une recherche précise (un service, une ville) avec un titre, un texte et des données structurées dédiés. Une vidéo ou un profil de réseau social peut parfois apparaître dans les résultats, mais vous ne contrôlez ni le titre, ni la page d'arrivée, ni ce qui est affiché à côté. Aucune méthode ne garantit une position précise dans Google.",
+  },
+  {
+    q: "La fiche Google Business Profile suffit-elle à la place d'un site internet ?",
+    a: "Elle suffit pour afficher horaires, adresse, téléphone, photos et avis, et elle est gratuite : c'est un bon premier pas pour un commerce local. Elle ne permet en revanche pas de détailler vos prestations, vos prix, votre méthode ou de répondre à des questions précises sur plusieurs pages. Un site et une fiche se complètent : la fiche mène aux appels et itinéraires, le site apporte le détail qui convainc.",
+  },
+  {
+    q: "Quel budget et quel délai pour passer de TikTok à un vrai site ?",
+    a: `Chez Kota Studio, une landing page (une seule page de conversion, par exemple le lien de votre bio) démarre à 790 € et un site sur-mesure à 1 290 €, avec une livraison en 14 jours. Le prix final dépend du nombre de pages et des options ; le détail est sur la page prix. Si votre trafic vient surtout de TikTok, la landing page mobile est souvent le bon point de départ, le site complet pouvant venir ensuite.`,
+  },
+];
+
+export function buildSocialVsSiteJsonLd() {
+  const pageUrl = `${SITE_URL}${SOCIAL_VS_SITE_PATH}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE_URL}/` },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Site internet ou réseaux sociaux ?",
+            item: pageUrl,
+          },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: socialVsSiteFaqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+    ],
+  };
+}

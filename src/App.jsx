@@ -15,6 +15,7 @@ import RefonteSignsPage from "./pages/RefonteSignsPage";
 import CustomVsCmsPage from "./pages/CustomVsCmsPage";
 import SitePagesGuidePage from "./pages/SitePagesGuidePage";
 import DomainOwnershipPage from "./pages/DomainOwnershipPage";
+import SocialVsSitePage from "./pages/SocialVsSitePage";
 import AiVisibilityPage from "./pages/AiVisibilityPage";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -102,6 +103,10 @@ export default function App() {
         <Route
           path="/nom-de-domaine-et-propriete-du-site"
           element={<DomainOwnershipPage />}
+        />
+        <Route
+          path="/site-internet-ou-reseaux-sociaux"
+          element={<SocialVsSitePage />}
         />
         <Route
           path="/apparaitre-dans-chatgpt-et-ia-site-local"

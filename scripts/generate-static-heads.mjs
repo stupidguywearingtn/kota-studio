@@ -47,6 +47,7 @@ import {
   buildCustomVsCmsJsonLd,
   buildSitePagesJsonLd,
   buildDomainOwnershipJsonLd,
+  buildSocialVsSiteJsonLd,
   buildAiVisibilityJsonLd,
   buildProjectJsonLd,
   PAGE_SCHEMA_ATTR,
@@ -193,6 +194,14 @@ writeRoute("/nom-de-domaine-et-propriete-du-site", {
     "Nom de domaine, hébergement, code et design : qui est propriétaire de quoi quand une agence crée votre site, et les questions à poser avant de signer.",
   schemaId: "domain-ownership",
   jsonLd: buildDomainOwnershipJsonLd(),
+});
+
+writeRoute("/site-internet-ou-reseaux-sociaux", {
+  title: "Site internet ou réseaux sociaux : faut-il les deux ? | Kota Studio",
+  description:
+    "TikTok, Instagram ou site internet : ce que chacun apporte, ce que la fiche Google Business ne remplace pas, et par où commencer quand on est un commerce ou un indépendant local.",
+  schemaId: "social-vs-site",
+  jsonLd: buildSocialVsSiteJsonLd(),
 });
 
 writeRoute("/apparaitre-dans-chatgpt-et-ia-site-local", {
