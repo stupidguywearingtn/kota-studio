@@ -100,7 +100,7 @@ export default function DomainOwnershipPage() {
             <span className="text-encre">Qui est propriétaire de mon site internet ?</span>
           </nav>
 
-          <span className="inline-flex items-center gap-2 rounded-full border border-or/30 bg-creme/70 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-or shadow-soft">
+          <span className="inline-flex items-center gap-2 tag-label">
             <span className="h-1.5 w-1.5 rounded-full bg-or" />
             Guide pratique
           </span>

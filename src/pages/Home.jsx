@@ -10,7 +10,6 @@ import WhatWeDo from "../components/WhatWeDo";
 import Promises from "../components/Promises";
 import Work from "../components/Work";
 import Process from "../components/Process";
-import Testimonials from "../components/Testimonials";
 import Offer from "../components/Offer";
 import FinalCta from "../components/FinalCta";
 import Footer from "../components/Footer";
@@ -225,7 +224,6 @@ export default function Home() {
         <Promises />
         <Work />
         <Process />
-        <Testimonials />
         <Offer />
         <FinalCta />
       </main>

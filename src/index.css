@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -13,7 +12,7 @@
     scroll-behavior: auto; /* Lenis gère le smooth scroll */
   }
   body {
-    font-family: 'Bricolage Grotesque', sans-serif;
+    font-family: 'Instrument Sans', system-ui, sans-serif;
     /* Dégradé crème + grille dorée subtile : visible sur toutes les zones
        crème, masquée par les sections sombres (bg-encre opaque). */
     background-color: #FBF6EC;
@@ -429,3 +428,115 @@ html.lenis body {
     animation: none !important;
   }
 }
+
+/* ============================================================
+   DA « ATELIER » — alignée sur Wow Sites Club (oct. 2026)
+   Tapis de découpe vert quadrillé + papier + surligneur jaune.
+   Unbounded (titres) · Instrument Sans (texte) · JetBrains Mono
+   (étiquettes) · Caveat (annotations manuscrites).
+   ============================================================ */
+:root{
+  --mat:#1D4537; --mat2:#163629; --grid:#285A48; --grid2:#3A7A62; --rule:#E8D66C;
+  --paper:#F1F0EA; --paper2:#E3E1D8; --ink:#141714; --ink2:#535A54;
+  --hi:#F1E25A; --hot:#FF6A3D; --onmat:#EEF2EC; --onmat2:#A9BFB4;
+}
+body{
+  background:var(--paper) url(/hand/paper.jpg) 0 0/512px !important;
+  color:var(--ink);
+}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:200;opacity:.06;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+::selection{background:var(--hi);color:var(--ink)}
+
+/* le tapis de découpe : toutes les sections sombres deviennent un tapis vert quadrillé */
+.mat, .bg-encre{
+  background-color:var(--mat) !important;
+  background-image:
+    linear-gradient(var(--grid2) 1px,transparent 1px),linear-gradient(90deg,var(--grid2) 1px,transparent 1px),
+    linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px) !important;
+  background-size:160px 160px,160px 160px,32px 32px,32px 32px !important;
+  background-position:-1px -1px !important;
+  color:var(--onmat);
+}
+.bg-encre .text-taupe,.mat .text-taupe{color:var(--onmat2) !important}
+.bg-encre .text-or,.mat .text-or{color:var(--hi) !important}
+.bg-encre .border-or\/30,.bg-encre .border-or\/20{border-color:rgba(232,214,108,.35) !important}
+
+/* titres : Unbounded, serrés */
+.kota-title, h1.font-display, h2.kota-title{font-family:"Unbounded","Arial Black",sans-serif;font-weight:800;letter-spacing:-.04em;line-height:.98}
+/* mot accent dans un titre clair = coup de surligneur */
+h1 .text-or, h2 .text-or, h3 .text-or{
+  color:var(--ink) !important;
+  background:linear-gradient(transparent 55%, var(--hi) 55%, var(--hi) 92%, transparent 92%);
+  padding:0 .08em; -webkit-box-decoration-break:clone; box-decoration-break:clone;
+}
+.bg-encre h1 .text-or,.bg-encre h2 .text-or,.bg-encre h3 .text-or,.mat h1 .text-or,.mat h2 .text-or{background:none;color:var(--hi) !important}
+.gold-underline::after{background:var(--hi);height:.32em;bottom:.04em;z-index:-1;border-radius:2px}
+.gold-underline{z-index:0}
+.text-outline{-webkit-text-stroke:1.4px var(--ink);letter-spacing:.02em}
+
+/* surfaces */
+.bg-or{background-color:var(--hi) !important;color:var(--ink)}
+.bg-or\/10,.bg-or\/15{background-color:rgba(241,226,90,.28) !important}
+.border-or\/30,.border-or\/40,.border-or\/20{border-color:rgba(20,23,20,.18) !important}
+.bg-creme{background-color:#FBFAF5 !important}
+.shadow-soft{box-shadow:3px 3px 0 var(--ink) !important}
+.shadow-soft-lg{box-shadow:5px 5px 0 var(--ink) !important}
+.shadow-soft-or{box-shadow:4px 4px 0 var(--ink) !important}
+.gold-halo{display:none !important}
+
+/* boutons : bloc papier/jaune à ombre dure, comme Wow Sites Club */
+.btn-3d{border-radius:12px !important;box-shadow:4px 4px 0 var(--ink) !important;transition:transform .15s,box-shadow .15s !important}
+.btn-3d:hover{transform:translate(-2px,-2px) !important;box-shadow:6px 6px 0 var(--ink) !important}
+.btn-3d:active{transform:translate(2px,2px) !important;box-shadow:1px 1px 0 var(--ink) !important}
+.bg-encre .btn-3d,.mat .btn-3d{box-shadow:4px 4px 0 #0b1a14 !important}
+
+/* badges / étiquettes : style étiquette en mono */
+.badge-3d{font-family:"JetBrains Mono",monospace;font-size:12px !important;letter-spacing:.12em;text-transform:uppercase;border-radius:8px !important;
+  box-shadow:3px 3px 0 var(--ink) !important;background:var(--paper) !important;border:1.5px solid var(--ink) !important}
+.eyebrow{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.hand{font-family:"Caveat",cursive;font-weight:700}
+
+/* éléments d'atelier réutilisables */
+.tape{position:absolute;width:96px;height:28px;background:linear-gradient(180deg,#fffbe8cc,#efe6c4cc),url(/hand/paper.jpg) center/180px;opacity:.92;box-shadow:0 1px 1.5px #0003;z-index:3}
+.tape::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,#fff0 0 6px,#ffffff22 6px 7px)}
+.postit{background:var(--hi) url(/hand/postit.jpg) center/cover;color:var(--ink);box-shadow:0 12px 20px -8px #0007}
+.kraft{background:url(/hand/kraft.jpg) 0 0/300px;color:var(--ink)}
+.stamp-ink{color:#C8412C;mix-blend-mode:multiply;opacity:.86}
+
+/* ---- hero atelier ---- */
+.hero-outline{color:var(--mat);--o:.035em;--oc:var(--onmat);letter-spacing:.005em;
+  text-shadow:var(--o) 0 0 var(--oc),calc(var(--o)*.924) calc(var(--o)*.383) 0 var(--oc),calc(var(--o)*.707) calc(var(--o)*.707) 0 var(--oc),calc(var(--o)*.383) calc(var(--o)*.924) 0 var(--oc),0 var(--o) 0 var(--oc),calc(var(--o)*-.383) calc(var(--o)*.924) 0 var(--oc),calc(var(--o)*-.707) calc(var(--o)*.707) 0 var(--oc),calc(var(--o)*-.924) calc(var(--o)*.383) 0 var(--oc),calc(var(--o)*-1) 0 0 var(--oc),calc(var(--o)*-.924) calc(var(--o)*-.383) 0 var(--oc),calc(var(--o)*-.707) calc(var(--o)*-.707) 0 var(--oc),calc(var(--o)*-.383) calc(var(--o)*-.924) 0 var(--oc),0 calc(var(--o)*-1) 0 var(--oc),calc(var(--o)*.383) calc(var(--o)*-.924) 0 var(--oc),calc(var(--o)*.707) calc(var(--o)*-.707) 0 var(--oc),calc(var(--o)*.924) calc(var(--o)*-.383) 0 var(--oc)}
+.hero-title .hero-word{color:var(--ink) !important}
+.hero-title .hero-card{background:var(--hi) !important;color:var(--ink);border-radius:10px !important;box-shadow:5px 5px 0 #0b1a14 !important;transform:translateY(-50%) rotate(-1.5deg) !important}
+.hero-title .hero-halo{display:none}
+.hero-title .hero-rotor{height:1.5em;margin-top:.14em}
+.hero-phone-frame{position:relative;aspect-ratio:9/19.5;border-radius:54px;padding:11px;background:linear-gradient(145deg,#2c2f2c,#0e100e 60%,#262926);
+  box-shadow:0 0 0 2px #3c403c inset,0 40px 70px -20px rgba(0,0,0,.65),12px 14px 0 rgba(11,26,20,.55)}
+.hero-phone-screen{display:block;width:100%;height:100%;object-fit:cover;border-radius:44px;background:#F7F2E7}
+.hero-phone-island{position:absolute;top:22px;left:50%;width:31%;height:26px;margin-left:-15.5%;border-radius:20px;background:#000;z-index:2}
+@media (max-width:1023px){.hero-phone{transform:rotate(2deg)}}
+
+/* Unbounded est ~25 % plus large que Bricolage : on recale l'échelle des titres */
+.kota-title.text-xl{font-size:1.05rem;line-height:1.02}
+.kota-title.text-2xl{font-size:1.3rem;line-height:1.02}
+.kota-title.text-3xl{font-size:1.6rem;line-height:1.02}
+.kota-title.text-4xl{font-size:1.85rem;line-height:1.02}
+.kota-title.text-5xl{font-size:2.35rem;line-height:1.02}
+.kota-title.text-6xl{font-size:2.8rem;line-height:1.02}
+.kota-title.text-7xl{font-size:3.5rem;line-height:1.02}
+@media (min-width:1024px){
+  .kota-title.lg\:text-xl{font-size:1.05rem;line-height:1.02}
+  .kota-title.lg\:text-2xl{font-size:1.3rem;line-height:1.02}
+  .kota-title.lg\:text-3xl{font-size:1.6rem;line-height:1.02}
+  .kota-title.lg\:text-4xl{font-size:1.85rem;line-height:1.02}
+  .kota-title.lg\:text-5xl{font-size:2.35rem;line-height:1.02}
+  .kota-title.lg\:text-6xl{font-size:2.8rem;line-height:1.02}
+  .kota-title.lg\:text-7xl{font-size:3.5rem;line-height:1.02}
+}
+
+/* étiquette de section façon Wow Sites Club : petite étiquette papier, mono, ombre dure */
+.tag-label{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);
+  background:#FBFAF5;border:1.5px solid var(--ink);border-radius:7px;padding:6px 11px;box-shadow:3px 3px 0 var(--ink);transform:rotate(-1.5deg)}
+.tag-label iconify-icon{color:var(--hot) !important}
+.bg-encre .tag-label,.mat .tag-label{background:var(--hi);border-color:var(--ink);box-shadow:3px 3px 0 #0b1a14}

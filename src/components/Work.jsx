@@ -8,7 +8,7 @@ export default function Work() {
     <section id="realisations" className="relative mx-auto max-w-7xl px-6 py-20 lg:py-28">
       {/* En-tête */}
       <div className="reveal mb-12 lg:mb-16">
-        <span className="inline-flex items-center gap-2 rounded-full border border-or/30 bg-or/10 px-4 py-1.5 text-sm font-semibold text-or">
+        <span className="inline-flex items-center gap-2 tag-label">
           <iconify-icon icon="solar:gallery-favourite-linear" class="text-base text-or" aria-hidden="true"></iconify-icon>
           {work.tag}
         </span>

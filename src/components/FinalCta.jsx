@@ -117,7 +117,7 @@ export default function FinalCta() {
               {finalCta.calendarPlaceholder}
             </p>
             <p className="max-w-sm text-sm text-taupe">{finalCta.calendarHint}</p>
-            <span className="mt-2 inline-flex items-center gap-2 rounded-full border border-or/20 bg-sable px-4 py-1.5 text-xs font-medium text-taupe">
+            <span className="mt-2 inline-flex items-center gap-2 tag-label">
               <iconify-icon
                 icon="solar:shield-check-linear"
                 class="text-base text-or"

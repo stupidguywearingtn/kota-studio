@@ -17,13 +17,12 @@ export default function Button({
   // .btn-3d = effet de profondeur partagé (ombre encre décalée au repos,
   // s'enfonce au survol/clic). Appliqué à TOUS les boutons du site.
   const base =
-    "btn-3d group inline-flex items-center justify-center gap-2.5 rounded-full px-7 py-3.5 text-base font-semibold tracking-tight cursor-pointer";
+    "btn-3d group inline-flex items-center justify-center gap-2.5 rounded-xl px-6 py-3.5 text-[15px] font-semibold tracking-tight cursor-pointer";
 
   const variants = {
-    primary: "bg-encre text-creme hover:bg-encre-soft", // principal : encre + crème
-    secondary:
-      "border-2 border-encre text-encre bg-creme hover:bg-encre hover:text-creme", // secondaire : crème + contour encre
-    light: "bg-creme text-encre hover:bg-or hover:text-encre", // sur fond sombre
+    primary: "bg-hi text-encre", // principal : bloc jaune surligneur + ombre encre
+    secondary: "border-[1.5px] border-encre text-encre bg-creme", // secondaire : papier + contour encre
+    light: "bg-creme text-encre", // sur fond vert : bloc papier
   };
 
   const cls = `${base} ${variants[variant] || variants.primary} ${className}`;

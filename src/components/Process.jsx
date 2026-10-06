@@ -107,7 +107,7 @@ export default function Process() {
       <div className="relative mx-auto max-w-7xl px-6">
         {/* En-tête */}
         <div className="reveal mx-auto max-w-2xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-or/30 bg-or/10 px-4 py-1.5 text-sm font-semibold text-or">
+          <span className="inline-flex items-center gap-2 tag-label">
             <iconify-icon
               icon="solar:calendar-linear"
               class="text-base text-or"

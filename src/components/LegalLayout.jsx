@@ -64,7 +64,7 @@ export default function LegalLayout({ title, intro, children }) {
       </header>
 
       <main className="mx-auto max-w-3xl px-6 pb-24 pt-6 lg:pt-10">
-        <span className="inline-flex items-center gap-2 rounded-full border border-or/30 bg-creme/70 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-or shadow-soft">
+        <span className="inline-flex items-center gap-2 tag-label">
           <span className="h-1.5 w-1.5 rounded-full bg-or" />
           Informations légales
         </span>

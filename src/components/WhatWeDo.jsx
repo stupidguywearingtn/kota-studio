@@ -18,7 +18,7 @@ export default function WhatWeDo() {
 
       {/* En-tête */}
       <header className="reveal relative max-w-2xl">
-        <span className="inline-flex items-center gap-2 rounded-full border border-encre/10 bg-sable px-4 py-1.5 text-sm font-medium text-taupe">
+        <span className="inline-flex items-center gap-2 tag-label">
           <span className="h-2 w-2 rounded-full bg-or" aria-hidden="true"></span>
           {whatWeDo.tag}
         </span>

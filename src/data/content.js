@@ -64,9 +64,9 @@ export const marquee = {
 };
 
 export const logos = {
-  label: "Ils nous feront confiance",
-  // Placeholders — remplace par tes vrais logos (texte ou <img>).
-  items: ["LOGO", "LOGO", "LOGO", "LOGO", "LOGO", "LOGO"],
+  label: "Ils nous font confiance",
+  // Vrais clients livrés (noms en texte, en attendant les logos vectoriels).
+  items: ["Tel & Cash", "Markus Immobilier", "Sensoria", "Margaux CDR", "HCE BTP", "Phone Lab", "Emir Wealth"],
 };
 
 /* -- 3. CE QU'ON FAIT ------------------------------------------------------ */

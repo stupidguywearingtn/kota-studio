@@ -101,7 +101,7 @@ export default function ChooseAgencyGuidePage() {
             <span className="text-encre">Comment choisir une agence de création de site internet ?</span>
           </nav>
 
-          <span className="inline-flex items-center gap-2 rounded-full border border-or/30 bg-creme/70 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-or shadow-soft">
+          <span className="inline-flex items-center gap-2 tag-label">
             <span className="h-1.5 w-1.5 rounded-full bg-or" />
             Guide pour bien choisir
           </span>

@@ -11,7 +11,7 @@ export default function Logo({ className = "", onDark = false }) {
       } ${className}`}
     >
       <span>{brand.name}</span>
-      <span className="text-or">.</span>
+      <span className={onDark ? "text-hi" : "text-hot"}>.</span>
       <span>{brand.suffix}</span>
     </Link>
   );

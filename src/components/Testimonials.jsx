@@ -19,7 +19,7 @@ export default function Testimonials() {
 
       {/* En-tête */}
       <div className="reveal mx-auto max-w-2xl text-center">
-        <span className="inline-flex items-center gap-2 rounded-full border border-encre/10 bg-sable px-4 py-1.5 text-sm font-medium text-taupe">
+        <span className="inline-flex items-center gap-2 tag-label">
           <iconify-icon
             icon="solar:chat-round-like-linear"
             class="text-base text-or"

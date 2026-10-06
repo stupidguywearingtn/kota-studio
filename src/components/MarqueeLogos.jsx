@@ -51,7 +51,7 @@ export default function MarqueeLogos() {
               <div
                 key={i}
                 aria-hidden={i >= logos.items.length ? "true" : undefined}
-                className="mx-4 flex h-16 min-w-[140px] shrink-0 items-center justify-center rounded-2xl border border-encre/10 bg-creme text-xl font-display font-extrabold tracking-title text-taupe shadow-soft"
+                className="mx-4 flex h-16 min-w-[140px] shrink-0 items-center justify-center rounded-xl border-[1.5px] border-encre bg-creme px-6 text-base font-display font-extrabold tracking-title text-encre shadow-soft whitespace-nowrap"
               >
                 {logo}
               </div>

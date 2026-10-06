@@ -48,7 +48,7 @@ export default function Offer() {
       <div className="relative grid grid-cols-1 gap-8 lg:grid-cols-2">
         {/* ===================== COLONNE GAUCHE ===================== */}
         <div className="reveal flex flex-col">
-          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-or/30 bg-or/10 px-4 py-1.5 text-sm font-semibold text-or">
+          <span className="inline-flex w-fit items-center gap-2 tag-label">
             <iconify-icon
               icon="solar:tag-price-linear"
               class="text-base"
