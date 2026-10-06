@@ -198,6 +198,11 @@ export default function SitePagesGuidePage() {
                 </Link>
               </li>
               <li>
+                <Link to="/site-internet-ou-reseaux-sociaux" className="font-semibold text-or hover:underline">
+                  Site internet ou réseaux sociaux : faut-il les deux ? →
+                </Link>
+              </li>
+              <li>
                 <Link to="/site-sur-mesure-ou-wordpress-wix" className="font-semibold text-or hover:underline">
                   Site sur-mesure ou WordPress / Wix : que choisir ? →
                 </Link>

@@ -169,6 +169,11 @@ export default function SocialVsSitePage() {
                 </Link>
               </li>
               <li>
+                <Link to="/apparaitre-dans-chatgpt-et-ia-site-local" className="font-semibold text-or hover:underline">
+                  Comment apparaître dans ChatGPT et les IA quand on a un site local ? →
+                </Link>
+              </li>
+              <li>
                 <Link to="/combien-coute-un-site-internet" className="font-semibold text-or hover:underline">
                   Combien coûte un site internet ? Prix, délais et inclus détaillés →
                 </Link>

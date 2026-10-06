@@ -10,6 +10,12 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-10-06 (mardi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, `/site-internet-ou-reseaux-sociaux`, sitemap en 200. `origin/main` = `d4b84fb` avant chantier.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur Saint-Julien (Boondooa, ABC Idea, Dieup'Art, AMJ74, WebFrance, PappleWeb — nouveau, Expressweb). `site:kotastudio.fr` ne renvoie toujours que la page d'accueil. Autres requêtes non relancées. Aucun progrès mesurable : blocage = indexation (Search Console).
+- Chantier du jour : maillage contextuel entre pages de fond. Voir "Chantiers faits".
+
 **Au 2026-10-05 (lundi — recherche du lundi faite, voir "Techniques apprises") :**
 
 - Prod : home, robots.txt 200 ; sitemap lu (19 URLs avant chantier ; un `curl` sur sitemap a expiré une fois, proxy). `origin/main` = `7120b24` avant chantier.
@@ -505,6 +511,13 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-10-06 — Maillage contextuel vers la page "Site internet ou réseaux sociaux"
+
+- Pourquoi : reste noté le 10-05 ; la nouvelle page n'était liée que depuis le footer. Pas de nouvelle page ajoutée : les 20 pages ne sont pas indexées, l'ajout de volume n'est pas le levier.
+- Fait : lien dans le bloc "Prêt à passer à l'étape suivante" de `SitePagesGuidePage.jsx` vers `/site-internet-ou-reseaux-sociaux` ; lien dans "Pour aller plus loin" de `SocialVsSitePage.jsx` vers `/apparaitre-dans-chatgpt-et-ia-site-local`. Build OK (20 routes pré-rendues), liens vérifiés dans le HTML statique.
+- Non fait : aucun texte, JSON-LD ni CSS modifié ; pas de test visuel mobile (liens dans une liste verticale existante). Genève toujours bloquée.
+- Reste : Yanis doit demander l'indexation des URLs dans Google Search Console (aucun accès ici) ; c'est la vraie priorité.
 
 ### 2026-10-05 — Page "Site internet ou réseaux sociaux : faut-il les deux ?"
 
