@@ -159,7 +159,6 @@ export function mountHeroScene(container, opts = {}) {
 
     ready = true;
     resize();
-    onReady();
   }).catch((e) => console.warn("[hero3d]", e));
 
   new THREE.TextureLoader().load(phoneShotUrl, (t) => {
@@ -217,6 +216,7 @@ export function mountHeroScene(container, opts = {}) {
   const easeIO = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
   let t0 = null;
   let started = false;
+  let announced = false;
 
   function frame(tMs) {
     if (!ready) return;
@@ -261,6 +261,10 @@ export function mountHeroScene(container, opts = {}) {
     world.rotation.x = rx * 0.05;
 
     renderer.render(scene, cam);
+    if (!announced) {
+      announced = true;
+      onReady(); // l'image fixe ne s'efface qu'après la 1re image 3D réellement dessinée
+    }
   }
 
   let raf = 0;
