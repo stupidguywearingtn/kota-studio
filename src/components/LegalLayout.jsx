@@ -11,6 +11,8 @@ import FloatingWhatsApp from "./FloatingWhatsApp";
 /* Surligne un champ à compléter ([entre crochets] dans content.js -> legal).
    Apparaît en doré pour que le client repère ce qu'il reste à remplir. */
 export function Ph({ children }) {
+  // Valeur réelle -> texte normal ; seule une valeur « [à compléter] » est surlignée.
+  if (typeof children === "string" && !children.startsWith("[")) return <span>{children}</span>;
   return (
     <span className="rounded bg-or/15 px-1.5 py-0.5 font-medium text-encre ring-1 ring-or/30">
       {children}

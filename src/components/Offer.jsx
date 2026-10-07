@@ -1,196 +1,104 @@
 import { offer } from "../data/content";
 import Button from "./Button";
 
-/* SECTION 8 — OFFRE / PRIX
-   Section claire (crème). Grille 2 colonnes :
-   - Gauche : titre + CTA + 2 cartes (recherche & stratégie / développement sur-mesure)
-   - Droite : galerie défilante (2 marquees) + bloc tarifaire (plans / inclus / options) */
-
+/* SECTION — TARIFS (id="offre"), mise en scène du Wow Sites Club :
+   ticket de caisse / post-it entouré au feutre / carte noire, puis tableau
+   des options. Prix réels de content.js (offer). */
 export default function Offer() {
-  // 4 copies de chaque rangée -> boucle marquee invisible (pas de saut/trou).
-  const topRow = Array(4).fill(offer.gallery.top).flat();
-  const bottomRow = Array(4).fill(offer.gallery.bottom).flat();
-
-  // Vignette d'une réalisation : l'image se pose sur un placeholder sable.
-  // Si l'image est absente (404), onError la masque -> le placeholder reste.
-  const GalleryBox = ({ src }) => (
-    <div className="relative mx-3 h-28 w-44 shrink-0 overflow-hidden rounded-2xl border border-encre/10 bg-sable">
-      <span className="absolute inset-0 flex items-center justify-center">
-        <iconify-icon
-          icon="solar:gallery-wide-linear"
-          class="text-3xl text-taupe/50"
-          aria-hidden="true"
-        ></iconify-icon>
-      </span>
-      <img
-        src={src}
-        alt="Réalisation Kota Studio"
-        loading="lazy"
-        className="relative h-full w-full object-cover"
-        onError={(e) => {
-          e.currentTarget.style.display = "none";
-        }}
-      />
-    </div>
-  );
-
   return (
-    <section
-      id="offre"
-      className="relative mx-auto max-w-7xl px-6 py-20 lg:py-28"
-    >
-      {/* Halo doré décoratif en fond */}
-      <div
-        className="gold-halo pointer-events-none absolute -top-10 right-0 h-72 w-72"
-        aria-hidden="true"
-      ></div>
-
-      <div className="relative grid grid-cols-1 gap-8 lg:grid-cols-2">
-        {/* ===================== COLONNE GAUCHE ===================== */}
-        <div className="reveal flex flex-col">
-          <span className="inline-flex w-fit items-center gap-2 tag-label">
-            <iconify-icon
-              icon="solar:tag-price-linear"
-              class="text-base"
-              aria-hidden="true"
-            ></iconify-icon>
-            {offer.tag}
-          </span>
-
-          <h2 className="kota-title mt-5 text-4xl lg:text-5xl">
-            {offer.title}
+    <section id="offre" className="mat relative overflow-hidden">
+      <div className="mx-auto max-w-7xl px-5 py-20 sm:px-6 lg:py-28">
+        <header className="reveal max-w-5xl">
+          <p className="k-eyebrow">Tarifs</p>
+          <h2 className="k-h2">
+            Un prix clair. <span className="k-hl">Tout compris.</span>
           </h2>
+          <p className="mt-5 max-w-[60ch] text-lg text-onmat2">
+            Prix fixe validé avant de commencer. Acompte de 50 % pour lancer le projet, le solde à la livraison.
+          </p>
+        </header>
 
-          <div className="mt-7">
-            <Button href={offer.cta.href} variant="primary">
-              {offer.cta.label}
+        <div className="k-plans reveal-stagger mt-14">
+          {/* Ticket de caisse */}
+          <div className="k-plan rc">
+            <p className="nm">Reçu · Landing page</p>
+            <p className="from">à partir de</p>
+            <p className="pr">790 €</p>
+            <div className="dash" />
+            <ul>
+              <li>1 page pensée pour convertir</li>
+              <li>Design sur-mesure, mobile d'abord</li>
+              <li>Formulaire, WhatsApp ou réservation</li>
+              <li>SEO de base + mise en ligne</li>
+            </ul>
+            <Button href="#contact" variant="secondary" className="mt-2 w-full">
+              Réserver un appel
             </Button>
           </div>
 
-          {/* Les 2 cartes empilées */}
-          <div className="mt-9 flex flex-col gap-5">
-            {offer.leftCards.map((card) => (
-              <div
-                key={card.title}
-                className="lift rounded-3xl border border-encre/10 bg-creme p-7 shadow-soft"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-or/15 text-2xl text-or">
-                  <iconify-icon
-                    icon={card.icon}
-                    aria-hidden="true"
-                  ></iconify-icon>
-                </div>
+          {/* Post-it entouré */}
+          <div className="k-plan pi">
+            <span className="tape" />
+            <span className="h font-hand">le plus complet</span>
+            <p className="nm">Site sur-mesure</p>
+            <p className="from">à partir de</p>
+            <p className="pr">
+              <span className="k-ringed">
+                1 290 €
+                <svg viewBox="0 0 240 90" preserveAspectRatio="none" fill="none" aria-hidden="true">
+                  <path d="M40 10C95 0 205 2 228 26c16 18 4 44-36 54-60 14-160 10-182-14C-6 46 8 18 52 8" stroke="#C8412C" strokeWidth="3" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+                </svg>
+              </span>
+            </p>
+            <ul>
+              <li>Toutes les pages de votre activité</li>
+              <li>Espace admin pour tout modifier</li>
+              <li>SEO local + visibilité dans les IA</li>
+              <li>Révisions illimitées, livré en 14 jours</li>
+            </ul>
+            <Button href="#contact" variant="light" className="mt-2 w-full">
+              Lancer mon site
+            </Button>
+          </div>
 
-                <h3 className="kota-title mt-5 text-2xl">{card.title}</h3>
-
-                <ul className="mt-4 flex flex-col gap-3">
-                  {card.points.map((point) => (
-                    <li key={point} className="flex items-start gap-3">
-                      <iconify-icon
-                        icon="solar:check-circle-bold"
-                        class="mt-0.5 shrink-0 text-xl text-or"
-                        aria-hidden="true"
-                      ></iconify-icon>
-                      <span className="text-taupe">{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+          {/* Carte noire */}
+          <div className="k-plan cc">
+            <div className="flex items-center justify-between">
+              <span className="chipc" aria-hidden="true" />
+              <span className="nm text-onmat2">Projet · sur devis</span>
+            </div>
+            <p className="pr !text-[42px] sm:!text-[48px]">Sur devis</p>
+            <ul>
+              <li>Boutique en ligne sur-mesure</li>
+              <li>Application mobile</li>
+              <li>Outils métier : CRM, réservation…</li>
+              <li>Refonte d'un site existant</li>
+            </ul>
+            <Button href="#contact" variant="primary" className="mt-2 w-full">
+              Parlons-en
+            </Button>
           </div>
         </div>
 
-        {/* ===================== COLONNE DROITE ===================== */}
-        <div className="flex flex-col gap-8">
-          {/* --- DROITE HAUT : galerie (2 marquees, sens opposés) --- */}
-          <div className="reveal flex flex-col gap-4">
-            {/* Rangée 1 : défile vers la GAUCHE (4 copies, boucle invisible) */}
-            <div className="overflow-hidden edge-fade">
-              <div className="flex w-max mq-ltr">
-                {topRow.map((src, i) => (
-                  <GalleryBox key={`top-${i}`} src={src} />
-                ))}
-              </div>
-            </div>
-
-            {/* Rangée 2 : défile vers la DROITE (4 copies, boucle invisible) */}
-            <div className="overflow-hidden edge-fade">
-              <div className="flex w-max mq-rtl">
-                {bottomRow.map((src, i) => (
-                  <GalleryBox key={`bot-${i}`} src={src} />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* --- DROITE BAS : bloc tarifaire --- */}
-          <div className="reveal rounded-3xl border border-encre/10 bg-creme p-7 shadow-soft lg:p-8">
-            {/* Plans */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {offer.plans.map((plan) => (
-                <div
-                  key={plan.name}
-                  className="rounded-2xl border border-encre/10 bg-sable/60 p-5"
-                >
-                  <p className="font-semibold text-encre">{plan.name}</p>
-                  <p className="mt-1 font-display text-lg font-extrabold text-or">
-                    {plan.price}
-                  </p>
-                </div>
+        {/* Options */}
+        <div className="k-cmp reveal mt-16">
+          <table>
+            <thead>
+              <tr>
+                <th>{offer.extrasTitle}</th>
+                <th className="text-right">Prix</th>
+              </tr>
+            </thead>
+            <tbody>
+              {offer.extras.map((x) => (
+                <tr key={x.label}>
+                  <td>{x.label}</td>
+                  <td>{x.price}</td>
+                </tr>
               ))}
-            </div>
-
-            {/* Séparateur doré fin */}
-            <div className="mt-7 flex items-center gap-3">
-              <span className="h-px flex-1 bg-encre/10"></span>
-              <iconify-icon
-                icon="solar:diamonds-bold"
-                class="text-sm text-or"
-                aria-hidden="true"
-              ></iconify-icon>
-              <span className="h-px flex-1 bg-encre/10"></span>
-            </div>
-
-            {/* Ce qui est inclus */}
-            <h3 className="mt-6 text-sm font-bold uppercase tracking-wide text-encre">
-              {offer.includedTitle}
-            </h3>
-            <ul className="mt-4 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
-              {offer.included.map((item) => (
-                <li key={item} className="flex items-start gap-2.5">
-                  <iconify-icon
-                    icon="solar:check-circle-bold"
-                    class="mt-0.5 shrink-0 text-lg text-or"
-                    aria-hidden="true"
-                  ></iconify-icon>
-                  <span className="text-sm text-taupe">{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            {/* Options en plus */}
-            <h3 className="mt-8 text-sm font-bold uppercase tracking-wide text-encre">
-              {offer.extrasTitle}
-            </h3>
-            <ul className="mt-3">
-              {offer.extras.map((extra) => (
-                <li
-                  key={extra.label}
-                  className="flex items-center justify-between border-t border-encre/10 py-2.5"
-                >
-                  <span className="flex items-center gap-2.5 text-encre">
-                    <iconify-icon
-                      icon="solar:add-circle-linear"
-                      class="text-base text-or/80"
-                      aria-hidden="true"
-                    ></iconify-icon>
-                    {extra.label}
-                  </span>
-                  <span className="font-semibold text-or">{extra.price}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+            </tbody>
+            <caption>Prix nets, TVA non applicable (art. 293 B du CGI). Paiement par virement : 50 % à la commande, 50 % à la livraison.</caption>
+          </table>
         </div>
       </div>
     </section>

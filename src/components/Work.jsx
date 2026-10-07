@@ -7,24 +7,29 @@ export default function Work() {
   return (
     <section id="realisations" className="relative mx-auto max-w-7xl px-6 py-20 lg:py-28">
       {/* En-tête */}
-      <div className="reveal mb-12 lg:mb-16">
-        <span className="inline-flex items-center gap-2 tag-label">
-          <iconify-icon icon="solar:gallery-favourite-linear" class="text-base text-or" aria-hidden="true"></iconify-icon>
-          {work.tag}
-        </span>
-        <h2 className="kota-title mt-6 text-4xl lg:text-6xl">
-          {work.titleBefore}{" "}
-          <span className="gold-underline">{work.titleHighlight}</span>
+      <header className="reveal mb-12 max-w-5xl lg:mb-16">
+        <p className="k-eyebrow">{work.tag}</p>
+        <h2 className="k-h2">
+          De vrais sites, <span className="k-hl">en ligne.</span>
         </h2>
-      </div>
+        <p className="mt-5 max-w-[56ch] text-lg leading-relaxed text-taupe">
+          Cliquez, ils sont en ligne. Faits main pour des clients qui vendent, réservent et recrutent grâce à leur site.
+        </p>
+      </header>
 
       {/* Grille 2×2 */}
       <div className="reveal-stagger grid grid-cols-1 gap-6 sm:grid-cols-2 lg:gap-8">
-        {projects.map((p) => (
-          <Link
+        {projects.filter((p) => p.home !== false).map((p) => {
+          const isLive = p.liveUrl && p.liveUrl !== "#";
+          const domain = isLive ? p.liveUrl.replace(/^https?:\/\/(www\.)?/, "") : "";
+          const Tag = isLive ? "a" : Link;
+          const linkProps = isLive
+            ? { href: p.liveUrl, target: "_blank", rel: "noopener", "aria-label": `Voir le site ${p.name} en ligne (${domain})` }
+            : { to: `/projets/${p.slug}`, "aria-label": `Voir le projet ${p.name}` };
+          return (
+          <Tag
             key={p.slug}
-            to={`/projets/${p.slug}`}
-            aria-label={`Voir le projet ${p.name}`}
+            {...linkProps}
             className="lift group block overflow-hidden rounded-[28px] border border-encre/10 bg-creme shadow-soft"
           >
             {/* Aperçu */}
@@ -54,7 +59,7 @@ export default function Work() {
               {/* "Voir le projet" — apparaît au survol */}
               <div className="absolute inset-x-4 bottom-4 flex translate-y-3 items-center justify-between opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
                 <span className="text-sm font-semibold text-creme drop-shadow">
-                  {work.cardCta}
+                  {isLive ? "Voir le site en ligne" : work.cardCta}
                 </span>
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-or text-encre shadow-soft-or">
                   <iconify-icon icon="solar:arrow-right-up-linear" class="arrow-advance text-xl" aria-hidden="true"></iconify-icon>
@@ -68,14 +73,21 @@ export default function Work() {
                 <h3 className="kota-title text-xl lg:text-2xl">{p.name}</h3>
                 <p className="mt-1 text-sm text-taupe">{p.sector}</p>
               </div>
-              <iconify-icon
-                icon="solar:arrow-right-linear"
-                class="arrow-advance shrink-0 text-2xl text-encre/40"
-                aria-hidden="true"
-              ></iconify-icon>
+              {isLive ? (
+                <span className="shrink-0 rounded-lg border-[1.5px] border-encre bg-hi px-2.5 py-1.5 font-mono text-[11.5px] tracking-wide text-encre shadow-[2px_2px_0_#141714] transition-transform group-hover:-translate-y-0.5">
+                  {domain} ↗
+                </span>
+              ) : (
+                <iconify-icon
+                  icon="solar:arrow-right-linear"
+                  class="arrow-advance shrink-0 text-2xl text-encre/40"
+                  aria-hidden="true"
+                ></iconify-icon>
+              )}
             </div>
-          </Link>
-        ))}
+          </Tag>
+          );
+        })}
       </div>
     </section>
   );
