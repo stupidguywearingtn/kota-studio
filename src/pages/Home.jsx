@@ -12,6 +12,8 @@ import Work from "../components/Work";
 import Process from "../components/Process";
 import Offer from "../components/Offer";
 import FinalCta from "../components/FinalCta";
+import Included from "../components/Included";
+import Faq from "../components/Faq";
 import Footer from "../components/Footer";
 import FloatingWhatsApp from "../components/FloatingWhatsApp";
 
@@ -224,8 +226,10 @@ export default function Home() {
         <Promises />
         <Work />
         <Process />
+        <Included />
         <Offer />
         <FinalCta />
+        <Faq />
       </main>
       <Footer />
       <FloatingWhatsApp />

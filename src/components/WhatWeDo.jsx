@@ -1,182 +1,109 @@
+import { useEffect, useRef } from "react";
 import { whatWeDo } from "../data/content";
 import Button from "./Button";
 
-/* SECTION 3 — CE QU'ON FAIT
-   Deux cartes (crème / encre) présentant les deux formules,
-   chacune avec un mockup navigateur prêt à recevoir une capture. */
+/* Vidéo d'illustration 3D (rendue en amont, boucle parfaite) : ne se charge
+   et ne joue que lorsqu'elle est à l'écran. */
+function LoopVideo({ base, label }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          if (v.preload !== "auto") {
+            v.preload = "auto";
+            v.load();
+          }
+          v.play().catch(() => {});
+        } else v.pause();
+      },
+      { rootMargin: "200px" }
+    );
+    io.observe(v);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <video
+      ref={ref}
+      muted
+      loop
+      playsInline
+      preload="none"
+      poster={`${base}-poster.webp`}
+      aria-label={label}
+    >
+      <source src={`${base}.webm`} type="video/webm" />
+      <source src={`${base}.mp4`} type="video/mp4" />
+    </video>
+  );
+}
+
+/* SECTION — CE QU'ON FAIT
+   Deux formules clairement différentes, chacune avec son illustration 3D :
+   - Landing page : UNE page, un bouton, une demande qui tombe.
+   - Site sur-mesure : un vrai site de plusieurs pages (Markus Immobilier). */
 export default function WhatWeDo() {
   return (
-    <section
-      id="ce-quon-fait"
-      className="relative mx-auto max-w-7xl px-6 py-20 lg:py-28"
-    >
-      {/* Halo doré décoratif */}
-      <div
-        className="gold-halo pointer-events-none absolute -top-10 right-0 h-72 w-72"
-        aria-hidden="true"
-      ></div>
-
-      {/* En-tête */}
-      <header className="reveal relative max-w-2xl">
-        <span className="inline-flex items-center gap-2 tag-label">
-          <span className="h-2 w-2 rounded-full bg-or" aria-hidden="true"></span>
-          {whatWeDo.tag}
-        </span>
-        <h2 className="kota-title mt-6 text-4xl leading-[1.05] lg:text-6xl">
-          <span>{whatWeDo.titleStrong}</span>{" "}
-          <span className="font-light text-taupe">{whatWeDo.titleLight}</span>
+    <section id="ce-quon-fait" className="relative mx-auto max-w-7xl px-5 py-20 sm:px-6 lg:py-28">
+      <header className="reveal max-w-5xl">
+        <p className="k-eyebrow">{whatWeDo.tag}</p>
+        <h2 className="k-h2">
+          {whatWeDo.title} <span className="k-hl">{whatWeDo.highlight}</span>
         </h2>
+        <p className="mt-5 max-w-[56ch] text-lg leading-relaxed text-taupe">{whatWeDo.subtitle}</p>
       </header>
 
-      {/* Grille des deux formules */}
-      <div className="reveal-stagger mt-14 grid grid-cols-1 gap-8 lg:grid-cols-2">
-        {whatWeDo.cards.map((card, i) => {
-          const isDark = card.theme === "encre";
-          const floatClass = i % 2 === 0 ? "float-soft" : "float-soft-delayed";
-
+      <div className="reveal-stagger mt-12 grid grid-cols-1 gap-8 lg:mt-16 lg:grid-cols-2 lg:gap-10">
+        {whatWeDo.cards.map((c) => {
+          const dark = c.theme === "mat";
           return (
-            <article
-              key={card.title}
-              className={`lift relative flex flex-col rounded-[28px] p-8 lg:p-10 ${
-                isDark
-                  ? "bg-encre text-creme shadow-soft-lg"
-                  : "bg-creme border border-encre/10 shadow-soft"
-              }`}
-            >
-              {/* Label */}
-              <p className="text-sm font-medium uppercase tracking-widest text-or">
-                {card.label}
-              </p>
-
-              {/* Titre */}
-              <h3
-                className={`kota-title mt-3 text-3xl lg:text-4xl ${
-                  isDark ? "text-creme" : ""
-                }`}
-              >
-                {card.title}
-              </h3>
-
-              {/* Mockup navigateur — wrapper flottant, jamais sur l'élément 3D */}
-              <div className={`${floatClass} mt-8`}>
-                <div
-                  className={`mockup-3d overflow-hidden rounded-2xl border shadow-soft ${
-                    isDark
-                      ? "bg-encre-soft border-creme/10"
-                      : "bg-white border-encre/10"
-                  }`}
-                >
-                  {/* Barre du navigateur */}
-                  <div
-                    className={`flex items-center gap-3 border-b px-4 py-3 ${
-                      isDark
-                        ? "border-creme/10 bg-encre"
-                        : "border-encre/5 bg-sable"
-                    }`}
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <span
-                        className="h-2.5 w-2.5 rounded-full bg-or"
-                        aria-hidden="true"
-                      ></span>
-                      <span
-                        className={`h-2.5 w-2.5 rounded-full ${
-                          isDark ? "bg-creme/20" : "bg-encre/15"
-                        }`}
-                        aria-hidden="true"
-                      ></span>
-                      <span
-                        className={`h-2.5 w-2.5 rounded-full ${
-                          isDark ? "bg-creme/20" : "bg-encre/15"
-                        }`}
-                        aria-hidden="true"
-                      ></span>
-                    </div>
-                    {/* Pilule URL centrée */}
-                    <div
-                      className={`flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-1 text-xs text-taupe ${
-                        isDark ? "bg-encre-soft" : "bg-creme"
-                      }`}
-                    >
-                      <iconify-icon
-                        icon="solar:lock-keyhole-minimalistic-linear"
-                        class="text-xs text-or"
-                        aria-hidden="true"
-                      ></iconify-icon>
-                      {card.browser.url}
-                    </div>
-                  </div>
-
-                  {/* Corps : maquette stylisée abstraite */}
-                  {/* Remplacer par une vraie capture */}
-                  <div className="p-5">
-                    <div className="flex items-start gap-4">
-                      {/* Bloc d'accent doré */}
-                      <div className="h-12 w-12 shrink-0 rounded-xl bg-or"></div>
-                      <div className="flex-1 space-y-2 pt-1">
-                        <div
-                          className={`h-3 w-3/4 rounded-full ${
-                            isDark ? "bg-creme/15" : "bg-sable"
-                          }`}
-                        ></div>
-                        <div
-                          className={`h-3 w-1/2 rounded-full ${
-                            isDark ? "bg-creme/10" : "bg-creme"
-                          }`}
-                        ></div>
-                      </div>
-                    </div>
-
-                    <div
-                      className={`mt-5 h-24 rounded-xl ${
-                        isDark ? "bg-creme/5" : "bg-sable"
-                      }`}
-                    ></div>
-
-                    <div className="mt-4 grid grid-cols-3 gap-3">
-                      <div
-                        className={`h-12 rounded-lg ${
-                          isDark ? "bg-creme/10" : "bg-creme"
-                        }`}
-                      ></div>
-                      <div
-                        className={`h-12 rounded-lg ${
-                          isDark ? "bg-creme/10" : "bg-creme"
-                        }`}
-                      ></div>
-                      <div className="h-12 rounded-lg border border-or/40 bg-or-soft/30"></div>
-                    </div>
-
-                    {/* Mini-pilule dorée (CTA simulé) */}
-                    <div className="mt-5 flex justify-end">
-                      <div className="h-7 w-24 rounded-full bg-or"></div>
-                    </div>
-                  </div>
-                </div>
+            <article key={c.key} className={`k-offer ${dark ? "matc" : "paper"}`}>
+              <div className="ill" style={{ background: c.bg }}>
+                <LoopVideo
+                  base={c.video}
+                  label={dark ? "Illustration 3D : les pages d'un site sur-mesure" : "Illustration 3D : une landing page et son bouton d'action"}
+                />
               </div>
 
-              {/* Texte */}
-              <p
-                className={`mt-8 text-base leading-relaxed ${
-                  isDark ? "text-creme/70" : "text-taupe"
-                }`}
-              >
-                {card.text}
-              </p>
+              <div className="flex flex-1 flex-col px-3 pb-3 pt-6 sm:px-5 sm:pb-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className={`k-eyebrow ${dark ? "text-hi" : "text-hot"}`}>
+                      Formule {c.num} · {c.label}
+                    </p>
+                    <h3 className="mt-2 font-display text-[28px] font-extrabold uppercase leading-none tracking-[-.04em] sm:text-[34px]">
+                      {c.title}
+                    </h3>
+                  </div>
+                  <span className="price mt-1">{c.price}</span>
+                </div>
 
-              {/* CTA */}
-              <div className="mt-7">
-                <Button
-                  href={card.cta.href}
-                  variant={isDark ? "light" : "primary"}
-                >
-                  {card.cta.label}
-                </Button>
+                <p className={`mt-4 text-[16px] leading-relaxed ${dark ? "text-onmat2" : "text-taupe"}`}>{c.text}</p>
+
+                <ul className="mt-5">
+                  {c.points.map((p) => (
+                    <li key={p}>{p}</li>
+                  ))}
+                </ul>
+
+                <div className="mt-7 pt-1 lg:mt-auto lg:pt-8">
+                  <Button href={c.cta.href} variant={dark ? "primary" : "secondary"}>
+                    {c.cta.label}
+                  </Button>
+                </div>
               </div>
             </article>
           );
         })}
       </div>
+
+      <p className="reveal mt-10 text-center font-hand text-[24px] text-encre/80">
+        Pas sûr de la formule ? On vous conseille pendant l'appel, c'est gratuit.
+      </p>
     </section>
   );
 }

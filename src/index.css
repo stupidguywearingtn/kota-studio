@@ -540,3 +540,129 @@ h1 .text-or, h2 .text-or, h3 .text-or{
   background:#FBFAF5;border:1.5px solid var(--ink);border-radius:7px;padding:6px 11px;box-shadow:3px 3px 0 var(--ink);transform:rotate(-1.5deg)}
 .tag-label iconify-icon{color:var(--hot) !important}
 .bg-encre .tag-label,.mat .tag-label{background:var(--hi);border-color:var(--ink);box-shadow:3px 3px 0 #0b1a14}
+
+/* =====================================================================
+   SECTIONS FAÇON WOW SITES CLUB (oct. 2026) — préfixe k-
+   ===================================================================== */
+.k-eyebrow{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.mat .k-eyebrow{color:var(--hi)}
+.k-h2{font-family:"Unbounded","Arial Black",sans-serif;font-weight:800;font-size:clamp(30px,5.6vw,74px);line-height:.95;letter-spacing:-.04em;margin:12px 0 0;text-transform:uppercase;text-wrap:balance}
+.k-hl{background:linear-gradient(transparent 12%,var(--hi) 12%,var(--hi) 92%,transparent 92%);padding:0 .08em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.mat .k-hl{color:var(--ink)}
+.k-paper{background:var(--paper) url(/hand/paper.jpg) 0 0/512px;color:var(--ink)}
+.k-outline{color:var(--mat);--o:1.4px;--oc:var(--onmat2);text-shadow:var(--o) 0 0 var(--oc),calc(var(--o)*.924) calc(var(--o)*.383) 0 var(--oc),calc(var(--o)*.707) calc(var(--o)*.707) 0 var(--oc),calc(var(--o)*.383) calc(var(--o)*.924) 0 var(--oc),0 var(--o) 0 var(--oc),calc(var(--o)*-.383) calc(var(--o)*.924) 0 var(--oc),calc(var(--o)*-.707) calc(var(--o)*.707) 0 var(--oc),calc(var(--o)*-.924) calc(var(--o)*.383) 0 var(--oc),calc(var(--o)*-1) 0 0 var(--oc),calc(var(--o)*-.924) calc(var(--o)*-.383) 0 var(--oc),calc(var(--o)*-.707) calc(var(--o)*-.707) 0 var(--oc),calc(var(--o)*-.383) calc(var(--o)*-.924) 0 var(--oc),0 calc(var(--o)*-1) 0 var(--oc),calc(var(--o)*.383) calc(var(--o)*-.924) 0 var(--oc),calc(var(--o)*.707) calc(var(--o)*-.707) 0 var(--oc),calc(var(--o)*.924) calc(var(--o)*-.383) 0 var(--oc)}
+
+/* --- formules (ce qu'on fait) --- */
+.k-offer{position:relative;border:2px solid var(--ink);border-radius:22px;padding:14px;display:flex;flex-direction:column;box-shadow:7px 7px 0 var(--ink)}
+.k-offer.paper{background:#FBFAF5}
+.k-offer.matc{background:var(--mat2);color:var(--onmat);box-shadow:7px 7px 0 #0b1a14}
+.k-offer .ill{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:4/3}
+.k-offer .ill video,.k-offer .ill img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.k-offer .num{font-family:"Unbounded",sans-serif;font-weight:900;font-size:44px;letter-spacing:-.06em;line-height:1}
+.k-offer.paper .num{color:#FBFAF5;--o:1.4px;--oc:var(--ink)}
+.k-offer .price{font-family:"JetBrains Mono",monospace;font-size:13px;letter-spacing:.06em;background:var(--hi);color:var(--ink);border:1.5px solid var(--ink);border-radius:8px;padding:5px 9px;box-shadow:2px 2px 0 var(--ink);transform:rotate(2deg);white-space:nowrap}
+.k-offer ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.k-offer li{position:relative;padding-left:28px;font-size:15px;line-height:1.35}
+.k-offer li::before{content:"✓";position:absolute;left:0;top:-1px;font-family:"Caveat",cursive;font-weight:700;font-size:22px;line-height:1;color:var(--hot)}
+.k-offer.matc li::before{color:var(--hi)}
+
+/* --- promesses compactes --- */
+.k-prom{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:1.5px solid var(--grid2);border-bottom:1.5px solid var(--grid2)}
+.k-prom > div{padding:26px 22px;border-right:1.5px solid var(--grid2)}
+.k-prom > div:last-child{border-right:0}
+.k-prom b{display:block;white-space:nowrap;font-family:"Unbounded",sans-serif;font-weight:900;font-size:clamp(28px,4vw,54px);letter-spacing:-.05em;line-height:1;color:var(--hi)}
+.k-prom span{display:block;margin-top:8px;color:var(--onmat2);font-size:15px;line-height:1.35}
+@media (max-width:767px){.k-prom > div{padding:20px 14px}.k-prom{grid-template-columns:1fr 1fr}.k-prom > div:nth-child(2){border-right:0}.k-prom > div:nth-child(-n+2){border-bottom:1.5px solid var(--grid2)}}
+
+/* --- how it works --- */
+.k-how ol{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.k-how li button{display:grid;grid-template-columns:62px minmax(0,1fr);gap:14px;align-items:center;text-align:left;width:100%;padding:12px 14px;border-radius:14px;border:1.5px solid transparent;transition:background .25s,border-color .25s;color:inherit}
+.k-how li button em{font-style:normal;font-family:"Unbounded",sans-serif;font-weight:900;font-size:40px;letter-spacing:-.06em;line-height:1}
+.k-how li button b{display:block;font-family:"Unbounded",sans-serif;font-weight:600;font-size:clamp(16px,1.8vw,20px);letter-spacing:-.02em}
+.k-how li button small{display:block;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--onmat2);margin-bottom:2px}
+.k-how li button span{display:block;color:var(--onmat2);font-size:14.5px;line-height:1.45;max-height:0;overflow:hidden;transition:max-height .45s}
+.k-how li.on button{background:var(--mat2);border-color:var(--grid2)}
+.k-how li.on button em{color:var(--hi);text-shadow:none}
+.k-how li.on button small{color:var(--hi)}
+.k-how li.on button span{max-height:110px;margin-top:4px}
+.k-how li .bar{height:3px;background:var(--grid2);border-radius:3px;margin:0 14px;overflow:hidden;display:none}
+.k-how li.on .bar{display:block}
+.k-how li .bar i{display:block;height:100%;width:0;background:var(--hi)}
+.k-how li.on .bar i{animation:kfill var(--dur,5s) linear forwards}
+.k-how.paused li.on .bar i{animation-play-state:paused}
+@keyframes kfill{to{width:100%}}
+.k-stage{position:relative;background:#F4F3EE;color:var(--ink);border-radius:22px;padding:22px;box-shadow:10px 10px 0 #0b1a14;min-height:420px;overflow:hidden}
+.k-stage .tape{top:-12px;left:calc(50% - 48px);transform:rotate(-2deg)}
+.k-scene{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transform:translateY(14px) scale(.98);transition:opacity .45s,transform .55s cubic-bezier(.2,.9,.3,1);pointer-events:none}
+.k-scene.on{opacity:1;transform:none;pointer-events:auto}
+
+/* --- bento « tout est inclus » --- */
+.k-bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.k-bx{position:relative;border:1.5px solid var(--ink);border-radius:16px;padding:20px;background:#fff6;display:grid;gap:8px;align-content:start;min-height:190px;overflow:hidden}
+.k-bx b{font-family:"Unbounded",sans-serif;font-weight:700;font-size:18px;letter-spacing:-.02em;line-height:1.15}
+.k-bx p{margin:0;color:var(--ink2);font-size:14.5px;line-height:1.45}
+.k-bx .big{font-family:"Unbounded",sans-serif;font-weight:900;font-size:56px;letter-spacing:-.06em;line-height:.9}
+.k-bx.wide{grid-column:span 2}.k-bx.tall{grid-row:span 2}
+.k-bx.y{background:var(--hi)}
+.k-bx.k{background:var(--ink);color:var(--paper)}.k-bx.k p{color:#B9C2BC}
+.k-bx code{font:12.5px/1.55 "JetBrains Mono",monospace;background:#0b0d0b;color:#dfe6e1;border-radius:10px;padding:14px;display:block;white-space:pre-wrap}
+.k-bx .phones{display:flex;gap:10px;margin-top:8px}
+.k-bx .phones img{width:calc(25% - 7.5px);aspect-ratio:390/844;object-fit:cover;object-position:top;border-radius:12px;border:4px solid #0b0c0b;background:#111}
+@media (max-width:1023px){.k-bento{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:639px){.k-bento{grid-template-columns:1fr}.k-bx.wide{grid-column:auto}.k-bx.tall{grid-row:auto}}
+
+/* --- tarifs --- */
+.k-plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:start}
+.k-plan{position:relative;background:var(--paper) url(/hand/receipt.jpg) 0 0/400px;color:var(--ink);border-radius:2px;padding:26px 22px 34px;display:grid;gap:14px;box-shadow:0 18px 30px #0007}
+.k-plan.rc{font-family:"JetBrains Mono",monospace;-webkit-mask:linear-gradient(#000,#000) top/100% calc(100% - 12px) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/16px 12px repeat-x;mask:linear-gradient(#000,#000) top/100% calc(100% - 12px) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/16px 12px repeat-x}
+.k-plan.rc li{font-size:13.5px}
+.k-plan .dash{border-top:1.5px dashed #14171455;margin:2px 0}
+.k-plan.pi{transform:rotate(-1.5deg);background:var(--hi) url(/hand/postit.jpg) 0 0/256px}
+.k-plan.cc{background:linear-gradient(135deg,#1c1f1c,#0e100e);color:var(--paper);border-radius:16px;box-shadow:0 18px 30px #0008,inset 0 1px 0 #ffffff1a}
+.k-plan .chipc{width:42px;height:32px;border-radius:7px;background:linear-gradient(135deg,#e9d58a,#b99b45)}
+.k-plan .tape{top:-12px;left:calc(50% - 46px)}
+.k-plan .nm{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.k-plan .pr{font-family:"Unbounded",sans-serif;font-weight:900;font-size:clamp(46px,5vw,60px);letter-spacing:-.06em;line-height:.9;white-space:nowrap}
+.k-plan .pr small{font:500 14px "Instrument Sans",sans-serif;letter-spacing:0;margin-left:6px}
+.k-plan .from{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.75}
+.k-plan ul{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:14.5px}
+.k-plan li{position:relative;padding-left:26px}
+.k-plan li::before{content:"✓";position:absolute;left:0;top:-1px;font-weight:700;font-family:"Caveat",cursive;font-size:21px;line-height:1}
+.k-plan .h{position:absolute;right:16px;top:18px;font-size:24px;transform:rotate(8deg)}
+.k-plan .ring{position:absolute;left:8px;top:58px;width:clamp(170px,19vw,230px);height:86px;pointer-events:none}
+.k-cmp{overflow-x:auto}
+.k-cmp table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px}
+.k-cmp th,.k-cmp td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--grid2);font-variant-numeric:tabular-nums}
+.k-cmp th{font:500 11.5px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--onmat2)}
+.k-cmp td:last-child{text-align:right;font-weight:600;color:var(--hi)}
+.k-cmp caption{caption-side:bottom;text-align:left;color:var(--onmat2);font-size:12.5px;padding-top:12px}
+@media (max-width:1023px){.k-plans{grid-template-columns:1fr;max-width:460px;margin-inline:auto}}
+
+/* --- contact (done for you) --- */
+.k-form{position:relative;background:#fff;border-radius:6px;padding:24px;box-shadow:8px 8px 0 var(--ink);display:grid;gap:12px;transform:rotate(.6deg)}
+.k-form .tape{top:-12px;left:40%}
+.k-form label{display:grid;gap:5px;font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+.k-form input,.k-form select,.k-form textarea{font:500 16px "Instrument Sans",sans-serif;letter-spacing:0;text-transform:none;color:var(--ink);background:#fff;border:1.5px solid #c9c7bd;border-radius:10px;padding:11px 12px;width:100%;outline:none}
+.k-form input:focus,.k-form select:focus,.k-form textarea:focus{border-color:var(--ink);box-shadow:0 0 0 3px #F1E25A88}
+.k-form textarea{min-height:96px;resize:vertical}
+
+/* --- faq --- */
+.k-faq details{border-top:1.5px solid var(--ink);padding:16px 0}
+.k-faq details:last-child{border-bottom:1.5px solid var(--ink)}
+.k-faq summary{font-family:"Unbounded",sans-serif;font-weight:600;font-size:clamp(15px,1.9vw,19px);letter-spacing:-.02em;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px}
+.k-faq summary::-webkit-details-marker{display:none}
+.k-faq summary::after{content:"+";font-size:24px;line-height:1}
+.k-faq details[open] summary::after{content:"−"}
+.k-faq p{margin:10px 0 0;color:var(--ink2);max-width:72ch;line-height:1.55}
+
+/* --- footer --- */
+.k-bigw{font-family:"Unbounded",sans-serif;font-weight:900;font-size:min(27vw,360px);line-height:.8;letter-spacing:-.06em;color:var(--mat);--o:2px;--oc:var(--grid2);white-space:nowrap;text-align:center;user-select:none}
+.k-wave i{display:block;width:5px;height:100%;border-radius:4px;background:var(--ink);transform:scaleY(.25);animation:kwave 1.1s ease-in-out infinite}
+.k-wave i:nth-child(3n){background:var(--hot)}
+@keyframes kwave{0%,100%{transform:scaleY(.2)}50%{transform:scaleY(1)}}
+.k-caret{display:inline-block;width:7px;height:14px;background:var(--hi);vertical-align:-2px;margin-left:2px;animation:kblink 1s steps(1) infinite}
+@keyframes kblink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.k-wave i,.k-caret{animation:none}}
+.k-ringed{position:relative;display:inline-block}
+.k-ringed svg{position:absolute;left:-16px;top:-14px;width:calc(100% + 30px);height:calc(100% + 26px);pointer-events:none}
+.k-plan.pi .from{margin-bottom:6px}

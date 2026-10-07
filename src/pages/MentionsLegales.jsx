@@ -15,13 +15,13 @@ export default function MentionsLegales() {
       <LegalSection n={1} title="Éditeur du site">
         <p>Le présent site est édité par :</p>
         <ul className="mt-2 space-y-1.5">
-          <li>Raison sociale : <Ph>{c.name}</Ph></li>
+          <li>Nom commercial : <Ph>{c.name}</Ph></li>
           <li>Forme juridique : <Ph>{c.legalForm}</Ph></li>
-          <li>SIRET : <Ph>{c.siret}</Ph></li>
+          <li>Immatriculation : <Ph>{c.siret}</Ph></li>
           <li>RCS : <Ph>{c.rcs}</Ph></li>
           <li>Capital social : <Ph>{c.capital}</Ph></li>
-          <li>N° TVA intracommunautaire : <Ph>{c.vat}</Ph></li>
-          <li>Siège social : <Ph>{c.address}</Ph></li>
+          <li>TVA : <Ph>{c.vat}</Ph></li>
+          <li>Adresse : <Ph>{c.address}</Ph></li>
           <li>E-mail : {c.email}</li>
           <li>Téléphone : {c.phone}</li>
           <li>Directeur de la publication : <Ph>{c.director}</Ph></li>

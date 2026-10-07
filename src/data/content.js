@@ -18,6 +18,7 @@ export const nav = {
     { label: "Réalisations", href: "#realisations" },
     { label: "Process", href: "#process" },
     { label: "Offres", href: "#offre" },
+    { label: "FAQ", href: "#faq" },
   ],
   cta: { label: "Réserver un appel", href: "#contact" },
 };
@@ -72,24 +73,43 @@ export const logos = {
 /* -- 3. CE QU'ON FAIT ------------------------------------------------------ */
 export const whatWeDo = {
   tag: "Ce qu'on fait",
-  titleStrong: "Deux façons",
-  titleLight: "de vous démarquer",
+  title: "Deux formules.",
+  highlight: "Zéro template.",
+  subtitle: "Une page qui va droit au but, ou un site complet qui porte toute votre activité. Dans les deux cas : codé à la main, pensé pour le téléphone.",
   cards: [
     {
-      theme: "creme", // carte crème
-      label: "Le grand jeu",
-      title: "Site sur-mesure",
-      text: "Un site complet, codé à la main, à votre image. Structure, design et performances pensés pour durer.",
-      cta: { label: "Réserver un appel", href: "#contact" },
-      browser: { url: "votre-marque.fr", accent: "or" },
-    },
-    {
-      theme: "encre", // carte encre / sombre
+      key: "landing",
+      theme: "paper",
+      num: "01",
       label: "Droit au but",
       title: "Landing page",
-      text: "Une page unique, redoutablement efficace, taillée pour une offre et un seul objectif : convertir.",
-      cta: { label: "Réserver un appel", href: "#contact" },
-      browser: { url: "votre-offre.fr", accent: "or" },
+      price: "dès 790 €",
+      text: "Une seule page, pensée pour une seule action : qu'on vous appelle, qu'on réserve, qu'on achète.",
+      points: [
+        "1 page, 1 objectif, 1 bouton qui convertit",
+        "Idéale pour une offre, un lancement, une pub",
+        "Livrée en 14 jours",
+      ],
+      video: "/illus/il-landing",
+      bg: "#E3E1D8",
+      cta: { label: "Je veux une landing", href: "#contact" },
+    },
+    {
+      key: "site",
+      theme: "mat",
+      num: "02",
+      label: "Le grand jeu",
+      title: "Site sur-mesure",
+      price: "dès 1 290 €",
+      text: "Plusieurs pages pour toute votre activité : services, réalisations, équipe, blog, contact. Pensé pour Google et pour durer.",
+      points: [
+        "Autant de pages que votre activité en demande",
+        "Espace admin pour modifier vos textes et photos",
+        "SEO local + visibilité dans les IA inclus",
+      ],
+      video: "/illus/il-site",
+      bg: "#1D4537",
+      cta: { label: "Je veux un site complet", href: "#contact" },
     },
   ],
 };
@@ -97,25 +117,30 @@ export const whatWeDo = {
 /* -- 4. NOS PROMESSES (fond encre) ----------------------------------------- */
 export const promises = {
   tag: "Nos promesses",
-  title: "Ce sur quoi on s'engage",
+  // big + short = version courte de l'accueil ; title + text = version longue
+  // reprise par les pages guides (ne pas supprimer).
   items: [
     {
-      icon: "solar:refresh-circle-linear",
-      title: "Révisions illimitées",
-      text: "Aucune limite. On ajuste jusqu'à ce que vous soyez 100% satisfait de votre site.",
-    },
-    {
-      icon: "solar:calendar-mark-linear",
+      big: "14 j",
+      short: "de l'appel au site en ligne",
       title: "Livraison en 14 jours",
       text: "Un délai clair annoncé dès le départ. Vous savez exactement quand votre site sera en ligne.",
     },
     {
-      icon: "solar:users-group-rounded-linear",
+      big: "∞",
+      short: "révisions, jusqu'à ce que ça vous plaise",
+      title: "Révisions illimitées",
+      text: "Aucune limite. On ajuste jusqu'à ce que vous soyez 100% satisfait de votre site.",
+    },
+    {
+      big: "1 équipe",
+      short: "joignable à chaque étape",
       title: "Une équipe à votre disposition",
       text: "Du premier appel à la mise en ligne, on reste joignables et impliqués à chaque étape.",
     },
     {
-      icon: "solar:graph-up-linear",
+      big: "0",
+      short: "fausse promesse sur Google",
       title: "Une base SEO solide, sans fausses promesses",
       text: "On pose les bonnes fondations techniques dès le départ (structure, vitesse, contenu). On ne vous vendra jamais un classement Google garanti : personne ne peut sérieusement s'engager là-dessus.",
     },
@@ -132,7 +157,8 @@ export const work = {
 
 /* Les 4 projets du portfolio.
    - cover : aperçu affiché sur la carte (fichier dans public/realisations/).
-   - liveUrl : lien du vrai site (À REMPLIR — laisser "#" en attendant).
+   - liveUrl : lien du vrai site en ligne ("#" = pas encore de lien public).
+   - home: false = projet gardé en page, mais absent de la grille d'accueil.
    - intro / defi / approche / resultat / recette / shots : contenu des pages
      projet, en placeholder "Bientôt disponible" pour l'instant. */
 export const projects = [
@@ -142,14 +168,14 @@ export const projects = [
     sector: "E-commerce — smartphones reconditionnés",
     badge: "E-commerce",
     year: "2026",
-    cover: "/realisations/site-6.png",
-    liveUrl: "#",
+    cover: "/realisations/site-6.webp",
+    liveUrl: "https://www.telandcash.fr",
     intro: "Bientôt disponible",
     defi: "Bientôt disponible",
     approche: "Bientôt disponible",
     resultat: "Bientôt disponible",
     recette: ["Bientôt disponible", "Bientôt disponible", "Bientôt disponible"],
-    shots: ["/realisations/site-6.png"],
+    shots: ["/realisations/site-6.webp"],
   },
   {
     slug: "markus-immobilier",
@@ -157,14 +183,29 @@ export const projects = [
     sector: "Agence immobilière premium",
     badge: "Immobilier",
     year: "2026",
-    cover: "/realisations/site-5.png",
-    liveUrl: "#",
+    cover: "/realisations/site-5.webp",
+    liveUrl: "https://www.markusimmobilier.fr",
     intro: "Bientôt disponible",
     defi: "Bientôt disponible",
     approche: "Bientôt disponible",
     resultat: "Bientôt disponible",
     recette: ["Bientôt disponible", "Bientôt disponible", "Bientôt disponible"],
-    shots: ["/realisations/site-5.png"],
+    shots: ["/realisations/site-5.webp"],
+  },
+  {
+    slug: "hce-btp",
+    name: "HCE BTP",
+    sector: "Enrobé & travaux publics — Jura & Ain",
+    badge: "BTP",
+    year: "2026",
+    cover: "/realisations/site-hce.webp",
+    liveUrl: "https://www.hcetp.com",
+    intro: "Bientôt disponible",
+    defi: "Bientôt disponible",
+    approche: "Bientôt disponible",
+    resultat: "Bientôt disponible",
+    recette: ["Bientôt disponible", "Bientôt disponible", "Bientôt disponible"],
+    shots: ["/realisations/site-hce.webp"],
   },
   {
     slug: "sensoria",
@@ -172,14 +213,15 @@ export const projects = [
     sector: "Expérience immersive — escape game",
     badge: "Expérience",
     year: "2026",
-    cover: "/realisations/site-1.png",
+    cover: "/realisations/site-1.webp",
     liveUrl: "#",
+    home: false, // pas encore de lien public : gardé en page projet, retiré de la grille d'accueil
     intro: "Bientôt disponible",
     defi: "Bientôt disponible",
     approche: "Bientôt disponible",
     resultat: "Bientôt disponible",
     recette: ["Bientôt disponible", "Bientôt disponible", "Bientôt disponible"],
-    shots: ["/realisations/site-1.png"],
+    shots: ["/realisations/site-1.webp"],
   },
   {
     slug: "margaux-cdr",
@@ -187,14 +229,14 @@ export const projects = [
     sector: "Soins du corps — beauté",
     badge: "Beauté",
     year: "2026",
-    cover: "/realisations/site-3.png",
-    liveUrl: "#",
+    cover: "/realisations/site-3.webp",
+    liveUrl: "https://margauxcdr.com",
     intro: "Bientôt disponible",
     defi: "Bientôt disponible",
     approche: "Bientôt disponible",
     resultat: "Bientôt disponible",
     recette: ["Bientôt disponible", "Bientôt disponible", "Bientôt disponible"],
-    shots: ["/realisations/site-3.png"],
+    shots: ["/realisations/site-3.webp"],
   },
 ];
 
@@ -219,59 +261,36 @@ export const projectPage = {
 
 /* -- 6. NOTRE PROCESS (fond encre, signature) ------------------------------ */
 export const process = {
-  tag: "Notre process",
-  // Titre sur 2 lignes : ligne 1 normale, ligne 2 (titleHighlight) en doré.
-  titleLine1: "De l'idée au site en ligne,",
-  titleHighlight: "en 14 jours",
-  subtitle: "Un déroulé clair, étape par étape. Vous savez toujours où on en est.",
+  tag: "Comment ça se passe",
+  title: "De l'appel à votre site en ligne,",
+  highlight: "en 5 étapes.",
+  subtitle: "Un déroulé clair en 5 étapes, de l'appel découverte à la mise en ligne en 14 jours.",
   steps: [
     {
       day: "Jour 1",
-      title: "Appel découverte",
-      text: "On récolte toutes les infos sur votre projet, vos objectifs et votre univers.",
-      icons: ["logos:whatsapp-icon", "logos:google-meet"],
+      title: "On s'appelle",
+      text: "15 minutes pour comprendre votre activité, vos clients et ce que vous aimez. Gratuit, sans engagement.",
     },
     {
       day: "Jour 2",
-      title: "Questionnaire structuré",
-      text: "Un formulaire guidé pour cadrer le contenu, le ton et les besoins précis.",
-      icons: ["logos:typeform-icon", "logos:notion-icon"],
+      title: "Devis clair, acompte de 50 %",
+      text: "Un prix fixe, écrit noir sur blanc. L'acompte lance le projet, le solde se règle à la livraison.",
     },
     {
-      day: "Jours 3-6",
-      title: "La magie opère",
-      text: "Design et développement : on donne vie à votre site, écran par écran.",
-      icons: ["logos:figma", "simple-icons:webflow", "logos:framer"],
+      day: "Jours 3 à 6",
+      title: "Votre maquette",
+      text: "On dessine votre site. Vous validez le style avant la moindre ligne de code.",
     },
     {
-      day: "Jour 7",
-      title: "Présentation de votre V1",
-      text: "On vous présente une première version complète, navigable et fonctionnelle.",
-      icons: ["logos:google-meet"],
-    },
-    {
-      day: "Jours 8-13",
-      title: "On peaufine ensemble",
-      text: "Retours, ajustements, finitions. On affine jusqu'au moindre détail.",
-      icons: ["logos:figma", "logos:framer"],
+      day: "Jours 7 à 13",
+      title: "On code, vous ajustez",
+      text: "Développé à la main, écran par écran. Vous demandez, on ajuste, sans limite de révisions.",
     },
     {
       day: "Jour 14",
-      title: "Livraison de votre site",
-      text: "Mise en ligne, prise en main de l'espace admin. Votre site est à vous.",
-      icons: ["solar:rocket-2-bold"],
-      gold: true, // bloc doré plein — l'aboutissement
+      title: "Mise en ligne",
+      text: "Domaine, Google, visibilité IA et prise en main de votre espace admin. Votre site est à vous.",
     },
-  ],
-  badges: [
-    "SEO",
-    "Webflow",
-    "Framer",
-    "Design UX/UI",
-    "Conversion",
-    "Responsive",
-    "Sur-mesure",
-    "Performance",
   ],
 };
 
@@ -318,14 +337,14 @@ export const offer = {
   // tant qu'une image est absente).
   gallery: {
     top: [
-      "/realisations/site-1.png",
-      "/realisations/site-2.png",
-      "/realisations/site-3.png",
+      "/realisations/site-1.webp",
+      "/realisations/site-2.webp",
+      "/realisations/site-3.webp",
     ],
     bottom: [
-      "/realisations/site-4.png",
-      "/realisations/site-5.png",
-      "/realisations/site-6.png",
+      "/realisations/site-4.webp",
+      "/realisations/site-5.webp",
+      "/realisations/site-6.webp",
     ],
   },
   // Colonne droite basse : prix + inclus + extras
@@ -384,7 +403,7 @@ export const finalCta = {
 /* -- Bouton WhatsApp flottant (présent sur toute la page) ------------------ */
 export const whatsapp = {
   // ⚠️ Remplace NUMERO par ton numéro au format international SANS "+" ni espaces.
-  number: "33668823396",
+  number: "33615802619",
   // Message pré-rempli à l'ouverture de WhatsApp.
   message:
     "Bonjour, je viens de votre site Kota Studio, j'aimerais des infos sur la création de mon site.",
@@ -398,18 +417,18 @@ export const whatsapp = {
    surlignées en doré sur les pages pour que tu repères ce qu'il reste à remplir.
    L'hébergeur est déjà pré-rempli (Vercel). */
 export const legal = {
-  updatedAt: "[JJ/MM/2026]",
+  updatedAt: "07/10/2026",
   company: {
-    name: "[Nom de l'entreprise / Kota Studio]",
-    legalForm: "[Forme juridique — ex : micro-entreprise / SASU]",
-    siret: "[Numéro SIRET]",
-    rcs: "[RCS + ville d'immatriculation — si société]",
-    capital: "[Capital social — si société]",
-    vat: "[N° TVA intracommunautaire — si applicable]",
-    address: "[Adresse complète du siège]",
-    email: "hello@kota.studio",
-    phone: "+33 6 68 82 33 96",
-    director: "[Nom du directeur / de la directrice de la publication]",
+    name: "Kota Studio — Yanis Ouammou, entrepreneur individuel",
+    legalForm: "Entreprise individuelle (micro-entreprise)",
+    siret: "SIREN 901 733 022",
+    rcs: "Non applicable (entreprise individuelle)",
+    capital: "Non applicable (entreprise individuelle)",
+    vat: "TVA non applicable, art. 293 B du CGI",
+    address: "13 rue du Docteur Paluel, 74160 Saint-Julien-en-Genevois, France",
+    email: "yanisouammou063@gmail.com",
+    phone: "+33 6 15 80 26 19",
+    director: "Yanis Ouammou",
   },
   // Hébergeur du site — pré-rempli car le site est déployé sur Vercel.
   host: {
@@ -431,6 +450,7 @@ export const footer = {
         { label: "Réalisations", href: "#realisations" },
         { label: "Process", href: "#process" },
         { label: "Offres", href: "#offre" },
+        { label: "FAQ", href: "#faq" },
       ],
     },
     {
@@ -440,58 +460,29 @@ export const footer = {
         { label: "Landing page", href: "#ce-quon-fait" },
         { label: "Refonte", href: "#ce-quon-fait" },
         { label: "SEO", href: "#ce-quon-fait" },
-        {
-          label: "Site internet à Saint-Julien-en-Genevois",
-          href: "/creation-site-internet-saint-julien-en-genevois",
-        },
-        {
-          label: "Site internet à Annecy",
-          href: "/creation-site-internet-annecy",
-        },
-        {
-          label: "Agence web à Annemasse",
-          href: "/agence-web-annemasse",
-        },
-        {
-          label: "Agence web à Lyon",
-          href: "/agence-web-lyon",
-        },
-        {
-          label: "Création & refonte de site en Haute-Savoie",
-          href: "/creation-refonte-site-internet-haute-savoie",
-        },
-        {
-          label: "Combien coûte un site ?",
-          href: "/combien-coute-un-site-internet",
-        },
-        {
-          label: "Comment choisir une agence web ?",
-          href: "/comment-choisir-une-agence-web",
-        },
-        {
-          label: "Quand refaire son site internet ?",
-          href: "/quand-refaire-son-site-internet",
-        },
-        {
-          label: "Site sur-mesure ou WordPress / Wix ?",
-          href: "/site-sur-mesure-ou-wordpress-wix",
-        },
-        {
-          label: "Quelles pages pour un site vitrine ?",
-          href: "/quelles-pages-pour-un-site-vitrine",
-        },
-        {
-          label: "Qui possède mon site et mon domaine ?",
-          href: "/nom-de-domaine-et-propriete-du-site",
-        },
-        {
-          label: "Site internet ou réseaux sociaux ?",
-          href: "/site-internet-ou-reseaux-sociaux",
-        },
-        {
-          label: "Apparaître dans ChatGPT et les IA",
-          href: "/apparaitre-dans-chatgpt-et-ia-site-local",
-        },
+      ],
+    },
+    {
+      title: "Près de chez vous",
+      links: [
+        { label: "Site internet à Saint-Julien-en-Genevois", href: "/creation-site-internet-saint-julien-en-genevois" },
+        { label: "Site internet à Annecy", href: "/creation-site-internet-annecy" },
+        { label: "Agence web à Annemasse", href: "/agence-web-annemasse" },
+        { label: "Agence web à Lyon", href: "/agence-web-lyon" },
+        { label: "Création & refonte de site en Haute-Savoie", href: "/creation-refonte-site-internet-haute-savoie" },
+      ],
+    },
+    {
+      title: "Guides",
+      links: [
+        { label: "Combien coûte un site ?", href: "/combien-coute-un-site-internet" },
+        { label: "Comment choisir une agence web ?", href: "/comment-choisir-une-agence-web" },
+        { label: "Quand refaire son site internet ?", href: "/quand-refaire-son-site-internet" },
+        { label: "Site sur-mesure ou WordPress / Wix ?", href: "/site-sur-mesure-ou-wordpress-wix" },
+        { label: "Quelles pages pour un site vitrine ?", href: "/quelles-pages-pour-un-site-vitrine" },
+        { label: "Qui possède mon site et mon domaine ?", href: "/nom-de-domaine-et-propriete-du-site" },
+        { label: "Site internet ou réseaux sociaux ?", href: "/site-internet-ou-reseaux-sociaux" },
+        { label: "Apparaître dans ChatGPT et les IA", href: "/apparaitre-dans-chatgpt-et-ia-site-local" },
       ],
     },
     {
@@ -499,7 +490,7 @@ export const footer = {
       links: [
         { label: "Réserver un appel", href: "#contact" },
         { label: "WhatsApp", href: "#contact" },
-        { label: "hello@kota.studio", href: "mailto:hello@kota.studio" },
+        { label: "yanisouammou063@gmail.com", href: "mailto:yanisouammou063@gmail.com" },
       ],
     },
   ],

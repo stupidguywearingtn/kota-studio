@@ -43,7 +43,7 @@ export function buildCityJsonLd(city) {
           "@type": "ProfessionalService",
           name: "Kota Studio",
           url: `${SITE_URL}/`,
-          telephone: "+33668823396",
+          telephone: "+33615802619",
         },
         offers: offer.plans.map((p) => ({
           "@type": "Offer",
