@@ -10,6 +10,13 @@ listé ici comme fait.
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-10-07 (mercredi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, 3 pages de fond testées, llms.txt en 200 ; sitemap = 20 URLs ; robots.txt `Allow: /` + Sitemap. Aucune balise noindex, aucun X-Robots-Tag, canonical correct sur chaque page testée. (curl robots.txt a expiré une fois : proxy, pas le site.)
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (annuaires 118712, Aladom, Genevois Informatique, Infomaniak partenaires) et "agence web Annemasse" (Éponyme Web, Clickalpe, Gralon). `site:kotastudio.fr` : aucun résultat du domaine. Autres requêtes non relancées. Aucun progrès : blocage = indexation.
+- Chantier du jour : audit technique d'indexabilité — RAS côté site, aucun changement de code. Voir "Chantiers faits".
+- Branche : la branche de travail `claude/cool-johnson-xu6g8a` porte 2 commits d'avance sur `origin/main` dont un commit non-SEO (751f4f2 "DA atelier…", pas de moi). Poussé sur la branche désignée uniquement, pas sur main.
+
 **Au 2026-10-06 (mardi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, `/site-internet-ou-reseaux-sociaux`, sitemap en 200. `origin/main` = `d4b84fb` avant chantier.
@@ -511,6 +518,13 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-10-07 — Audit d'indexabilité technique (aucun changement de code)
+
+- Pourquoi : 4 semaines, 20 pages, 0 sous-page indexée. Avant d'ajouter du contenu, écarter une cause technique.
+- Fait : HTTP 200, canonical, meta robots, en-têtes vérifiés sur home, page Saint-Julien, Annemasse, réseaux sociaux ; robots.txt, sitemap (20 URLs), llms.txt OK. Aucune cause technique trouvée.
+- Non fait : pas de nouvelle page (volume non indexé = pas le levier) ; rien touché au rendu.
+- Reste : Yanis doit demander l'indexation dans Google Search Console (soumettre sitemap.xml + « Inspecter l'URL » → demander l'indexation sur les pages villes), puis envoyer la capture « Pages » ; sans accès GSC le run ne peut pas avancer. Aussi : citer le site sur la fiche Google Business et obtenir quelques liens locaux (annuaires, clients) — autorité nulle.
 
 ### 2026-10-06 — Maillage contextuel vers la page "Site internet ou réseaux sociaux"
 
