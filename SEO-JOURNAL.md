@@ -6,6 +6,33 @@ listé ici comme fait.
 
 ---
 
+## ⚠️ À LIRE EN PREMIER — Refonte du 07/10/2026 (validée par Yanis)
+
+Le site a été entièrement refait le 07/10/2026 et Yanis l'a validé. Ces points REMPLACENT les
+consignes plus anciennes (y compris celles de la tâche planifiée qui parlent de fond crème,
+de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'existe plus) :
+
+- DA « atelier » alignée sur Wow Sites Club : vert #1D4537 quadrillé, papier #F1F0EA, encre
+  #141714, jaune #F1E25A, orange #FF6A3D ; titres Unbounded, texte Instrument Sans, mono
+  JetBrains Mono, manuscrit Caveat. Ne pas y toucher.
+- Accueil validé, ne pas restructurer : hero 3D (MacBook + iPhone, src/three/heroScene.js),
+  formules Landing / Sur-mesure avec vidéos 3D, promesses courtes, réalisations avec liens vers
+  les vrais sites, process en 5 étapes, « Tout est inclus », tarifs, contact (formulaire →
+  WhatsApp), FAQ (JSON-LD FAQPage dans src/components/Faq.jsx), footer. AUCUN témoignage.
+- NAP officiel (identique partout, fiche Google comprise) : Kota Studio, 13 rue du Docteur
+  Paluel, 74160 Saint-Julien-en-Genevois — 06 15 80 26 19 (+33 6 15 80 26 19), WhatsApp
+  wa.me/33615802619. L'ancien 06 68 82 33 96 ne doit plus apparaître nulle part.
+- HCE BTP a changé de domaine : https://www.hcetp.com (hcebtp.com redirige).
+- Vocabulaire : Yanis refuse « site vitrine » dans ses textes (« site sur-mesure »), sauf comme
+  mot-clé de page guide.
+- Search Console : kotastudio.fr n'était dans AUCUNE propriété Search Console au 07/10/2026.
+  Propriété « domaine » créée, validation en attente d'un enregistrement DNS TXT chez OVH
+  (google-site-verification=3cFhkG44TEElSt8GmePbpojtk1JQ9Jp0t7gX_67Ja_c). Tant que ce n'est pas
+  validé, aucune donnée Search Console n'est disponible.
+- Fiche Google mise à jour le 07/10 : nouveau numéro, chat WhatsApp, date de création juillet
+  2021, « rendez-vous en ligne », « sur rendez-vous », 22 photos/vidéos, post « nouveau site ».
+  Seul point manquant pour 100 % : une vraie photo de l'extérieur (Yanis doit la prendre).
+
 ## État des lieux
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_

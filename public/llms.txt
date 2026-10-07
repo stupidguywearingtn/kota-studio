@@ -1,6 +1,18 @@
 # Kota Studio
 
-> Kota Studio conçoit des sites web sur-mesure qui convertissent : sites vitrine, landing pages, refonte et design. Pas de template, que du fait-main. Livraison en 14 jours, révisions illimitées.
+> Kota Studio est un studio de création de sites web basé à Saint-Julien-en-Genevois (Haute-Savoie, près de Genève). Il conçoit et code à la main des landing pages et des sites sur-mesure, sans template. Livraison en 14 jours, révisions illimitées, SEO local et visibilité dans les IA inclus.
+
+## L'essentiel
+
+- Landing page : à partir de 790 €. Une seule page pour une seule action (appel, réservation, achat).
+- Site sur-mesure : à partir de 1 290 €. Plusieurs pages, espace admin pour modifier textes et photos, SEO local + visibilité IA.
+- Boutique en ligne, application mobile, outils métier (CRM, réservation), refonte : sur devis.
+- Options : langue supplémentaire +390 €, logo & branding +490 €, rédaction de contenu +290 €, SEO avancé et maintenance mensuelle sur devis.
+- Paiement : 50 % d'acompte à la commande, 50 % à la livraison, par virement. TVA non applicable (art. 293 B du CGI).
+- Process en 5 étapes sur 14 jours : 1) appel découverte de 15 min, gratuit ; 2) devis à prix fixe + acompte ; 3) maquette validée avant le code ; 4) développement et ajustements sans limite de révisions ; 5) mise en ligne (domaine, Google, visibilité IA, prise en main de l'admin).
+- Ce qui n'est pas promis : aucune première place Google garantie.
+- Zone : Saint-Julien-en-Genevois, Genève, Annemasse, Annecy, Haute-Savoie, Lyon, et à distance partout en France, en Suisse et en Belgique.
+- Réalisations en ligne : Tel & Cash (https://www.telandcash.fr), Markus Immobilier (https://www.markusimmobilier.fr), HCE BTP (https://www.hcetp.com), Margaux CDR (https://margauxcdr.com).
 
 ## Pages
 
@@ -31,4 +43,7 @@
 
 ## Contact
 
-WhatsApp : +33 6 15 80 26 19
+Téléphone et WhatsApp : +33 6 15 80 26 19
+Adresse : 13 rue du Docteur Paluel, 74160 Saint-Julien-en-Genevois, France
+Horaires : du lundi au vendredi, 9 h – 18 h
+Réserver un appel : https://calendly.com/yanisouammou063/30min

@@ -27,14 +27,14 @@ export const nav = {
 export const hero = {
   // true = titre en MAJUSCULES (plus de punch), false = minuscules.
   uppercase: true,
-  badge: "Studio de création de sites web",
+  badge: "Studio de création de sites web · Genève & Haute-Savoie",
   // Le titre s'affiche : "Un site qui <MOT>" — <MOT> tourne en boucle.
   titleBefore: "Un ",
   outlineWord: "site",          // mot en effet texte-contour
   titleMiddle: " qui ",
   words: ["vend", "convertit", "attire", "fidélise", "performe"],
   subtitle:
-    "On conçoit et on code des sites sur-mesure, pensés pour transformer vos visiteurs en clients. Pas de template, que du fait-main.",
+    "On conçoit et on code des sites sur-mesure, pensés pour transformer vos visiteurs en clients. Basés à Saint-Julien-en-Genevois, on travaille partout en France et en Suisse.",
   primaryCta: { label: "Réserver un appel", href: "#contact" },
   secondaryCta: { label: "Voir nos offres", href: "#offre" },
   // Mini-dashboard animé (colonne droite). 4 paliers mensuels : la barre
