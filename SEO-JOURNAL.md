@@ -539,6 +539,15 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 
 ## Chantiers faits
 
+### 2026-10-08 (jeudi, pas de recherche du lundi) — Liaison JSON-LD des pages vers l'entité Kota Studio
+
+- Mesure : prod OK (home, sitemap 21 URLs, robots, llms.txt, pages ville/prix avec title+canonical+2 JSON-LD ; un curl vide transitoire = proxy). Positions : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (annuaires, Genevois Informatique, Aladom), "agence web Annemasse" (Éponyme Web, Clickalpe…), "création site vitrine Haute-Savoie" (Siclem, Youmeweb, WEB DEV) ; `site:` ne renvoie rien (probablement non fiable via cet outil). Autres requêtes non relancées. Blocage inchangé : indexation / Search Console (TXT DNS OVH à poser).
+- Chantier : dans `src/lib/jsonld.js`, le `provider` des Service des pages villes et le `creator` des pages projet pointent maintenant vers `https://kotastudio.fr/#organisation` (le ProfessionalService complet de la home : adresse, tel, horaires). Avant, ces blocs étaient des entités isolées sans adresse. Build OK, vérifié dans dist.
+- Pas fait : refonte du contenu des pages (rien d'autre à corriger vérifié). 
+- À vérifier par Yanis : horaires 9h-18h lun-ven dans le JSON-LD de la home (openingHours) — origine non documentée dans le journal ; à confirmer vs fiche Google ("sur rendez-vous").
+- Prochain run : nouvelle requête réelle non couverte, ou page Genève si Yanis clarifie freelance/agence.
+
+
 ### 2026-10-06 — Maillage contextuel vers la page "Site internet ou réseaux sociaux"
 
 - Pourquoi : reste noté le 10-05 ; la nouvelle page n'était liée que depuis le footer. Pas de nouvelle page ajoutée : les 20 pages ne sont pas indexées, l'ajout de volume n'est pas le levier.

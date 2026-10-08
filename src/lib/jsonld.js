@@ -41,6 +41,7 @@ export function buildCityJsonLd(city) {
         areaServed: { "@type": city.areaType || "City", name: city.cityName },
         provider: {
           "@type": "ProfessionalService",
+          "@id": `${SITE_URL}/#organisation`,
           name: "Kota Studio",
           url: `${SITE_URL}/`,
           telephone: "+33615802619",
@@ -188,7 +189,7 @@ export function buildProjectJsonLd(project) {
         image: `${SITE_URL}${project.cover}`,
         dateCreated: project.year,
         genre: project.badge,
-        creator: { "@type": "ProfessionalService", name: "Kota Studio", url: `${SITE_URL}/` },
+        creator: { "@type": "ProfessionalService", "@id": `${SITE_URL}/#organisation`, name: "Kota Studio", url: `${SITE_URL}/` },
       },
     ],
   };
