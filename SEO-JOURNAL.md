@@ -37,6 +37,13 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-10-11 (dimanche — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, page prix, robots.txt en 200 ; sitemap 21 URLs ; la home statique lie bien les 5 pages villes/région, les 6 guides et les mentions (maillage crawlable OK). `origin/main` = `e5909da`.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur Saint-Julien (annuaires 118712, Aladom, Genevois Informatique), Annemasse (Éponyme Web, Clickalpe, Too be web), Annecy (LOCAL.FR, Walt), freelance Genève (profils Malt, Reverseweb). Non relancées : Lyon, vitrine/refonte Haute-Savoie. Aucun progrès mesurable.
+- **Fait nouveau : l'enregistrement DNS TXT `google-site-verification=3cFhkG44…` est désormais bien publié chez OVH** (vérifié via DNS-over-HTTPS, 11/10). La propriété « domaine » Search Console peut donc être validée par Yanis.
+- Chantier du jour : aucun changement de code (voir "Chantiers faits").
+
 **Au 2026-10-06 (mardi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, `/site-internet-ou-reseaux-sociaux`, sitemap en 200. `origin/main` = `d4b84fb` avant chantier.
@@ -538,6 +545,14 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-10-11 (dimanche) — Aucun changement de code : blocage = indexation
+
+- Pourquoi : 21 URLs, JSON-LD, llms.txt, maillage et pré-rendu sont complets et vérifiés en prod ; une 22e page n'ajoute rien tant que Google n'indexe pas les existantes (`site:` ne renvoie que l'accueil au 10-04/10-08). Rien de cassé à corriger, donc rien poussé hormis ce journal.
+- Vérifié : TXT de validation Search Console présent dans le DNS (voir État des lieux).
+- Pas fait : `lastmod` dans le sitemap (gain faible, risque de dates fausses) ; page Genève (toujours bloquée) ; aucune nouvelle page sans demande vérifiée.
+- **Action Yanis (prioritaire)** : valider la propriété domaine dans Search Console, soumettre `https://kotastudio.fr/sitemap.xml`, puis « Inspection d'URL → Demander une indexation » pour la home, `/creation-site-internet-saint-julien-en-genevois`, `/agence-web-annemasse`, `/creation-site-internet-annecy`, `/combien-coute-un-site-internet`. Ensuite, run suivant : lire les données réelles si Yanis les colle dans le journal.
+- Prochain run : si Yanis clarifie Genève (freelance/agence), faire la page ; sinon nouvelle requête vérifiée.
 
 ### 2026-10-08 (jeudi, pas de recherche du lundi) — Liaison JSON-LD des pages vers l'entité Kota Studio
 
