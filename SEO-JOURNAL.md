@@ -539,6 +539,15 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 
 ## Chantiers faits
 
+### 2026-10-12 (lundi, recherche) — Run de contrôle, aucun changement de code
+
+- Mesure : kotastudio.fr **absent** sur "création site internet Saint-Julien-en-Genevois" (annuaires 118712, Aladom, Genevois Informatique), "agence web Annemasse" (Éponyme Web, Clickalpe, Gralon) et "création site internet Annecy" (LOCAL.FR, Walt, La Fabrique du Net). Autres requêtes non relancées. Prod : l'accueil répond avec le bon titre ; l'e-mail et le WhatsApp (wa.me/33615802619) sont cohérents ; l'adresse n'apparaît pas en texte dans le footer (seulement la ville) — à vérifier par Yanis si voulu pour le NAP.
+- NAP code : aucune trace de l'ancien 06 68 82 33 96 ; +33615802619 identique dans index.html et jsonld.js ; adresse présente dans content.js, llms.txt et index.html.
+- Recherche du lundi : rien d'officiel et applicable de nouveau (résultats = blogs d'éditeurs, non fiables, qui répètent NAP cohérent + fiche Google complète). Rien ajouté à "Techniques apprises".
+- Décision : NE PAS pousser de contenu. Le blocage reste l'indexation (Search Console / TXT DNS OVH), pas le volume de pages. `npm run build` impossible ici (vite absent : `npm install` non fait dans ce conteneur), donc aucune modification risquée.
+- Reste : Yanis pose le TXT DNS et demande l'indexation ; Genève toujours bloquée.
+
+
 ### 2026-10-08 (jeudi, pas de recherche du lundi) — Liaison JSON-LD des pages vers l'entité Kota Studio
 
 - Mesure : prod OK (home, sitemap 21 URLs, robots, llms.txt, pages ville/prix avec title+canonical+2 JSON-LD ; un curl vide transitoire = proxy). Positions : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (annuaires, Genevois Informatique, Aladom), "agence web Annemasse" (Éponyme Web, Clickalpe…), "création site vitrine Haute-Savoie" (Siclem, Youmeweb, WEB DEV) ; `site:` ne renvoie rien (probablement non fiable via cet outil). Autres requêtes non relancées. Blocage inchangé : indexation / Search Console (TXT DNS OVH à poser).
@@ -2811,6 +2820,10 @@ site internet" (chantier du jour) ne cible aucune de ces 9 requêtes
 directement (requête informationnelle différente, non trackée dans ce
 tableau) — à surveiller pour un signal de visibilité propre une fois
 indexée, comme pour "comment choisir une agence web" le 09-24.
+
+### 2026-10-12
+
+Absent sur Saint-Julien, Annemasse, Annecy (3 requêtes mesurées, avant tout chantier).
 
 ### 2026-10-02
 
