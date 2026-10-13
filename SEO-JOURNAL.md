@@ -37,6 +37,13 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-10-13 (mardi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, sitemap (21 URLs), robots.txt, llms.txt, page Lyon, page réseaux sociaux en 200 (deux curl ont expiré une première fois = proxy, OK au 2e essai). `origin/main` = `e5909da` avant run.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (118712, Aladom, Genevois Informatique, Hands graphic), "agence web Annemasse" (Éponyme Web, Clickalpe, Too be web) et "freelance création site internet Genève" (profils Malt, Reverseweb Carouge). 4 autres requêtes non relancées. Aucun progrès mesurable, inchangé depuis le 07/09.
+- NAP vérifié dans index.html et jsonld.js : 13 rue du Docteur Paluel, +33615802619 ; ancien numéro absent du code. 9 pages de fond + villes portent déjà « Dernière mise à jour ».
+- Chantier : AUCUN changement de code. Rien de manquant côté on-page (21 pages, JSON-LD, llms.txt, maillage déjà faits) ; en ajouter n'aurait aucun effet tant que les pages ne sont pas indexées. Voir "Chantiers faits".
+
 **Au 2026-10-06 (mardi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, `/site-internet-ou-reseaux-sociaux`, sitemap en 200. `origin/main` = `d4b84fb` avant chantier.
@@ -538,6 +545,13 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-10-13 (mardi) — Run de mesure, aucun changement de code
+
+- Décision : ne rien modifier. Le blocage est l'indexation (Search Console / DNS OVH), pas le contenu. Risque de casser > gain.
+- Non fait volontairement : changer `openingHours` de la home (9h-18h lun-ven) alors que la fiche Google dit « sur rendez-vous » — origine inconnue, en doute donc on ne touche pas (déjà signalé le 10-08). Pas de nouvelle page Genève (positionnement freelance/agence toujours non tranché ; les résultats Genève sont des freelances Malt à 300-650 €/jour, donc le ton freelance est bien la demande réelle).
+- Yanis doit : (1) poser le TXT DNS Search Console chez OVH puis demander l'indexation des 21 URLs ; (2) confirmer les horaires réels vs « sur rendez-vous » ; (3) trancher freelance vs agence pour Genève.
+- Prochain run (mercredi) : si Search Console toujours muet, refaire mesure légère ; sinon traiter les données Search Console disponibles.
 
 ### 2026-10-08 (jeudi, pas de recherche du lundi) — Liaison JSON-LD des pages vers l'entité Kota Studio
 
