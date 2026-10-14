@@ -37,6 +37,13 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-10-14 (mercredi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, sitemap (21 URLs), robots.txt, llms.txt en 200. `origin/main` = `e4e1841` avant run.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (118712, Aladom, Genevois Informatique) et "création site internet Annecy" (Local.fr, Walt, La Fabrique du Net). `site:kotastudio.fr` ne renvoie aucune page du site (l'outil ne gère peut-être pas l'opérateur, non concluant). 5 autres requêtes non relancées. Inchangé depuis le 07/09.
+- Chantier : AUCUN changement de code, par décision (même raisonnement qu'hier : 21 pages, JSON-LD, llms.txt et maillage déjà en place ; ajouter du contenu avant indexation n'a aucun effet mesurable, et le risque de régression n'est pas nul). Seule action utile restante : Yanis valide Search Console (TXT DNS OVH) puis demande l'indexation des URLs.
+- Idée à examiner un autre jour : un lundi, rechercher une requête non couverte avant d'écrire une nouvelle page.
+
 **Au 2026-10-13 (mardi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, sitemap (21 URLs), robots.txt, llms.txt, page Lyon, page réseaux sociaux en 200 (deux curl ont expiré une première fois = proxy, OK au 2e essai). `origin/main` = `e5909da` avant run.
