@@ -37,6 +37,13 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-10-15 (jeudi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, sitemap.xml, robots.txt, llms.txt en 200. `origin/main` = `e4e1841` avant run.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (118712, Aladom, Genevois Informatique, Hands graphic) et "création site internet Annecy" (Local.fr, Walt, annuaires). `site:kotastudio.fr` : 0 résultat du domaine. Inchangé depuis le 07/09.
+- Chantier : AUCUN changement de code, décision identique au 13/10 : l'on-page est complet, le blocage est l'indexation. Sans validation Search Console (enregistrement DNS TXT OVH du 07/10, non confirmé à ce jour), ajouter des pages n'a aucun effet mesurable.
+- À fournir par Yanis (prioritaire) : ajouter/valider l'enregistrement DNS TXT google-site-verification dans OVH, puis dans Search Console soumettre sitemap.xml et demander l'indexation de la home + 3-4 pages clés.
+
 **Au 2026-10-13 (mardi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, sitemap (21 URLs), robots.txt, llms.txt, page Lyon, page réseaux sociaux en 200 (deux curl ont expiré une première fois = proxy, OK au 2e essai). `origin/main` = `e5909da` avant run.
