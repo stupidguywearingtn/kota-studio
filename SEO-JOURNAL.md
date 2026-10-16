@@ -37,6 +37,13 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-10-16 (vendredi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, sitemap.xml, robots.txt, llms.txt en 200. `origin/main` = `4d24eff` avant run.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (118712, Aladom, Genevois Informatique, Hands Graphic) et "agence web Annemasse" (annuaires 118712, Gralon, Éponyme Web, Clickalpe, Too be web). `site:kotastudio.fr` : 0 résultat du domaine. Inchangé depuis le 07/09.
+- Chantier : AUCUN changement de code, même décision qu'aux 13 et 15/10 : l'on-page est complet, le blocage est l'indexation (Search Console non validée). Ajouter des pages n'aurait aucun effet mesurable ; risque de casse > gain.
+- À fournir par Yanis (toujours prioritaire) : valider l'enregistrement DNS TXT google-site-verification chez OVH, puis dans Search Console soumettre sitemap.xml et demander l'indexation de la home + 3-4 pages clés.
+
 **Au 2026-10-15 (jeudi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, sitemap.xml, robots.txt, llms.txt en 200. `origin/main` = `e4e1841` avant run.
@@ -2832,6 +2839,10 @@ site internet" (chantier du jour) ne cible aucune de ces 9 requêtes
 directement (requête informationnelle différente, non trackée dans ce
 tableau) — à surveiller pour un signal de visibilité propre une fois
 indexée, comme pour "comment choisir une agence web" le 09-24.
+
+### 2026-10-16
+
+Absent sur Saint-Julien et Annemasse (2 requêtes mesurées) ; `site:kotastudio.fr` = 0 résultat. Inchangé.
 
 ### 2026-10-02
 
