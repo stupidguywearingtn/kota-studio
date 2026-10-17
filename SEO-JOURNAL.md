@@ -37,6 +37,13 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-10-17 (samedi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, sitemap.xml, robots.txt, llms.txt en 200. `origin/main` = `4d24eff` avant run.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (Boondooa, ABC Idea, creasiteinternet, WebSaas, AMJ74, Le Hub du Web, WebFrance). `site:kotastudio.fr` : toujours uniquement la page d'accueil, aucune sous-page indexée. Inchangé depuis le 07/09. Autres requêtes non relancées.
+- Chantier : AUCUN changement de code (même décision que 13/10 et 15/10) : l'on-page est complet (21 pages, JSON-LD, llms.txt, maillage), le blocage est l'indexation. Ajouter des pages n'a aucun effet tant que Search Console n'est pas validé.
+- À fournir par Yanis (prioritaire, bloquant depuis le 07/10) : ajouter l'enregistrement DNS TXT google-site-verification chez OVH, valider la propriété, soumettre sitemap.xml et demander l'indexation de la home + 3-4 pages clés.
+
 **Au 2026-10-15 (jeudi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, sitemap.xml, robots.txt, llms.txt en 200. `origin/main` = `e4e1841` avant run.
@@ -2843,6 +2850,10 @@ Absent sur Saint-Julien, Annemasse, vitrine Haute-Savoie (3 requêtes mesurées)
 Autres non relancées, inchangées attendu. Nouvelle page non encore indexée.
 
 ---
+
+### 2026-10-17
+
+Absent sur Saint-Julien ; `site:kotastudio.fr` = home seule. Inchangé.
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 
