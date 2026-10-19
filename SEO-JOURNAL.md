@@ -37,6 +37,14 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-10-19 (lundi — recherche du lundi faite, maigre) :**
+
+- Prod : home, sitemap.xml, llms.txt en 200. `origin/main` = `e4e1841`, branche de travail = `26bc014` avant run.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (118712, Aladom, Genevois Informatique, Hands graphic). `site:kotastudio.fr` : 0 résultat du domaine. Inchangé depuis le 07/09. Autres requêtes non relancées.
+- Recherche du lundi : seules des sources de vendeurs/blogs SEO sont remontées (pinmeto, searchable, mapatlas), chiffres contradictoires (AI Overviews sur 15 % vs 83 % des requêtes) -> rien noté comme technique apprise (non fiable). Seule tendance plausible, déjà appliquée : fiche Google Business + schéma LocalBusiness/ProfessionalService + réponses directes. A refaire avec sources officielles (Search Central, OpenAI) le 26/10.
+- Chantier : AUCUN changement de code (même décision que 13/15/17/18). Blocage = indexation. Pas de notification : situation identique, déjà signalée.
+- À fournir par Yanis (bloquant depuis le 07/10) : TXT DNS google-site-verification chez OVH, valider Search Console, soumettre sitemap.xml, demander l'indexation de la home + pages clés.
+
 **Au 2026-10-18 (dimanche — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, sitemap.xml, llms.txt en 200. `origin/main` = `d8e9689` avant run. Aucun TXT Search Console visible côté DNS depuis le sandbox (dig sans résultat, non concluant).
@@ -2865,6 +2873,10 @@ Absent sur Saint-Julien ; `site:kotastudio.fr` = home seule. Inchangé.
 ### 2026-10-18
 
 Absent sur Saint-Julien ; `site:kotastudio.fr` = home seule. Inchangé.
+
+### 2026-10-19
+
+Absent sur Saint-Julien ; `site:kotastudio.fr` = 0 résultat. Inchangé.
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 
