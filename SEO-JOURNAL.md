@@ -37,6 +37,14 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-10-26 (lundi — recherche du lundi faite, voir "Techniques apprises") :**
+
+- Prod : home, sitemap.xml, robots.txt, llms.txt en 200. `origin/main` = `b0800fe` avant run.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (Boondooa, ABC Idea, creasiteinternet, WebSaas, AMJ74, Le Hub du Web, WebFrance). `site:kotastudio.fr` : home seule. Inchangé depuis le 07/09.
+- Chantier : **protocole IndexNow** (nouveau, jamais fait : grep "indexnow|bing" = 0 occurrence dans le journal). Fichier clé `public/f2e43ff42e4006c66fcd29ad6ad79d68.txt` (contenu = la clé), servi à la racine par Vercel. Objectif : pousser les 21 URLs vers Bing/Yandex ; ChatGPT Search s'appuie en grande partie sur l'index Bing, indexation Bing = condition pour être cité. Aucun changement visible, aucun risque de rendu. Soumission des URLs faite après déploiement (résultat noté ci-dessous si obtenu).
+- Pas de nouvelle page : le blocage reste l'indexation Google (Search Console).
+- À fournir par Yanis (bloquant depuis le 07/10) : TXT DNS google-site-verification chez OVH, valider Search Console, soumettre sitemap.xml, demander l'indexation. NOUVEAU : créer/vérifier le site dans Bing Webmaster Tools (import depuis Search Console possible une fois validé) et soumettre sitemap.xml.
+
 **Au 2026-10-23 (vendredi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, sitemap.xml, llms.txt en 200. `origin/main` = `399bf53` avant run.
@@ -2342,6 +2350,8 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 ---
 
 ## Techniques apprises
+
+- **2026-10-26 (lundi)** : (1) Mise à jour mi-octobre 2026 des liens sources dans AI Mode/AI Overviews (liens inline plus visibles) — source secondaire (blog cheers.tech), à vérifier côté Google ; rien d'actionnable de plus : pages qui répondent à la question suivante du prospect, déjà notre approche. (2) Aucun core update annoncé en octobre ; dernier = mai 2026, spam update sept. terminé le 08/10 (searchenginewatch.com, dashboard Google). (3) Plusieurs guides 2026 (sources secondaires, non confirmées par OpenAI) : ChatGPT Search dépend de l'index Bing, Perplexity a son propre crawler ; IndexNow + Bing Webmaster Tools recommandés ; ne pas bloquer OAI-SearchBot/PerplexityBot (robots.txt actuel : Allow /, OK). Appliqué : clé IndexNow ajoutée.
 
 - **2026-10-05 (lundi)** : recherche AI Overviews/local — sources trouvées = blogs marketing (netconnectdigital, digitalapplied…), non autoritaires ; affirmation reprise seulement par prudence : fusion AI Overviews/AI Mode annoncée à I/O 2026 (à vérifier sur blog.google avant de l'écrire sur le site). Rien d'applicable immédiatement ; la page GEO du 10-01 cite la doc officielle Google (déc. 2025), toujours la référence.
 
