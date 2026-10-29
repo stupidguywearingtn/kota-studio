@@ -37,6 +37,13 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-10-29 (jeudi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, sitemap.xml, llms.txt en 200. `origin/main` = `9475de9` avant run (aucun run journalisé les 27 et 28/10).
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (118712, Aladom, Genevois Informatique/Infomaniak, Malt, Sortlist) et "agence web Annemasse" (Éponyme Web, 118712, Gralon). `site:kotastudio.fr` : 0 résultat du domaine. Inchangé depuis le 07/09, malgré IndexNow du 26/10 (Bing seulement, effet non mesurable ici).
+- Chantier : AUCUN changement de code (même décision que les 13/15/17/18/20/21/22/23). Blocage = indexation Google, pas le contenu. Pas de notification : situation identique, déjà signalée.
+- À fournir par Yanis (bloquant depuis le 07/10) : TXT DNS google-site-verification chez OVH, valider Search Console, soumettre sitemap.xml, demander l'indexation de la home + pages clés ; créer le site dans Bing Webmaster Tools.
+
 **Au 2026-10-26 (lundi — recherche du lundi faite, voir "Techniques apprises") :**
 
 - Prod : home, sitemap.xml, robots.txt, llms.txt en 200. `origin/main` = `b0800fe` avant run.
