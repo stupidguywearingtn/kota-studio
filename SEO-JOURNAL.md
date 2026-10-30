@@ -37,6 +37,13 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-10-30 (vendredi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, sitemap.xml, llms.txt en 200. `origin/main` = `9701d53` avant run.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (Boondooa, ABC Idea, creasiteinternet, WebSaaS, AMJ74, Le Hub du Web, WebFrance). NOUVEAU signal : `site:kotastudio.fr` retourne de nouveau la home (0 résultat les 20 et 22/10, home seule les 17-18/10) — la home est dans l'index, mais aucune autre page.
+- Chantier : AUCUN changement de code (même décision que les 13/15/17/18/20/21/22/23/29). Blocage = indexation Google des pages secondaires (Search Console non validée), pas le contenu. Pas de notification : situation inchangée, déjà signalée.
+- À fournir par Yanis (bloquant depuis le 07/10) : TXT DNS google-site-verification chez OVH, valider Search Console, soumettre sitemap.xml, demander l'indexation des pages clés ; créer le site dans Bing Webmaster Tools. (Vérification DNS impossible depuis ce conteneur : `dig` absent.)
+
 **Au 2026-10-29 (jeudi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, sitemap.xml, llms.txt en 200. `origin/main` = `9475de9` avant run (aucun run journalisé les 27 et 28/10).
