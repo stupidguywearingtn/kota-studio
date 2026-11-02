@@ -37,6 +37,14 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-02 (lundi — recherche du lundi faite) :**
+
+- Prod : home, sitemap.xml, llms.txt en 200. `origin/main` = `9701d53` avant run.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (118712, Aladom, Genevois Informatique/Infomaniak, Malt, Sortlist). `site:kotastudio.fr` : 0 résultat du domaine. Inchangé depuis le 07/09, malgré IndexNow du 26/10.
+- Recherche du lundi : aucune annonce officielle Google de novembre 2026 trouvée (résultats = blogs d'éditeurs SEO, non fiables). Seul point récurrent et déjà appliqué : le balisage doit correspondre au contenu visible (FAQPage/HowTo déjà conformes) ; les données de la fiche Google Business pèseraient davantage sur les requêtes locales IA (affirmation d'éditeur, non vérifiée) → la cohérence NAP et la fiche restent la priorité. Rien de nouveau à appliquer.
+- Chantier : AUCUN changement de code (même décision que 13/15/17/18/20/21/22/23/29). Blocage = indexation Google. Pas de notification : situation identique, déjà signalée.
+- À fournir par Yanis (bloquant depuis le 07/10) : TXT DNS google-site-verification chez OVH, valider Search Console, soumettre sitemap.xml, demander l'indexation de la home + pages clés ; créer le site dans Bing Webmaster Tools.
+
 **Au 2026-10-29 (jeudi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, sitemap.xml, llms.txt en 200. `origin/main` = `9475de9` avant run (aucun run journalisé les 27 et 28/10).
@@ -2916,6 +2924,10 @@ Absent sur Saint-Julien ; `site:kotastudio.fr` = home seule. Inchangé.
 Absent sur Saint-Julien ; `site:kotastudio.fr` = 0 résultat. Inchangé.
 
 ### 2026-10-22
+
+Absent sur Saint-Julien ; `site:kotastudio.fr` = 0 résultat. Inchangé.
+
+### 2026-11-02
 
 Absent sur Saint-Julien ; `site:kotastudio.fr` = 0 résultat. Inchangé.
 
