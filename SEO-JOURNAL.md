@@ -37,6 +37,14 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-09 (lundi — recherche du lundi faite) :**
+
+- Prod : home, sitemap.xml, llms.txt en 200. `origin/main` = `1f4b893` avant run.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (118712, Aladom, Genevois Informatique/Infomaniak, Malt). `site:kotastudio.fr` : 0 page du domaine (seule une page Contra tierce mentionne Kota Studio, projet AUREA, 22/08/2025). Inchangé depuis le 07/09.
+- Recherche du lundi : aucune annonce officielle Google de novembre 2026 trouvée (résultats = blogs de consultants, non fiables). Rien de nouveau et applicable ; seule tendance récurrente (non vérifiée) : AI Overviews/AI Mode s'appuient sur la fiche Google Business, les avis et les annuaires → la fiche et la cohérence NAP restent prioritaires. Piste à considérer côté Yanis : obtenir de vrais avis Google et profils d'annuaires (Malt, Contra déjà existants) cohérents avec le NAP.
+- Chantier : AUCUN changement de code (même décision que les runs précédents). Blocage = indexation Google. Pas de notification : situation identique, déjà signalée.
+- À fournir par Yanis (bloquant depuis le 07/10) : TXT DNS google-site-verification chez OVH, valider Search Console, soumettre sitemap.xml, demander l'indexation ; créer le site dans Bing Webmaster Tools.
+
 **Au 2026-11-08 (dimanche — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, sitemap.xml, llms.txt en 200. `origin/main` = `8e39478` avant run.
