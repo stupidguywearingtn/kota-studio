@@ -39,7 +39,7 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 
 **Au 2026-11-11 (mercredi — pas de recherche du lundi, étape 5 non applicable) :**
 
-- Prod : home, sitemap.xml (21 URLs), robots.txt, llms.txt en 200. `origin/main` = `8e39478` avant run. ATTENTION : les commits journal du 09/11 (`fccde2b`) et du 10/11 (`183f0fd`) n'étaient PAS sur `origin/main` (seulement sur la branche locale de session, jamais poussée) — rattrapés par le push de ce run.
+- Prod : home, sitemap.xml (21 URLs), robots.txt, llms.txt en 200. `origin/main` = `183f0fd` avant run.
 - **NOUVEAU — DNS : l'enregistrement TXT `google-site-verification=3cFhkG44TEElSt8GmePbpojtk1JQ9Jp0t7gX_67Ja_c` est maintenant publié** sur kotastudio.fr (vérifié via dns.google/resolve, réponse du DNS OVH). Le blocage du 07/10 côté DNS est levé ; il reste à Yanis de cliquer « Valider » dans Search Console, soumettre sitemap.xml et demander l'indexation. Notification envoyée.
 - Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (118712, Aladom, Genevois Informatique/Infomaniak, PagesJaunes, Malt, edana.ch, feedbax Bluekat Digital). `site:kotastudio.fr` : 0 page du domaine (Contra AUREA seule). Inchangé depuis le 07/09.
 - Chantier : **redirection 308 www.kotastudio.fr → kotastudio.fr** (problème technique jamais relevé : le www servait les 21 pages en 200, contenu dupliqué, seul le canonical limitait la casse). Voir "Chantiers faits".
@@ -2314,7 +2314,7 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 
 ## Erreurs commises et corrigées
 
-- **2026-11-11** : les runs du 09/11 et du 10/11 ont écrit "`origin/main` = …" en lisant la branche locale, et leurs commits ne sont jamais arrivés sur `origin/main`. Correction : toujours `git fetch origin main` puis comparer `git log origin/main`, et pousser `HEAD:main` en fin de run. Les runs ont aussi conclu « TXT absent » sans revérifier : désormais tester `curl -s "https://dns.google/resolve?name=kotastudio.fr&type=TXT"` à chaque run (dig n'est pas fiable dans le sandbox).
+- **2026-11-11** : ce run a d'abord cru que les commits du 09/11 et du 10/11 n'étaient pas sur `origin/main` — faux : `git fetch origin main claude/...` avait échoué en entier (branche distante inexistante), `origin/main` était donc périmé. Corrigé ici. Leçon : faire `git fetch origin main` SEUL. Autre leçon : les runs précédents avaient conclu « TXT absent » sans revérifier ; tester `curl -s "https://dns.google/resolve?name=kotastudio.fr&type=TXT"` à chaque run (dig peu fiable dans le sandbox).
 
 - **2026-09-25** — Faux positif de process (pas une erreur poussée en
   production, rattrapée avant tout chantier) : un premier test du maillage
