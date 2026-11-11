@@ -37,6 +37,13 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-11 (mercredi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, sitemap.xml (21 URLs), robots.txt, llms.txt en 200. `origin/main` = `8e39478` avant run. ATTENTION : les commits journal du 09/11 (`fccde2b`) et du 10/11 (`183f0fd`) n'étaient PAS sur `origin/main` (seulement sur la branche locale de session, jamais poussée) — rattrapés par le push de ce run.
+- **NOUVEAU — DNS : l'enregistrement TXT `google-site-verification=3cFhkG44TEElSt8GmePbpojtk1JQ9Jp0t7gX_67Ja_c` est maintenant publié** sur kotastudio.fr (vérifié via dns.google/resolve, réponse du DNS OVH). Le blocage du 07/10 côté DNS est levé ; il reste à Yanis de cliquer « Valider » dans Search Console, soumettre sitemap.xml et demander l'indexation. Notification envoyée.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (118712, Aladom, Genevois Informatique/Infomaniak, PagesJaunes, Malt, edana.ch, feedbax Bluekat Digital). `site:kotastudio.fr` : 0 page du domaine (Contra AUREA seule). Inchangé depuis le 07/09.
+- Chantier : **redirection 308 www.kotastudio.fr → kotastudio.fr** (problème technique jamais relevé : le www servait les 21 pages en 200, contenu dupliqué, seul le canonical limitait la casse). Voir "Chantiers faits".
+
 **Au 2026-11-10 (mardi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, sitemap.xml, llms.txt en 200. `origin/main` = `fccde2b` avant run.
@@ -653,6 +660,14 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-11 (mercredi) — Redirection permanente www → apex (technique)
+
+- Constat : `curl -sI https://www.kotastudio.fr/` → HTTP 200 (Vercel, CNAME cname.vercel-dns.com), même HTML que l'apex, idem sur `/agence-web-lyon`. Le canonical pointe bien vers `https://kotastudio.fr/...`, mais Google devait choisir entre deux hôtes (signaux de liens dilués, budget de crawl gaspillé sur un site pas encore indexé). `http://` redirigeait déjà en 308 vers l'apex, pas le www.
+- Fait : `vercel.json` → bloc `redirects` avec condition `has: host = www.kotastudio.fr`, destination `https://kotastudio.fr/:path*`, `permanent: true` (308). Placé avant `rewrites` (Vercel applique les redirects avant les rewrites de toute façon). L'apex ne correspond pas à la condition → pas de boucle possible. Rewrite SPA inchangée (simple reformatage JSON).
+- À vérifier au prochain run : `curl -sI https://www.kotastudio.fr/agence-web-lyon` doit répondre 308 avec `location: https://kotastudio.fr/agence-web-lyon` ; l'apex doit rester en 200. Si l'apex casse, revert immédiat de `vercel.json`.
+- NE PAS fait : aucun contenu ajouté (le blocage reste l'indexation, pas l'on-page — même raisonnement que les runs précédents) ; pas de re-ping IndexNow (aucune URL nouvelle) ; pas de recherche de nouvelle requête.
+- Note : dans Vercel (Settings > Domains), Yanis peut aussi régler www en « Redirect to kotastudio.fr » — équivalent, la règle du fichier suffit.
 
 ### 2026-10-13 (mardi) — Run de mesure, aucun changement de code
 
@@ -2299,6 +2314,8 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 
 ## Erreurs commises et corrigées
 
+- **2026-11-11** : les runs du 09/11 et du 10/11 ont écrit "`origin/main` = …" en lisant la branche locale, et leurs commits ne sont jamais arrivés sur `origin/main`. Correction : toujours `git fetch origin main` puis comparer `git log origin/main`, et pousser `HEAD:main` en fin de run. Les runs ont aussi conclu « TXT absent » sans revérifier : désormais tester `curl -s "https://dns.google/resolve?name=kotastudio.fr&type=TXT"` à chaque run (dig n'est pas fiable dans le sandbox).
+
 - **2026-09-25** — Faux positif de process (pas une erreur poussée en
   production, rattrapée avant tout chantier) : un premier test du maillage
   interne avec `curl "<url>" | grep -oE '<a href="[^"]*"' | sort -u` sur
@@ -2971,8 +2988,13 @@ Absent sur Saint-Julien ; `site:kotastudio.fr` = 0 résultat. Inchangé.
 
 Absent sur Saint-Julien ; `site:kotastudio.fr` = 0 résultat. Inchangé.
 
+### 2026-11-11
+
+Absent sur Saint-Julien ; `site:kotastudio.fr` = 0 résultat. Inchangé. TXT Search Console désormais présent dans le DNS.
+
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 
+0. **URGENT (11/11)** : le TXT DNS est en place → ouvrir Search Console (propriété domaine kotastudio.fr), cliquer « Valider », soumettre `sitemap.xml`, demander l'indexation de la home et des pages villes. Puis Bing Webmaster Tools (import depuis Search Console).
 1. Adresse postale complète du siège (mentions légales + cohérence Google
    Business).
 2. Infos légales manquantes (SIRET, forme juridique, capital, TVA, email,
