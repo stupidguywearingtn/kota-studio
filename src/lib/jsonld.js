@@ -77,7 +77,7 @@ export const pricingGuideFaqs = [
   },
   {
     q: "Combien de temps faut-il pour avoir son site ?",
-    a: "Le délai annoncé dès le premier échange est de 14 jours, du brief initial à la mise en ligne. Ce délai est tenu grâce à un processus cadré en 6 étapes, détaillé ci-dessous.",
+    a: "Le délai annoncé dès le premier échange est de 14 jours, du brief initial à la mise en ligne. Ce délai est tenu grâce à un processus cadré en 5 étapes, détaillé ci-dessous.",
   },
   {
     q: "Qu'est-ce qui est inclus dans le prix, sans surprise ?",

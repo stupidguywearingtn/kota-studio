@@ -37,6 +37,13 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-12 (jeudi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, sitemap.xml (21 URLs), robots.txt, llms.txt en 200. `origin/main` = `97a13c4` avant run. **Redirection du 11/11 vérifiée : `www.kotastudio.fr/agence-web-lyon` → 308 vers l'apex, apex en 200.** TXT google-site-verification toujours publié (dns.google). Audit des 21 URLs du sitemap : canonical exact partout, 2 blocs JSON-LD par page (1 sur les pages légales), 450 à 2 000 mots.
+- NAP vérifié dans le code : 13 rue du Docteur Paluel, 74160 Saint-Julien-en-Genevois / 33615802619 identiques dans index.html, jsonld.js, content.js, llms.txt ; ancien 06 68 82 33 96 absent.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (118712, Aladom, Genevois Informatique/Infomaniak, PagesJaunes, edana.ch, Malt, feedbax Bluekat Digital) et "agence web Annemasse" (La Fabrique du Net, 118712, Sortlist Clickalpe, Gralon, Incremys, Malt). `site:kotastudio.fr` : 0 page du domaine. Inchangé depuis le 07/09.
+- Chantier : **correction d'une incohérence factuelle « 6 étapes » → « 5 étapes »** (6 pages) + **`<lastmod>` dans sitemap.xml**. Voir "Chantiers faits".
+
 **Au 2026-11-11 (mercredi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, sitemap.xml (21 URLs), robots.txt, llms.txt en 200. `origin/main` = `183f0fd` avant run.
@@ -660,6 +667,16 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-12 (jeudi) — Incohérence « processus en 6 étapes » + `<lastmod>` du sitemap
+
+- Constat 1 (bug de contenu, jamais relevé) : depuis la refonte du 07/10, `content.js > process` compte **5 étapes** (Jour 1, Jour 2, Jours 3 à 6, Jours 7 à 13, Jour 14), mais 7 réponses de FAQ disaient encore « processus cadré en **6** étapes (détaillé ci-dessous) » : `cities.js` (Saint-Julien, Annecy, Annemasse, Lyon ×2, Haute-Savoie) et `jsonld.js > pricingGuideFaqs` (page prix). Le texte contredisait la liste affichée juste en dessous, dans le HTML visible ET dans le JSON-LD FAQPage — exactement le genre de passage qu'une IA extrait isolément. Corrigé en « 5 étapes » (sed ciblé, 0 occurrence restante dans src/public/scripts/dist). FAQ visible et JSON-LD partagent la même source → toujours identiques.
+- Constat 2 : `public/sitemap.xml` n'avait aucun `<lastmod>` (seulement changefreq/priority, ignorés par Google). Ajouté sur les 21 URLs, **égal à la date « Dernière mise à jour » visible** de chaque page (villes/guides : date de création de leur contenu ; home, pages projet, pages légales : 2026-10-07, refonte + `legal.updatedAt`). Google n'utilise lastmod que s'il est « systématiquement exact » : à tenir à jour à chaque vraie modification de contenu (et changer la date visible en même temps).
+- Dates visibles NON modifiées : la correction 6→5 est un mot, pas une mise à jour de contenu (consigne : n'actualiser la date que pour une vraie modification).
+- Vérifs : build OK (21 routes pré-rendues), « 5 étapes » présent 2× (texte + JSON-LD) dans dist des pages concernées, sitemap XML valide ; rendu iPhone 13 sur /creation-site-internet-annecy et /combien-coute-un-site-internet : texte correct, scrollWidth 390 (pas de débordement), 0 erreur JS.
+- IndexNow : re-ping des 6 URLs modifiées + sitemap après déploiement (voir résultat dans l'entrée d'état si fait).
+- NE PAS fait : pas de nouvelle page (le blocage reste l'indexation) ; pas de `dateModified` dans le JSON-LD (gain marginal, aurait touché toutes les fonctions de jsonld.js) ; pas de retouche des pages projet « Bientôt disponible » (contenu à fournir par Yanis).
+- Piste pour un prochain run : la refonte du 07/10 a pu laisser d'autres affirmations périmées dans les pages de fond (ex. technos citées, étapes, « Jour 7 ») — faire un audit « pages de fond vs content.js actuel », page par page.
 
 ### 2026-11-11 (mercredi) — Redirection permanente www → apex (technique)
 
@@ -2314,6 +2331,8 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 
 ## Erreurs commises et corrigées
 
+- **2026-11-12** : la refonte du 07/10 a fait passer le process de 6 à 5 étapes sans que les FAQ des pages villes et de la page prix soient mises à jour (« 6 étapes détaillé ci-dessous » au-dessus d'une liste de 5). Resté en ligne 36 jours, non vu par les runs de mesure. Leçon : après toute modification de `content.js`, grep les nombres/délais/prix recopiés en dur dans `cities.js` et `jsonld.js`.
+
 - **2026-11-11** : ce run a d'abord cru que les commits du 09/11 et du 10/11 n'étaient pas sur `origin/main` — faux : `git fetch origin main claude/...` avait échoué en entier (branche distante inexistante), `origin/main` était donc périmé. Corrigé ici. Leçon : faire `git fetch origin main` SEUL. Autre leçon : les runs précédents avaient conclu « TXT absent » sans revérifier ; tester `curl -s "https://dns.google/resolve?name=kotastudio.fr&type=TXT"` à chaque run (dig peu fiable dans le sandbox).
 
 - **2026-09-25** — Faux positif de process (pas une erreur poussée en
@@ -2418,6 +2437,8 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 ---
 
 ## Techniques apprises
+
+- **2026-11-12 — `<lastmod>` du sitemap** (source : documentation Google Search Central, « Build and submit a sitemap » : Google ignore `changefreq` et `priority` et n'utilise `lastmod` que s'il est systématiquement et vérifiablement exact). Appliqué ici : lastmod = date « Dernière mise à jour » visible. Règle : quand on modifie vraiment une page, changer EN MÊME TEMPS sa date visible et son `<lastmod>` dans `public/sitemap.xml` (fichier statique, non généré).
 
 - **2026-10-26 (lundi)** : (1) Mise à jour mi-octobre 2026 des liens sources dans AI Mode/AI Overviews (liens inline plus visibles) — source secondaire (blog cheers.tech), à vérifier côté Google ; rien d'actionnable de plus : pages qui répondent à la question suivante du prospect, déjà notre approche. (2) Aucun core update annoncé en octobre ; dernier = mai 2026, spam update sept. terminé le 08/10 (searchenginewatch.com, dashboard Google). (3) Plusieurs guides 2026 (sources secondaires, non confirmées par OpenAI) : ChatGPT Search dépend de l'index Bing, Perplexity a son propre crawler ; IndexNow + Bing Webmaster Tools recommandés ; ne pas bloquer OAI-SearchBot/PerplexityBot (robots.txt actuel : Allow /, OK). Appliqué : clé IndexNow ajoutée.
 
@@ -2991,6 +3012,10 @@ Absent sur Saint-Julien ; `site:kotastudio.fr` = 0 résultat. Inchangé.
 ### 2026-11-11
 
 Absent sur Saint-Julien ; `site:kotastudio.fr` = 0 résultat. Inchangé. TXT Search Console désormais présent dans le DNS.
+
+### 2026-11-12
+
+Absent sur Saint-Julien et Annemasse ; `site:kotastudio.fr` = 0 résultat. Inchangé. Redirection www → apex confirmée en 308.
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 

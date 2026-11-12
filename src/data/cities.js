@@ -34,7 +34,7 @@ export const cities = [
       },
       {
         q: "Combien de temps pour avoir mon site ?",
-        a: "Le délai annoncé dès le premier échange est de 14 jours, du brief initial à la mise en ligne. Ce délai est tenu grâce à un processus cadré en 6 étapes, présenté ci-dessous.",
+        a: "Le délai annoncé dès le premier échange est de 14 jours, du brief initial à la mise en ligne. Ce délai est tenu grâce à un processus cadré en 5 étapes, présenté ci-dessous.",
       },
       {
         q: "Qu'est-ce qui est inclus dans un projet Kota Studio ?",
@@ -68,7 +68,7 @@ export const cities = [
       },
       {
         q: "Combien de temps pour un site internet à Annecy ?",
-        a: "14 jours du premier échange à la mise en ligne, avec un processus cadré en 6 étapes détaillé ci-dessous. Ce délai ne change pas selon la ville : il dépend du cadrage initial et de la rapidité des retours, pas de la localisation du client.",
+        a: "14 jours du premier échange à la mise en ligne, avec un processus cadré en 5 étapes détaillé ci-dessous. Ce délai ne change pas selon la ville : il dépend du cadrage initial et de la rapidité des retours, pas de la localisation du client.",
       },
       {
         q: "Qu'est-ce qui est inclus dans un projet Kota Studio ?",
@@ -103,7 +103,7 @@ export const cities = [
       },
       {
         q: "Combien de temps pour un site internet à Annemasse ?",
-        a: "14 jours du premier échange à la mise en ligne, avec un processus cadré en 6 étapes détaillé ci-dessous. Ce délai ne dépend pas de la ville du client : il dépend du cadrage initial du projet et de la rapidité des retours.",
+        a: "14 jours du premier échange à la mise en ligne, avec un processus cadré en 5 étapes détaillé ci-dessous. Ce délai ne dépend pas de la ville du client : il dépend du cadrage initial du projet et de la rapidité des retours.",
       },
       {
         q: "Qu'est-ce qui est inclus dans un projet Kota Studio ?",
@@ -134,7 +134,7 @@ export const cities = [
       },
       {
         q: "Pourquoi choisir une agence de Haute-Savoie plutôt qu'une agence lyonnaise ?",
-        a: "Lyon compte de nombreuses agences web bien installées, et c'est un argument légitime à considérer. La différence chez Kota Studio : un prix fixe annoncé dès le départ (pas seulement \"sur devis\"), un délai de 14 jours tenu par un process cadré en 6 étapes, et un seul interlocuteur du premier appel à la mise en ligne plutôt qu'un chef de projet qui répartit le travail dans une équipe.",
+        a: "Lyon compte de nombreuses agences web bien installées, et c'est un argument légitime à considérer. La différence chez Kota Studio : un prix fixe annoncé dès le départ (pas seulement \"sur devis\"), un délai de 14 jours tenu par un process cadré en 5 étapes, et un seul interlocuteur du premier appel à la mise en ligne plutôt qu'un chef de projet qui répartit le travail dans une équipe.",
       },
       {
         q: "Combien coûte un site internet à Lyon ?",
@@ -142,7 +142,7 @@ export const cities = [
       },
       {
         q: "Combien de temps pour un site internet à Lyon ?",
-        a: "14 jours du premier échange à la mise en ligne, avec un processus cadré en 6 étapes détaillé ci-dessous. Ce délai ne dépend pas de la ville du client : il dépend du cadrage initial du projet et de la rapidité des retours.",
+        a: "14 jours du premier échange à la mise en ligne, avec un processus cadré en 5 étapes détaillé ci-dessous. Ce délai ne dépend pas de la ville du client : il dépend du cadrage initial du projet et de la rapidité des retours.",
       },
       {
         q: "Qu'est-ce qui est inclus dans un projet Kota Studio ?",
@@ -174,7 +174,7 @@ export const cities = [
       },
       {
         q: "Combien de temps pour une création ou une refonte de site en Haute-Savoie ?",
-        a: "14 jours du premier échange à la mise en ligne, que ce soit pour une création ou une refonte, grâce à un processus cadré en 6 étapes détaillé ci-dessous. Une refonte démarre par un audit rapide du site existant (contenu, structure, ce qui est conservé ou refait), sans rallonger ce délai dans la plupart des cas.",
+        a: "14 jours du premier échange à la mise en ligne, que ce soit pour une création ou une refonte, grâce à un processus cadré en 5 étapes détaillé ci-dessous. Une refonte démarre par un audit rapide du site existant (contenu, structure, ce qui est conservé ou refait), sans rallonger ce délai dans la plupart des cas.",
       },
       {
         q: "Quelle est la différence entre une création et une refonte de site internet ?",
