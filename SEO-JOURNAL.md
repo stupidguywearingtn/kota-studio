@@ -37,6 +37,13 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-13 (vendredi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, sitemap.xml (21 URLs), robots.txt, llms.txt en 200. `origin/main` = `ec2c7aa` avant run. Redirection www → apex toujours en 308. TXT google-site-verification toujours publié (dns.google).
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (118712, Aladom, edana.ch, Genevois Informatique/Infomaniak, PagesJaunes, Malt, feedbax Bluekat Digital) et "création site internet Annecy" (La Fabrique du Net, LOCAL.FR/avis-verifies, 118712, Mappy, Codeur, Aladom). `site:kotastudio.fr` : 0 page du domaine (Contra AUREA seule). Inchangé depuis le 07/09 → Search Console n'est très probablement toujours pas validée.
+- Audit « pages de fond vs content.js » (piste du 12/11) : grep de tous les prix, délais, nombres d'étapes, %, technos, « Jour N », acompte dans src/pages, cities.js, jsonld.js, llms.txt, index.html → **aucune affirmation périmée** (790 / 1 290 €, 14 jours, 5 étapes, 50 %, 15 min, options +390/+490/+290 € partout cohérents ; plus aucune mention Webflow/Framer). Rien à corriger.
+- Chantier : **soft 404 → vraie 404** (technique). Voir "Chantiers faits".
+
 **Au 2026-11-12 (jeudi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, sitemap.xml (21 URLs), robots.txt, llms.txt en 200. `origin/main` = `97a13c4` avant run. **Redirection du 11/11 vérifiée : `www.kotastudio.fr/agence-web-lyon` → 308 vers l'apex, apex en 200.** TXT google-site-verification toujours publié (dns.google). Audit des 21 URLs du sitemap : canonical exact partout, 2 blocs JSON-LD par page (1 sur les pages légales), 450 à 2 000 mots.
@@ -667,6 +674,19 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-13 (vendredi) — Soft 404 → vraie page 404 (technique)
+
+- Constat : `curl https://kotastudio.fr/page-inexistante-test` → **HTTP 200** avec le HTML pré-rendu, le title et le **canonical de l'accueil**. Cause : `vercel.json` réécrivait `/(.*)` vers `/index.html`. Toute URL fautive (faute de frappe dans un lien TikTok, lien cassé externe, URL inventée par un crawler/IA) devenait une copie de l'accueil en 200 : soft 404 au sens de Google, crawl gaspillé sur un site pas encore indexé, et risque qu'une IA cite une URL fantôme.
+- Pourquoi c'était sans risque de la retirer : les 21 routes réelles sont toutes pré-rendues en fichiers `dist/<route>/index.html`, et Vercel sert le système de fichiers AVANT les réécritures (prouvé en prod : `/agence-web-annemasse` renvoyait déjà son propre title, pas celui de l'accueil). La réécriture ne servait donc qu'aux URLs inexistantes.
+- Fait :
+  - `vercel.json` : bloc `rewrites` supprimé (redirection www → apex conservée).
+  - `scripts/generate-404.mjs` (ajouté en fin de `npm run build`) : génère `dist/404.html` à partir du gabarit `dist/index.html` → title « Page introuvable | Kota Studio », `robots noindex`, sans canonical, sans OG/Twitter, sans JSON-LD, `#root` vide (React utilise `createRoot`, pas d'hydratation → pas de mismatch). Vercel le sert automatiquement en **HTTP 404**. Le script échoue bruyamment si un motif attendu disparaît du gabarit.
+  - `src/App.jsx` : route `*` → `CityPage` (qui affiche déjà « 404 / Page introuvable / Retour à l'accueil » pour un slug inconnu), pour les URLs à plusieurs segments (`/a/b`) qui sinon rendaient une page blanche. `/projets/inconnu` garde son « Projet introuvable ».
+- Vérifs avant push : build OK (21 routes + 404.html) ; serveur local imitant Vercel (fichier sinon 404.html en 404) + Playwright iPhone 13 : `/page-inexistante`, `/a/b/c`, `/projets/inconnu` → 404 avec le bon h1, scrollWidth 390, 0 erreur JS ; `/`, `/agence-web-lyon`, `/combien-coute-un-site-internet` inchangés en 200 ; les 21 URLs du sitemap + llms.txt, robots, sitemap, clé IndexNow, og image, manifest → 27/27 en 200 ; tous les liens internes `to=`/`href=` du code pointent vers un fichier existant.
+- Vérifs en prod après déploiement : URL inconnue → **404** (title « Page introuvable », noindex) ; 27/27 URLs légitimes (dont `/?utm_source=tiktok` et `/agence-web-lyon/` avec slash final) en **200** ; `/agence-web-annemasse` garde son title et canonical ; `www.kotastudio.fr/x` → 308.
+- Si une future page est ajoutée SANS être pré-rendue (absente de la liste de `generate-static-heads.mjs`/`prerender-body.mjs`), elle renverra 404 en prod : **toute nouvelle route doit être ajoutée au pré-rendu** (c'était déjà le cas de toutes les pages SEO).
+- NE PAS fait : pas de re-ping IndexNow (aucune URL de contenu modifiée) ; pas de nouvelle page (blocage = indexation) ; pas de date « Dernière mise à jour » touchée.
 
 ### 2026-11-12 (jeudi) — Incohérence « processus en 6 étapes » + `<lastmod>` du sitemap
 
@@ -2331,6 +2351,8 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 
 ## Erreurs commises et corrigées
 
+- **2026-11-13** : la réécriture SPA `/(.*) → /index.html` de `vercel.json` (présente depuis le début, et explicitement constatée le 08/09 : « route inconnue toujours 200 avec fallback SPA ») a été jugée normale pendant deux mois alors qu'elle créait des soft 404 avec le canonical de l'accueil. Corrigé (voir "Chantiers faits"). Leçon : une fois toutes les routes pré-rendues, le fallback SPA n'a plus de raison d'être ; tester une URL inexistante fait partie de l'audit technique.
+
 - **2026-11-12** : la refonte du 07/10 a fait passer le process de 6 à 5 étapes sans que les FAQ des pages villes et de la page prix soient mises à jour (« 6 étapes détaillé ci-dessous » au-dessus d'une liste de 5). Resté en ligne 36 jours, non vu par les runs de mesure. Leçon : après toute modification de `content.js`, grep les nombres/délais/prix recopiés en dur dans `cities.js` et `jsonld.js`.
 
 - **2026-11-11** : ce run a d'abord cru que les commits du 09/11 et du 10/11 n'étaient pas sur `origin/main` — faux : `git fetch origin main claude/...` avait échoué en entier (branche distante inexistante), `origin/main` était donc périmé. Corrigé ici. Leçon : faire `git fetch origin main` SEUL. Autre leçon : les runs précédents avaient conclu « TXT absent » sans revérifier ; tester `curl -s "https://dns.google/resolve?name=kotastudio.fr&type=TXT"` à chaque run (dig peu fiable dans le sandbox).
@@ -3017,9 +3039,13 @@ Absent sur Saint-Julien ; `site:kotastudio.fr` = 0 résultat. Inchangé. TXT Sea
 
 Absent sur Saint-Julien et Annemasse ; `site:kotastudio.fr` = 0 résultat. Inchangé. Redirection www → apex confirmée en 308.
 
+### 2026-11-13
+
+Absent sur Saint-Julien et Annecy ; `site:kotastudio.fr` = 0 résultat. Inchangé. URL inexistante désormais en 404 (était 200).
+
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 
-0. **URGENT (11/11)** : le TXT DNS est en place → ouvrir Search Console (propriété domaine kotastudio.fr), cliquer « Valider », soumettre `sitemap.xml`, demander l'indexation de la home et des pages villes. Puis Bing Webmaster Tools (import depuis Search Console).
+0. **URGENT (11/11, toujours pas d'effet visible au 13/11)** : le TXT DNS est en place → ouvrir Search Console (propriété domaine kotastudio.fr), cliquer « Valider », soumettre `sitemap.xml`, demander l'indexation de la home et des pages villes. Puis Bing Webmaster Tools (import depuis Search Console).
 1. Adresse postale complète du siège (mentions légales + cohérence Google
    Business).
 2. Infos légales manquantes (SIRET, forme juridique, capital, TVA, email,
