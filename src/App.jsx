@@ -115,6 +115,9 @@ export default function App() {
         {/* Pages villes SEO local (src/data/cities.js) — catch-all volontaire,
             gère aussi le 404 propre pour un slug inconnu (comme /projets/:slug). */}
         <Route path="/:citySlug" element={<CityPage />} />
+        {/* URL à plusieurs segments inconnue (ex. /a/b) : servie par dist/404.html
+            en HTTP 404 ; CityPage sans slug connu affiche « Page introuvable ». */}
+        <Route path="*" element={<CityPage />} />
       </Routes>
     </>
   );
