@@ -37,6 +37,13 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-14 (samedi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, sitemap.xml, robots.txt, llms.txt en 200 ; URL inconnue → 404 ; www → 308. `origin/main` = `f836f18` avant run. TXT google-site-verification toujours publié.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "refonte site internet Haute-Savoie" (TED/BOAMP, 118712, Malt, La Fabrique du Net, Infomaniak partenaires) et "agence web Lyon création site" (La Fabrique du Net, Codeur, Sortlist, digitiz, 118712). `site:kotastudio.fr` : 0 page du domaine (Contra AUREA seule). Inchangé depuis le 07/09 → Search Console toujours pas validée, très probablement.
+- **NOUVEAU — écart d'adresse possible** : la Base Adresse Nationale (api-adresse.data.gouv.fr) ne connaît pas de « rue du Docteur Paluel » à Saint-Julien ; elle renvoie **« 13 Avenue du docteur Palluel, 74160 »** (avenue, deux L). Les annuaires locaux (pharmacie au n°28, parking « Docteur Palluel ») confirment l'orthographe « Palluel ». Le site écrit « 13 rue du Docteur Paluel » partout. NON corrigé (le NAP doit rester identique à la fiche Google, que je ne peux pas voir) → à trancher par Yanis, voir "Hypothèses à vérifier".
+- Chantier : **enrichissement du JSON-LD ProfessionalService + nœud WebSite** (données structurées). Voir "Chantiers faits".
+
 **Au 2026-11-13 (vendredi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, sitemap.xml (21 URLs), robots.txt, llms.txt en 200. `origin/main` = `ec2c7aa` avant run. Redirection www → apex toujours en 308. TXT google-site-verification toujours publié (dns.google).
@@ -674,6 +681,19 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-14 (samedi) — JSON-LD de l'entité : WebSite, geo, email, zones servies (données structurées)
+
+- Pourquoi : les 3 derniers runs étaient techniques/contenu ; l'étape 4 demande d'enrichir le ProfessionalService. Le graphe de `index.html` est recopié dans TOUTES les pages pré-rendues (gabarit), donc un enrichissement profite aux 21 URLs. Manques constatés : pas de `geo` (recommandé par Google pour LocalBusiness), pas d'`email` alors qu'il est visible dans le footer, `areaServed` réduit à des codes pays bruts (« FR », « CH », « BE ») alors que les villes servies sont affichées (footer « Près de chez vous », badge « Genève & Haute-Savoie »), et aucun nœud `WebSite` (c'est lui que Google utilise pour le nom de site affiché dans les résultats).
+- Fait (uniquement `index.html`, bloc JSON-LD) :
+  - nœud `WebSite` (`#website`, name « Kota Studio », inLanguage fr-FR, publisher → `#organisation`) ;
+  - `email` = yanisouammou063@gmail.com (identique au footer) ;
+  - `geo` GeoCoordinates 46.143138 / 6.077369 = coordonnées BAN du n°13 avenue du docteur Palluel (api-adresse.data.gouv.fr, score 0,76) ;
+  - `areaServed` : City Saint-Julien-en-Genevois, Genève, Annemasse, Annecy, Lyon ; AdministrativeArea Haute-Savoie ; Country France, Suisse, Belgique (Belgique conservée : elle était déjà dans l'ancien `BE` et dans llms.txt) ;
+  - `knowsLanguage` fr.
+- NE PAS fait : `streetAddress` inchangée (voir l'écart BAN dans "Hypothèses à vérifier") ; pas de `foundingDate` (juillet 2021 vient de la fiche Google, pas visible sur le site) ; pas de `founder` (nom de Yanis non affiché) ; pas de `hasMap` ni de `sameAs` vers la fiche Google/Malt/Contra (URLs exactes inconnues, ne pas deviner) ; `openingHours` inchangé (doute déjà signalé le 13/10) ; pas de re-ping IndexNow (aucun contenu visible modifié, sitemap lastmod inchangé).
+- Vérifs : build OK (21 routes + 404) ; 40 blocs JSON-LD dans dist, tous du JSON valide ; `#website` présent sur les 21 pages (absent du 404, normal) ; home sur iPhone 13 : scrollWidth 390, h1 intact, 0 erreur JS, graphe à 4 nœuds.
+- À valider au prochain run : passer la home dans le Rich Results Test / validator.schema.org si accessible, et vérifier en prod que `#website` est servi.
 
 ### 2026-11-13 (vendredi) — Soft 404 → vraie page 404 (technique)
 
@@ -2281,6 +2301,9 @@ Par ordre de priorité pour les prochains runs :
 
 ## Hypothèses à vérifier
 
+- **Adresse exacte (2026-11-14) — IMPORTANT pour le NAP** : le site écrit « 13 rue du Docteur Paluel » (index.html, jsonld.js, content.js, llms.txt), mais la Base Adresse Nationale officielle donne « 13 **Avenue** du docteur **Palluel**, 74160 Saint-Julien-en-Genevois ». Yanis doit vérifier ce qu'affiche la fiche Google Business : si la fiche dit « Avenue du Docteur Palluel », il faut aligner tout le site dessus (un seul run, sed ciblé + vérif) ; si la fiche dit « rue du Docteur Paluel », il vaut mieux corriger la fiche ET le site vers l'adresse officielle. Ne rien changer tant que ce n'est pas tranché.
+- **URLs des profils à relier en `sameAs` (2026-11-14)** : lien exact de la fiche Google Business (maps.app.goo.gl ou ?cid=), profil Malt, profil Contra, Instagram éventuel — à fournir pour compléter le `sameAs` (aujourd'hui TikTok seul).
+
 - **Pratique réelle (2026-10-05)** : pour `/site-internet-ou-reseaux-sociaux`, Yanis peut fournir un cas concret (client venu de TikTok → site) et dire si la landing page sert bien de lien en bio ; rien n'a été affirmé là-dessus.
 
 - **Propriété domaine/hébergement/droits (2026-10-02)** : Yanis doit dire qui est titulaire du
@@ -3043,8 +3066,13 @@ Absent sur Saint-Julien et Annemasse ; `site:kotastudio.fr` = 0 résultat. Incha
 
 Absent sur Saint-Julien et Annecy ; `site:kotastudio.fr` = 0 résultat. Inchangé. URL inexistante désormais en 404 (était 200).
 
+### 2026-11-14
+
+Absent sur « refonte site internet Haute-Savoie » et « agence web Lyon création site » ; `site:kotastudio.fr` = 0 résultat. Inchangé.
+
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 
+0bis. **Adresse (14/11)** : la BAN officielle dit « 13 Avenue du docteur Palluel », le site dit « 13 rue du Docteur Paluel ». Dire ce qu'affiche la fiche Google pour aligner le NAP. Fournir aussi les liens exacts fiche Google / Malt / Contra pour le `sameAs`.
 0. **URGENT (11/11, toujours pas d'effet visible au 13/11)** : le TXT DNS est en place → ouvrir Search Console (propriété domaine kotastudio.fr), cliquer « Valider », soumettre `sitemap.xml`, demander l'indexation de la home et des pages villes. Puis Bing Webmaster Tools (import depuis Search Console).
 1. Adresse postale complète du siège (mentions légales + cohérence Google
    Business).

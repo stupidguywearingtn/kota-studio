@@ -34,12 +34,21 @@
       "@context": "https://schema.org",
       "@graph": [
         {
+          "@type": "WebSite",
+          "@id": "https://kotastudio.fr/#website",
+          "url": "https://kotastudio.fr/",
+          "name": "Kota Studio",
+          "inLanguage": "fr-FR",
+          "publisher": { "@id": "https://kotastudio.fr/#organisation" }
+        },
+        {
           "@type": "ProfessionalService",
           "@id": "https://kotastudio.fr/#organisation",
           "name": "Kota Studio",
           "description": "Studio de création de sites web sur-mesure : landing pages, sites complets, refonte, SEO et visibilité dans les IA.",
           "url": "https://kotastudio.fr/",
           "telephone": "+33615802619",
+          "email": "yanisouammou063@gmail.com",
           "logo": "https://kotastudio.fr/logo-kota-studio.png",
           "image": "https://kotastudio.fr/og-kota-studio.jpg",
           "address": {
@@ -50,13 +59,29 @@
             "addressRegion": "Haute-Savoie",
             "addressCountry": "FR"
           },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 46.143138,
+            "longitude": 6.077369
+          },
           "openingHoursSpecification": [{
             "@type": "OpeningHoursSpecification",
             "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
             "opens": "09:00",
             "closes": "18:00"
           }],
-          "areaServed": ["FR", "CH", "BE"],
+          "areaServed": [
+            { "@type": "City", "name": "Saint-Julien-en-Genevois" },
+            { "@type": "City", "name": "Genève" },
+            { "@type": "City", "name": "Annemasse" },
+            { "@type": "City", "name": "Annecy" },
+            { "@type": "City", "name": "Lyon" },
+            { "@type": "AdministrativeArea", "name": "Haute-Savoie" },
+            { "@type": "Country", "name": "France" },
+            { "@type": "Country", "name": "Suisse" },
+            { "@type": "Country", "name": "Belgique" }
+          ],
+          "knowsLanguage": "fr",
           "priceRange": "790€-1290€",
           "sameAs": ["https://www.tiktok.com/@kota.studiofx"],
           "hasOfferCatalog": {
