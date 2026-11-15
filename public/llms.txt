@@ -12,7 +12,7 @@
 - Process en 5 étapes sur 14 jours : 1) appel découverte de 15 min, gratuit ; 2) devis à prix fixe + acompte ; 3) maquette validée avant le code ; 4) développement et ajustements sans limite de révisions ; 5) mise en ligne (domaine, Google, visibilité IA, prise en main de l'admin).
 - Ce qui n'est pas promis : aucune première place Google garantie.
 - Zone : Saint-Julien-en-Genevois, Genève, Annemasse, Annecy, Haute-Savoie, Lyon, et à distance partout en France, en Suisse et en Belgique.
-- Réalisations en ligne : Tel & Cash (https://www.telandcash.fr), Markus Immobilier (https://www.markusimmobilier.fr), HCE BTP (https://www.hcetp.com), Margaux CDR (https://margauxcdr.com).
+- Réalisations en ligne : Tel & Cash (https://www.telandcash.fr), Markus Immobilier (https://www.markusimmobilier.fr), HCE BTP (https://www.hcetp.com), Margaux CDR.
 
 ## Pages
 
@@ -35,11 +35,13 @@
 
 ## Réalisations
 
-- [Tel & Cash](/projets/tel-and-cash): E-commerce — smartphones reconditionnés — site en ligne : https://www.telandcash.fr
-- [Markus Immobilier](/projets/markus-immobilier): Agence immobilière premium — site en ligne : https://www.markusimmobilier.fr
-- [HCE BTP](/projets/hce-btp): Enrobé et travaux publics, Jura & Ain — site en ligne : https://www.hcetp.com
-- [Sensoria](/projets/sensoria): Expérience immersive — escape game premium.
-- [Margaux CDR](/projets/margaux-cdr): Soins du corps — beauté / bien-être — site en ligne : https://margauxcdr.com
+Réalisations en ligne (les pages /projets/ du site ne contiennent pas encore d'étude de cas rédigée : liens directs vers les sites livrés) :
+
+- [Tel & Cash](https://www.telandcash.fr): E-commerce — smartphones reconditionnés.
+- [Markus Immobilier](https://www.markusimmobilier.fr): Agence immobilière premium.
+- [HCE BTP](https://www.hcetp.com): Enrobé et travaux publics, Jura & Ain.
+- Margaux CDR : Soins du corps — beauté / bien-être.
+- Sensoria : Expérience immersive — escape game (pas encore de lien public).
 
 ## Contact
 

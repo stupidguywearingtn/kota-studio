@@ -38,7 +38,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 import { cities } from "../src/data/cities.js";
-import { projects } from "../src/data/content.js";
+import { projects, isProjectPlaceholder } from "../src/data/content.js";
 import {
   buildCityJsonLd,
   buildPricingGuideJsonLd,
@@ -118,14 +118,22 @@ function injectSchema(html, schemaId, jsonLdObject) {
   return html.replace("</head>", scriptTag);
 }
 
-function writeRoute(routePath, { title, description, schemaId, jsonLd }) {
+function writeRoute(routePath, { title, description, schemaId, jsonLd, noindex = false }) {
   const url = `${SITE_URL}${routePath}`;
   let html = renderHead(template, { title, description, url });
+  if (noindex) {
+    const before = html;
+    html = html.replace(
+      /(<meta name="description" content=".*?" \/>)/,
+      (m) => `${m}\n    <meta name="robots" content="noindex, follow" />`
+    );
+    if (html === before) throw new Error(`noindex : meta description introuvable pour ${routePath}`);
+  }
   if (jsonLd) html = injectSchema(html, schemaId, jsonLd);
   const dir = path.join(distDir, routePath.replace(/^\//, ""));
   mkdirSync(dir, { recursive: true });
   writeFileSync(path.join(dir, "index.html"), html);
-  console.log(`  ${routePath} -> ${title}${jsonLd ? " (+ JSON-LD)" : ""}`);
+  console.log(`  ${routePath} -> ${title}${jsonLd ? " (+ JSON-LD)" : ""}${noindex ? " [noindex]" : ""}`);
 }
 
 console.log("Génération des <head> statiques par route (title/description/canonical/OG/JSON-LD)...");
@@ -145,6 +153,7 @@ for (const project of projects) {
     description: `${project.name} (${project.sector}) — réalisation Kota Studio, agence de création de sites web sur-mesure.`,
     schemaId: `project:${project.slug}`,
     jsonLd: buildProjectJsonLd(project),
+    noindex: isProjectPlaceholder(project),
   });
 }
 

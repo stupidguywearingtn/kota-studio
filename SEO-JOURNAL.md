@@ -37,6 +37,13 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-15 (dimanche — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : home, sitemap.xml, robots.txt, llms.txt en 200 ; URL inconnue → 404 ; www → 308. `origin/main` = `bead3a4` avant run. TXT google-site-verification toujours publié. **Nœud `#website` du 14/11 bien servi en prod** sur la home.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site vitrine Haute-Savoie" (118712, Malt, La Fabrique du Net Annecy/Chambéry, Codeur, ComeUp) et "freelance création site internet Genève" (Malt ×15, Codeur, Infomaniak partenaires, kolonell.com). `site:kotastudio.fr` : 0 page du domaine (Contra AUREA seule). Inchangé depuis le 07/09.
+- **NOUVEAU — site client mort** : `margauxcdr.com` ne résout plus (DNS : les serveurs Cloudflare du domaine refusent la zone, « lame delegation », vérifié via dns.google ET cloudflare-dns.com ; curl → 502). La carte « Margaux CDR » de la grille Réalisations de l'accueil pointe vers ce lien mort. Accueil NON modifié (section validée) → notifié à Yanis.
+- Chantier : **pages projet vides passées en noindex + retirées du sitemap** (technique / qualité). Voir "Chantiers faits".
+
 **Au 2026-11-14 (samedi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, sitemap.xml, robots.txt, llms.txt en 200 ; URL inconnue → 404 ; www → 308. `origin/main` = `f836f18` avant run. TXT google-site-verification toujours publié.
@@ -681,6 +688,19 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-15 (dimanche) — Pages projet vides : noindex automatique + sortie du sitemap (technique)
+
+- Constat (audit du graphe de liens internes sur le HTML pré-rendu de dist/) : les 16 pages accueil/villes/guides/légales reçoivent 20 liens internes chacune (footer), mais les **5 pages `/projets/*` en reçoivent 0** : la grille Réalisations pointe directement vers les sites clients en ligne (Work.jsx) et Sensoria est masquée (`home: false`). Ces 5 pages étaient pourtant dans le sitemap, indexables, et leur corps ne contient que « Bientôt disponible » ×7 + le footer (~250 mots, quasi identiques d'une page à l'autre) : 5 pages minces/orphelines sur 21 URLs soumises (24 %), sur un site que Google n'a pas encore indexé — mauvais signal de qualité au premier crawl, et une IA qui suit le lien `/projets/` depuis llms.txt tombait sur une coquille vide.
+- Fait :
+  - `src/data/content.js` : helper `isProjectPlaceholder(project)` (vrai tant que `intro` vaut « Bientôt disponible »).
+  - `scripts/generate-static-heads.mjs` : option `noindex` dans `writeRoute` → `<meta name="robots" content="noindex, follow" />` injecté après la meta description des pages projet placeholder (erreur bruyante si le motif disparaît du gabarit).
+  - `src/pages/ProjectPage.jsx` : même balise posée côté client, retirée en quittant la page (navigation SPA).
+  - `public/sitemap.xml` : 5 URLs `/projets/*` retirées (21 → 16 URLs).
+  - `public/llms.txt` : section Réalisations → liens directs vers les sites livrés (telandcash.fr, markusimmobilier.fr, hcetp.com, tous en 200 ce jour) au lieu des pages vides ; Margaux CDR sans lien (site injoignable) ; « escape game premium » → « escape game » (aligné sur content.js).
+- **Auto-réversible** : dès que Yanis remplit `intro`/`defi`/`approche`/`resultat` d'un projet dans content.js, la page redevient indexable toute seule. **Il faudra alors la remettre dans `public/sitemap.xml`** (avec un lastmod exact) et dans llms.txt, puis pinger IndexNow.
+- Vérifs : build OK (21 routes + 404), « [noindex] » sur les 5 projets uniquement ; grep : seules les 5 pages projet + 404.html portent une balise robots ; les 16 URLs du sitemap existent dans dist et aucune n'est noindex ; sitemap XML valide ; Playwright iPhone 13 (serveur local imitant Vercel) : `/projets/hce-btp` noindex, scrollWidth 390, 0 erreur JS ; navigation SPA projet → accueil : balise retirée ; `/` et `/agence-web-lyon` sans balise robots, scrollWidth 390, 0 erreur JS.
+- NE PAS fait : aucun lien ajouté vers les pages projet (pousser des pages vides n'a pas de sens) ; pas de suppression des pages (elles restent accessibles, prêtes à être remplies) ; **carte Margaux CDR de l'accueil NON modifiée** (section validée, décision à Yanis) ; pas de re-ping IndexNow (rien de nouveau à indexer — Bing verra le noindex au prochain passage).
 
 ### 2026-11-14 (samedi) — JSON-LD de l'entité : WebSite, geo, email, zones servies (données structurées)
 
@@ -2301,6 +2321,9 @@ Par ordre de priorité pour les prochains runs :
 
 ## Hypothèses à vérifier
 
+- **Site client Margaux CDR hors ligne (2026-11-15)** : `margauxcdr.com` ne résout plus (zone DNS refusée par les serveurs Cloudflare du domaine — zone supprimée de Cloudflare ou domaine non renouvelé ?). La carte de la grille Réalisations de l'accueil mène à une erreur. Yanis doit soit faire réparer le DNS (client), soit décider de retirer/masquer la carte (`home: false` dans content.js, comme Sensoria). Une fois réglé : remettre le lien dans llms.txt (lignes 15 et 43).
+- **Pages projet (2026-11-15)** : en noindex automatique tant que leur contenu est « Bientôt disponible ». Pour les rendre utiles (et indexables), Yanis doit fournir pour chaque projet : le défi du client, l'approche, le résultat (sans chiffre inventé), 3 points « recette ». Puis remettre l'URL dans le sitemap.
+
 - **Adresse exacte (2026-11-14) — IMPORTANT pour le NAP** : le site écrit « 13 rue du Docteur Paluel » (index.html, jsonld.js, content.js, llms.txt), mais la Base Adresse Nationale officielle donne « 13 **Avenue** du docteur **Palluel**, 74160 Saint-Julien-en-Genevois ». Yanis doit vérifier ce qu'affiche la fiche Google Business : si la fiche dit « Avenue du Docteur Palluel », il faut aligner tout le site dessus (un seul run, sed ciblé + vérif) ; si la fiche dit « rue du Docteur Paluel », il vaut mieux corriger la fiche ET le site vers l'adresse officielle. Ne rien changer tant que ce n'est pas tranché.
 - **URLs des profils à relier en `sameAs` (2026-11-14)** : lien exact de la fiche Google Business (maps.app.goo.gl ou ?cid=), profil Malt, profil Contra, Instagram éventuel — à fournir pour compléter le `sameAs` (aujourd'hui TikTok seul).
 
@@ -3070,8 +3093,13 @@ Absent sur Saint-Julien et Annecy ; `site:kotastudio.fr` = 0 résultat. Inchang�
 
 Absent sur « refonte site internet Haute-Savoie » et « agence web Lyon création site » ; `site:kotastudio.fr` = 0 résultat. Inchangé.
 
+### 2026-11-15
+
+Absent sur « création site vitrine Haute-Savoie » et « freelance création site internet Genève » ; `site:kotastudio.fr` = 0 résultat. Inchangé.
+
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 
+0ter. **Margaux CDR (15/11)** : margauxcdr.com ne répond plus (DNS cassé) alors que l'accueil y renvoie — faire réparer ou masquer la carte.
 0bis. **Adresse (14/11)** : la BAN officielle dit « 13 Avenue du docteur Palluel », le site dit « 13 rue du Docteur Paluel ». Dire ce qu'affiche la fiche Google pour aligner le NAP. Fournir aussi les liens exacts fiche Google / Malt / Contra pour le `sameAs`.
 0. **URGENT (11/11, toujours pas d'effet visible au 13/11)** : le TXT DNS est en place → ouvrir Search Console (propriété domaine kotastudio.fr), cliquer « Valider », soumettre `sitemap.xml`, demander l'indexation de la home et des pages villes. Puis Bing Webmaster Tools (import depuis Search Console).
 1. Adresse postale complète du siège (mentions légales + cohérence Google

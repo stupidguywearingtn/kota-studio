@@ -259,6 +259,16 @@ export const projectPage = {
   },
 };
 
+/* SEO (2026-11-15) : une page projet n'est indexable que si son contenu a été
+   rempli. Tant que l'intro vaut le placeholder « Bientôt disponible », la
+   page ne contient aucun texte propre (contenu mince, quasi identique pour
+   les 5 projets) : elle reçoit <meta name="robots" content="noindex, follow">
+   (pré-rendu + client) et reste hors du sitemap. Dès que Yanis remplit
+   intro/défi/approche/résultat, elle redevient indexable automatiquement —
+   il faudra alors la remettre dans public/sitemap.xml. */
+export const isProjectPlaceholder = (project) =>
+  !project.intro || project.intro === projectPage.comingSoon;
+
 /* -- 6. NOTRE PROCESS (fond encre, signature) ------------------------------ */
 export const process = {
   tag: "Comment ça se passe",

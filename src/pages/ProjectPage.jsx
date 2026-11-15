@@ -4,7 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
 import { buildProjectJsonLd, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
-import { projects, projectPage } from "../data/content";
+import { projects, projectPage, isProjectPlaceholder } from "../data/content";
 import Logo from "../components/Logo";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
@@ -63,6 +63,23 @@ export default function ProjectPage() {
       if (metaDesc && prevDesc !== null) metaDesc.setAttribute("content", prevDesc);
       if (canonical && prevCanonical !== null) canonical.setAttribute("href", prevCanonical);
     };
+  }, [project]);
+
+  /* SEO : noindex tant que le contenu du projet n'est pas rempli (voir
+     isProjectPlaceholder dans data/content.js). Le HTML pré-rendu porte déjà
+     la balise ; ici on la pose/retire aussi pour la navigation SPA. */
+  useEffect(() => {
+    if (!project || !isProjectPlaceholder(project)) return;
+    let meta = document.querySelector('meta[name="robots"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "robots");
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute("content", "noindex, follow");
+    // En quittant la page (navigation SPA), on retire la balise : aucune
+    // autre page du site n'en porte (accueil, villes, guides indexables).
+    return () => meta.remove();
   }, [project]);
 
   /* SEO/GEO : données structurées (BreadcrumbList + CreativeWork), absentes
