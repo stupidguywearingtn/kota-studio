@@ -37,6 +37,13 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-16 (lundi — recherche du lundi faite) :**
+
+- Prod : home, sitemap.xml, robots.txt, llms.txt, /agence-web-annemasse en 200 ; URL inconnue → 404. `origin/main` = `fa55f7b` avant run. TXT google-site-verification toujours publié. margauxcdr.com toujours en « lame delegation » (inchangé, déjà signalé).
+- **NOUVEAU — redirection www incomplète** : `www.kotastudio.fr/agence-web-lyon` → 308 OK, mais **`www.kotastudio.fr/` (racine) → HTTP 200** avec la home complète (x-vercel-cache HIT, age ~16 h, donc servi après le déploiement du 15/11 ; `/?a=1` idem). La règle `/:path*` du 11/11 ne couvrait pas la racine. Corrigé ce jour (voir "Chantiers faits").
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "agence web Annemasse création site internet" (La Fabrique du Net, 118712, Malt, Gralon, Aladom, Sortlist) et "création site internet Annecy" (La Fabrique du Net, LOCAL.FR/avis-verifies, 118712, Mappy, Codeur, Aladom). `site:kotastudio.fr` : 0 page du domaine (Contra AUREA seule). Inchangé depuis le 07/09.
+- Recherche du lundi : **core update de novembre 2026 lancé le 10/11, déploiement jusqu'à ~2 semaines** (voir "Techniques apprises"). Ne pas interpréter de variation de position avant ~24/11.
+
 **Au 2026-11-15 (dimanche — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : home, sitemap.xml, robots.txt, llms.txt en 200 ; URL inconnue → 404 ; www → 308. `origin/main` = `bead3a4` avant run. TXT google-site-verification toujours publié. **Nœud `#website` du 14/11 bien servi en prod** sur la home.
@@ -688,6 +695,13 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-16 (lundi) — Redirection www → apex étendue à la racine (technique)
+
+- Constat : `curl -sI https://www.kotastudio.fr/` → **HTTP 200** (home complète, canonical apex), alors que `www.kotastudio.fr/agence-web-lyon` → 308. La règle du 11/11 (`source: "/:path*"`) ne s'appliquait pas à la racine en prod. C'est justement la page la plus forte (home) qui restait dupliquée sur deux hôtes. Le run du 11/11 et ceux du 12/11 au 15/11 n'avaient testé que des sous-pages → l'erreur n'avait pas été vue.
+- Fait : `vercel.json` → règle explicite ajoutée EN TÊTE des redirects : `source: "/"`, même condition `has host = www.kotastudio.fr`, destination `https://kotastudio.fr/`, permanent (308). La règle `/:path*` est conservée pour les sous-pages. L'apex ne matche pas la condition → aucun risque de boucle ni d'effet sur l'apex. JSON validé.
+- **À vérifier au prochain run** : `curl -sI https://www.kotastudio.fr/` doit répondre 308 → `https://kotastudio.fr/` ; `https://kotastudio.fr/` doit rester en 200 ; `www…/agence-web-lyon` toujours 308. Si la racine www reste en 200 alors que le déploiement est passé, régler www en « Redirect to kotastudio.fr (308) » dans Vercel > Settings > Domains (Yanis) — c'est la méthode native et la plus sûre.
+- NE PAS fait : aucun contenu modifié (core update en cours depuis le 10/11 : ne pas brouiller la lecture ; et le blocage reste l'indexation) ; pas de re-ping IndexNow (aucune URL nouvelle) ; GEO étape 4 non applicable (aucun contenu touché) ; carte Margaux CDR toujours non modifiée (décision Yanis).
 
 ### 2026-11-15 (dimanche) — Pages projet vides : noindex automatique + sortie du sitemap (technique)
 
@@ -2398,6 +2412,8 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 
 ## Erreurs commises et corrigées
 
+- **2026-11-16** — La redirection www → apex du 11/11 (`source: "/:path*"`) ne couvrait pas la racine : `www.kotastudio.fr/` est resté en 200 du 11/11 au 16/11. Erreur de vérification : seules des sous-pages (`/agence-web-lyon`, `/x`) avaient été testées. Corrigé par une règle `source: "/"` dédiée. Leçon : toute règle de redirection se teste sur la racine ET une sous-page.
+
 - **2026-11-13** : la réécriture SPA `/(.*) → /index.html` de `vercel.json` (présente depuis le début, et explicitement constatée le 08/09 : « route inconnue toujours 200 avec fallback SPA ») a été jugée normale pendant deux mois alors qu'elle créait des soft 404 avec le canonical de l'accueil. Corrigé (voir "Chantiers faits"). Leçon : une fois toutes les routes pré-rendues, le fallback SPA n'a plus de raison d'être ; tester une URL inexistante fait partie de l'audit technique.
 
 - **2026-11-12** : la refonte du 07/10 a fait passer le process de 6 à 5 étapes sans que les FAQ des pages villes et de la page prix soient mises à jour (« 6 étapes détaillé ci-dessous » au-dessus d'une liste de 5). Resté en ligne 36 jours, non vu par les runs de mesure. Leçon : après toute modification de `content.js`, grep les nombres/délais/prix recopiés en dur dans `cities.js` et `jsonld.js`.
@@ -2506,6 +2522,8 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 ---
 
 ## Techniques apprises
+
+- **2026-11-16 (lundi)** : (1) **Google November 2026 core update** lancé le 10/11/2026 vers 13 h ET, global, toutes langues, « jusqu'à 2 semaines » de déploiement (fin attendue ~24/11) ; Google le décrit comme une mise à jour régulière, pas une pénalité, sans post sur le blog Search Central (sources : seroundtable.com/google-november-2026-core-update-42504.html, searchenginejournal.com, annonce LinkedIn de Google citée). Applicable ici : ne pas toucher au contenu existant pendant le déploiement et ne pas interpréter de variation avant ~24/11 (le site n'étant pas indexé, effet attendu nul). (2) Local + IA (études éditeurs : Steady Demand, BrightLocal, Whitespark — chiffres non officiels et contradictoires entre versions) : AI Mode cite surtout Google Maps / fiche Business pour les requêtes locales, AI Overviews davantage le site de l'entreprise ; la cohérence schema du site ↔ fiche Google est présentée comme un facteur de confiance. Rien de nouveau à coder ; confirme que **trancher l'écart d'adresse Paluel/Palluel (14/11)** est la priorité NAP.
 
 - **2026-11-12 — `<lastmod>` du sitemap** (source : documentation Google Search Central, « Build and submit a sitemap » : Google ignore `changefreq` et `priority` et n'utilise `lastmod` que s'il est systématiquement et vérifiablement exact). Appliqué ici : lastmod = date « Dernière mise à jour » visible. Règle : quand on modifie vraiment une page, changer EN MÊME TEMPS sa date visible et son `<lastmod>` dans `public/sitemap.xml` (fichier statique, non généré).
 
@@ -3098,8 +3116,13 @@ Absent sur « refonte site internet Haute-Savoie » et « agence web Lyon créat
 
 Absent sur « création site vitrine Haute-Savoie » et « freelance création site internet Genève » ; `site:kotastudio.fr` = 0 résultat. Inchangé.
 
+### 2026-11-16
+
+Absent sur « agence web Annemasse création site internet » et « création site internet Annecy » ; `site:kotastudio.fr` = 0 résultat. Inchangé. Core update de novembre en cours (10/11 → ~24/11).
+
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 
+0quater. **Vercel (16/11)** : si `www.kotastudio.fr/` ne redirige toujours pas après ce déploiement, régler le domaine www en « Redirect to kotastudio.fr » dans Vercel > Settings > Domains.
 0ter. **Margaux CDR (15/11)** : margauxcdr.com ne répond plus (DNS cassé) alors que l'accueil y renvoie — faire réparer ou masquer la carte.
 0bis. **Adresse (14/11)** : la BAN officielle dit « 13 Avenue du docteur Palluel », le site dit « 13 rue du Docteur Paluel ». Dire ce qu'affiche la fiche Google pour aligner le NAP. Fournir aussi les liens exacts fiche Google / Malt / Contra pour le `sameAs`.
 0. **URGENT (11/11, toujours pas d'effet visible au 13/11)** : le TXT DNS est en place → ouvrir Search Console (propriété domaine kotastudio.fr), cliquer « Valider », soumettre `sitemap.xml`, demander l'indexation de la home et des pages villes. Puis Bing Webmaster Tools (import depuis Search Console).

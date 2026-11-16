@@ -5,6 +5,17 @@
   "outputDirectory": "dist",
   "redirects": [
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.kotastudio.fr"
+        }
+      ],
+      "destination": "https://kotastudio.fr/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [
         {
