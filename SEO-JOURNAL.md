@@ -712,7 +712,7 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
   - Faits studio utilisés (tous dans content.js / Faq.jsx) : 790 € / 1 290 €, options +490/+290/+390 €, SEO avancé et maintenance sur devis, 50/50 par virement, art. 293 B, 5 étapes / 14 jours, SEO local + visibilité IA inclus dans le site sur-mesure, pas de garantie de position.
 - Vérifs : build OK (22 routes pré-rendues + 404) ; dist : title, canonical, aucune balise robots, 2 blocs JSON-LD valides ; **les 6 questions ET les 6 réponses du FAQPage se retrouvent mot pour mot dans le texte visible pré-rendu** (script de contrôle) ; Playwright iPhone 13 : scrollWidth 390 sur la page, `/` et `/agence-web-lyon`, 7 H2, 0 erreur JS, lien footer présent ; captures mobiles relues (titre, cartes, encadré HCE lisibles, pas de débordement).
 - NE PAS fait : aucune statistique externe (les chiffres des guides concurrents — 500–2 500 €, 15–80 €/mois — viennent de vendeurs, non citables) ; rien sur le coût du domaine/hébergement après la 1re année (inconnu, voir Hypothèses) ; pas de `HowTo` (déjà sur la page prix, éviter le doublon) ; pas de `Service` dédié (même offre que la home) ; **aucun contenu existant modifié** hormis l'ajout d'une ligne au footer (core update en cours jusqu'à ~24/11) ; lastmod des autres pages inchangés (ajout de lien footer ≠ mise à jour de contenu) ; pas de lien depuis la FAQ de l'accueil (section validée).
-- À faire au prochain run : vérifier en prod `/creation-site-internet-artisan` en 200 avec son propre title, et le sitemap à 17 URLs. Ping IndexNow fait ce jour après déploiement (voir l'entrée positions).
+- Vérifié en prod après déploiement : page en 200 avec son title/canonical, sitemap à 17 URLs, footer à jour ; IndexNow pingé (HTTP 200). Rien à revérifier demain hormis la routine.
 
 ### 2026-11-16 (lundi) — Redirection www → apex étendue à la racine (technique)
 
@@ -3144,6 +3144,7 @@ Absent sur « agence web Annemasse création site internet » et « création si
 ### 2026-11-17
 
 Absent sur « création site internet Saint-Julien-en-Genevois » et « refonte site internet Haute-Savoie agence » ; `site:kotastudio.fr` = 0 résultat. Inchangé. www racine désormais en 308.
+Après déploiement : `/creation-site-internet-artisan` en 200 en prod (title + canonical propres), sitemap à 17 URLs, lien footer servi sur `/agence-web-lyon`, `/`, page prix, llms.txt en 200. IndexNow : POST de la nouvelle URL + llms.txt → HTTP 200.
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 
