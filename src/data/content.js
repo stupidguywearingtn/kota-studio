@@ -493,6 +493,7 @@ export const footer = {
         { label: "Qui possède mon site et mon domaine ?", href: "/nom-de-domaine-et-propriete-du-site" },
         { label: "Site internet ou réseaux sociaux ?", href: "/site-internet-ou-reseaux-sociaux" },
         { label: "Apparaître dans ChatGPT et les IA", href: "/apparaitre-dans-chatgpt-et-ia-site-local" },
+        { label: "Site internet pour artisan", href: "/creation-site-internet-artisan" },
       ],
     },
     {

@@ -48,6 +48,7 @@ import {
   buildSitePagesJsonLd,
   buildDomainOwnershipJsonLd,
   buildSocialVsSiteJsonLd,
+  buildArtisanSiteJsonLd,
   buildAiVisibilityJsonLd,
   buildProjectJsonLd,
   PAGE_SCHEMA_ATTR,
@@ -219,6 +220,14 @@ writeRoute("/apparaitre-dans-chatgpt-et-ia-site-local", {
     "Comment apparaître dans ChatGPT et les AI Overviews de Google : ce que disent Google et OpenAI, ce qui rend une page citable et ce que Kota Studio applique sur son site.",
   schemaId: "ai-visibility",
   jsonLd: buildAiVisibilityJsonLd(),
+});
+
+writeRoute("/creation-site-internet-artisan", {
+  title: "Site internet pour artisan : contenu, prix et délai | Kota Studio",
+  description:
+    "Site internet pour artisan : ce qu'il doit contenir, landing page ou site complet, prix (dès 790 €), délai de 14 jours et comment être trouvé sur Google et par les IA dans sa zone.",
+  schemaId: "artisan-site",
+  jsonLd: buildArtisanSiteJsonLd(),
 });
 
 writeRoute("/mentions-legales", {

@@ -593,3 +593,67 @@ export function buildSocialVsSiteJsonLd() {
     ],
   };
 }
+
+export const ARTISAN_SITE_PATH = "/creation-site-internet-artisan";
+
+/* Les 6 questions/réponses affichées sur ArtisanSitePage.jsx, reprises mot
+   pour mot dans le JSON-LD FAQPage. Page ajoutée le 2026-11-17 (requête réelle
+   « création site internet artisan », servie surtout par des guides nationaux,
+   aucun acteur local en tête). Aucune statistique externe, aucun résultat
+   client chiffré : les faits propres au studio viennent de content.js (prix,
+   options, paiement, process en 5 étapes sur 14 jours, projet HCE BTP). */
+export const artisanSiteFaqs = [
+  {
+    q: "Un artisan a-t-il vraiment besoin d'un site internet ?",
+    a: "Oui, dès qu'une partie de vos clients vous cherche sur Google avant d'appeler : « plombier Annecy », « maçon Saint-Julien-en-Genevois », « couvreur Haute-Savoie ». La fiche Google Business Profile, gratuite, affiche vos coordonnées et vos avis ; le site apporte ce qu'elle ne peut pas montrer : le détail de vos prestations, vos chantiers en photos, votre zone d'intervention exacte et un formulaire de demande de devis. Si le bouche-à-oreille remplit déjà votre planning, le site n'est pas urgent ; il devient utile quand vous voulez choisir vos chantiers ou toucher une nouvelle zone.",
+  },
+  {
+    q: "Que doit contenir le site internet d'un artisan ?",
+    a: "Six éléments suffisent pour la plupart des artisans : vos prestations décrites une par une, votre zone d'intervention (communes et rayon), des photos de vos chantiers réels, un bouton d'appel visible sur mobile, un formulaire de demande de devis et les mentions légales de tout site professionnel. Le reste (blog, actualités, pages « équipe ») est utile seulement si vous avez de quoi le faire vivre.",
+  },
+  {
+    q: "Landing page ou site complet : que choisir quand on est artisan ?",
+    a: "Une landing page (dès 790 € chez Kota Studio) suffit si vous exercez un seul métier sur une zone limitée et que votre objectif est simple : qu'on vous appelle. Un site sur-mesure (dès 1 290 €) devient pertinent dès que vous proposez plusieurs prestations distinctes, par exemple rénovation et neuf, ou que vous intervenez sur plusieurs villes : chaque prestation et chaque zone peut alors avoir sa propre page, ce qui aide Google à vous associer à chacune de ces recherches.",
+  },
+  {
+    q: "Combien coûte un site internet pour un artisan ?",
+    a: "Chez Kota Studio, le prix ne dépend pas du métier : une landing page démarre à 790 € et un site sur-mesure à 1 290 €, avec un prix fixe écrit dans le devis avant tout démarrage. Les options sont affichées à part : logo et branding +490 €, rédaction des textes +290 €, langue supplémentaire +390 € ; le SEO avancé et la maintenance mensuelle sont sur devis. Paiement par virement, 50 % à la commande et 50 % à la livraison, TVA non applicable (art. 293 B du CGI).",
+  },
+  {
+    q: "En combien de temps un artisan peut-il avoir son site en ligne ?",
+    a: "En 14 jours chez Kota Studio, de l'appel découverte à la mise en ligne : appel de 15 minutes (jour 1), devis et acompte (jour 2), maquette à valider (jours 3 à 6), développement avec révisions illimitées (jours 7 à 13), mise en ligne et prise en main de l'espace admin (jour 14). Pour tenir ce délai, le plus utile est de préparer ce que vous seul avez : la liste de vos prestations, votre zone d'intervention, des photos de chantiers et votre logo (ou l'option logo si vous n'en avez pas).",
+  },
+  {
+    q: "Comment un artisan peut-il être trouvé sur Google et par les IA dans sa zone ?",
+    a: "En combinant trois choses : une fiche Google Business Profile complète (catégorie, zone, photos, avis), un site dont chaque page dit clairement quel service vous rendez et où, et un nom, une adresse et un téléphone strictement identiques partout. ChatGPT, Perplexity ou les AI Overviews de Google reprennent plus volontiers une page explicite (prestation, ville, délais, prix de départ) qu'une page d'accueil vague. Personne ne peut garantir une position : Kota Studio pose ces bases, SEO local et visibilité IA étant inclus dans le site sur-mesure, et vous explique ce qui dépend de vous, comme les avis clients.",
+  },
+];
+
+export function buildArtisanSiteJsonLd() {
+  const pageUrl = `${SITE_URL}${ARTISAN_SITE_PATH}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE_URL}/` },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Site internet pour artisan",
+            item: pageUrl,
+          },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: artisanSiteFaqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+    ],
+  };
+}

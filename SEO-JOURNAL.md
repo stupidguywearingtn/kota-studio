@@ -37,6 +37,12 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-17 (mardi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : `origin/main` = `4873138` avant run. **Correctif du 16/11 vérifié : `www.kotastudio.fr/` → 308 → `https://kotastudio.fr/`** ; `www…/agence-web-lyon` → 308 ; apex `/` 200 ; sitemap, llms.txt 200 ; URL inconnue 404. TXT google-site-verification toujours publié. hcetp.com 200. margauxcdr.com toujours injoignable (inchangé, déjà signalé).
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (118712, Aladom, Infomaniak partenaire Genevois Informatique, Pages Jaunes, Malt, feedbax/Bluekat Digital à Copponex) et "refonte site internet Haute-Savoie agence" (La Fabrique du Net ×6, 118712, Malt, TED). `site:kotastudio.fr` : 0 page du domaine. Inchangé depuis le 07/09.
+- Chantier : **nouvelle page `/creation-site-internet-artisan`** (requête réelle « création site internet artisan », piste en attente depuis le 30/09). Voir "Chantiers faits".
+
 **Au 2026-11-16 (lundi — recherche du lundi faite) :**
 
 - Prod : home, sitemap.xml, robots.txt, llms.txt, /agence-web-annemasse en 200 ; URL inconnue → 404. `origin/main` = `fa55f7b` avant run. TXT google-site-verification toujours publié. margauxcdr.com toujours en « lame delegation » (inchangé, déjà signalé).
@@ -695,6 +701,18 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-17 (mardi) — Nouvelle page « Site internet pour artisan : quoi mettre, quel prix, quel délai ? » (contenu + GEO)
+
+- Pourquoi : 6 runs techniques d'affilée (11/11 → 16/11), backlog technique vide (redirection www racine vérifiée ce jour). La piste « artisans/PME locales » était en attente depuis le 30/09 (items 15/16). Demande vérifiée par recherche : « création site internet artisan », « site internet artisan prix » → résultats = guides nationaux (La Fabrique du Net, habitatpresto, wisestart, sk-web, ComeUp, Codeur) et annuaires, **aucun acteur local en Haute-Savoie/Genevois**, et aucun ne donne un prix ferme + délai + exemple réel. La home dit déjà « Artisans, commerces, indépendants et PME » : la cible est la bonne. Pas de cannibalisation : les pages prix / pages à prévoir / réseaux sociaux sont génériques, celle-ci est par métier.
+- Fait :
+  - `src/lib/jsonld.js` : `ARTISAN_SITE_PATH`, `artisanSiteFaqs` (6 Q/R), `buildArtisanSiteJsonLd()` (BreadcrumbList + FAQPage, même modèle que les autres guides).
+  - `src/pages/ArtisanSitePage.jsx` (calqué sur `SocialVsSitePage.jsx`, même DA) : H1 « Site internet pour artisan : quoi mettre, quel prix, quel délai ? », date visible « 17 novembre 2026 », 6 H2 en questions avec réponse directe autonome ; sous Q2 une grille de 6 cartes (prestations, zone, photos de chantiers, bouton d'appel, demande de devis, mentions légales) ; sous Q3 un encadré **« Exemple réel » HCE BTP** (image `site-hce.webp` déjà présente, lien hcetp.com, faits issus de content.js uniquement : secteur, Jura & Ain, 2026) ; « Pour aller plus loin » → prix, pages à prévoir, réseaux sociaux, Haute-Savoie ; CTA final.
+  - Branchement : `src/App.jsx` (route), `scripts/generate-static-heads.mjs` (title/description/JSON-LD statiques), `scripts/prerender-body.mjs` (corps pré-rendu), footer « Guides » dans `content.js` (→ lien depuis les 22 pages), `public/sitemap.xml` (lastmod 2026-11-17), `public/llms.txt`.
+  - Faits studio utilisés (tous dans content.js / Faq.jsx) : 790 € / 1 290 €, options +490/+290/+390 €, SEO avancé et maintenance sur devis, 50/50 par virement, art. 293 B, 5 étapes / 14 jours, SEO local + visibilité IA inclus dans le site sur-mesure, pas de garantie de position.
+- Vérifs : build OK (22 routes pré-rendues + 404) ; dist : title, canonical, aucune balise robots, 2 blocs JSON-LD valides ; **les 6 questions ET les 6 réponses du FAQPage se retrouvent mot pour mot dans le texte visible pré-rendu** (script de contrôle) ; Playwright iPhone 13 : scrollWidth 390 sur la page, `/` et `/agence-web-lyon`, 7 H2, 0 erreur JS, lien footer présent ; captures mobiles relues (titre, cartes, encadré HCE lisibles, pas de débordement).
+- NE PAS fait : aucune statistique externe (les chiffres des guides concurrents — 500–2 500 €, 15–80 €/mois — viennent de vendeurs, non citables) ; rien sur le coût du domaine/hébergement après la 1re année (inconnu, voir Hypothèses) ; pas de `HowTo` (déjà sur la page prix, éviter le doublon) ; pas de `Service` dédié (même offre que la home) ; **aucun contenu existant modifié** hormis l'ajout d'une ligne au footer (core update en cours jusqu'à ~24/11) ; lastmod des autres pages inchangés (ajout de lien footer ≠ mise à jour de contenu) ; pas de lien depuis la FAQ de l'accueil (section validée).
+- À faire au prochain run : vérifier en prod `/creation-site-internet-artisan` en 200 avec son propre title, et le sitemap à 17 URLs. Ping IndexNow fait ce jour après déploiement (voir l'entrée positions).
 
 ### 2026-11-16 (lundi) — Redirection www → apex étendue à la racine (technique)
 
@@ -2328,6 +2346,7 @@ Par ordre de priorité pour les prochains runs :
 15. ~~Page "quelles pages pour un site vitrine"~~ — faite le 2026-09-30. Pistes
     suivantes à vérifier avant d'écrire : artisans/PME locales, créateurs TikTok.
 16. ~~Page propriété domaine~~ — faite le 2026-10-02. Pistes : artisans/PME, créateurs TikTok (vérifier la demande), Genève (bloqué).
+17. ~~Page artisans~~ — **faite le 2026-11-17** (`/creation-site-internet-artisan`). Pistes suivantes (vérifier la demande avant) : déclinaisons par métier seulement si Yanis a des clients réels du métier (sinon pages minces) ; créateurs TikTok ; Genève (bloqué) ; Thonon/Chablais (page ville, angle à trouver).
 14. ~~Page "site sur-mesure ou WordPress/Wix"~~ — **faite le 2026-09-29**. Prochaine
     piste à rechercher : requête non couverte (ex. spécifique TikTok/créateurs,
     ou artisans/PME locales) — vérifier la demande avant d'écrire.
@@ -2335,6 +2354,8 @@ Par ordre de priorité pour les prochains runs :
 ---
 
 ## Hypothèses à vérifier
+
+- **Page artisans (2026-11-17)** : (1) Yanis peut fournir 1–2 phrases vraies sur le projet HCE BTP (ce que le client voulait, ce qui a été fait) pour étoffer l'encadré « Exemple réel » et la page projet (en noindex tant qu'elle est vide). (2) Préciser si le nom de domaine et l'hébergement sont inclus la 1re année et ce qu'ils coûtent ensuite : c'est la question n°1 des artisans dans les guides concurrents (« coût réel sur 3 ans »), la page ne peut pas y répondre aujourd'hui. (3) Autres clients artisans réels ? Ils permettraient des pages métier non minces.
 
 - **Site client Margaux CDR hors ligne (2026-11-15)** : `margauxcdr.com` ne résout plus (zone DNS refusée par les serveurs Cloudflare du domaine — zone supprimée de Cloudflare ou domaine non renouvelé ?). La carte de la grille Réalisations de l'accueil mène à une erreur. Yanis doit soit faire réparer le DNS (client), soit décider de retirer/masquer la carte (`home: false` dans content.js, comme Sensoria). Une fois réglé : remettre le lien dans llms.txt (lignes 15 et 43).
 - **Pages projet (2026-11-15)** : en noindex automatique tant que leur contenu est « Bientôt disponible ». Pour les rendre utiles (et indexables), Yanis doit fournir pour chaque projet : le défi du client, l'approche, le résultat (sans chiffre inventé), 3 points « recette ». Puis remettre l'URL dans le sitemap.
@@ -3120,7 +3141,13 @@ Absent sur « création site vitrine Haute-Savoie » et « freelance création s
 
 Absent sur « agence web Annemasse création site internet » et « création site internet Annecy » ; `site:kotastudio.fr` = 0 résultat. Inchangé. Core update de novembre en cours (10/11 → ~24/11).
 
+### 2026-11-17
+
+Absent sur « création site internet Saint-Julien-en-Genevois » et « refonte site internet Haute-Savoie agence » ; `site:kotastudio.fr` = 0 résultat. Inchangé. www racine désormais en 308.
+
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
+
+0quinquies. **Artisans (17/11)** : coût domaine + hébergement après la 1re année (inclus ou non ?) et 1–2 phrases vraies sur le projet HCE BTP.
 
 0quater. **Vercel (16/11)** : si `www.kotastudio.fr/` ne redirige toujours pas après ce déploiement, régler le domaine www en « Redirect to kotastudio.fr » dans Vercel > Settings > Domains.
 0ter. **Margaux CDR (15/11)** : margauxcdr.com ne répond plus (DNS cassé) alors que l'accueil y renvoie — faire réparer ou masquer la carte.
