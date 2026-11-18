@@ -3169,6 +3169,7 @@ Après déploiement : `/creation-site-internet-artisan` en 200 en prod (title + 
 ### 2026-11-18
 
 Absent sur « création site vitrine Haute-Savoie » et « agence web Lyon création site internet » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé. SERP « création site internet Thonon-les-Bains » relevée : annuaires/Malt/formations uniquement (cible de la nouvelle page).
+Après déploiement : `/creation-site-internet-thonon-les-bains` en 200 en prod (title + canonical propres), sitemap à 18 URLs, lien footer servi sur `/`. IndexNow : POST de la nouvelle URL + page Haute-Savoie + llms.txt → HTTP 200.
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 
