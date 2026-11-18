@@ -37,6 +37,12 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-18 (mercredi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : `origin/main` = `8243cf9` avant run. `/`, `/creation-site-internet-artisan`, page prix, sitemap.xml, llms.txt en 200 ; URL inconnue 404 ; `www.kotastudio.fr/` → 308 apex. TXT google-site-verification toujours publié. margauxcdr.com toujours injoignable (inchangé, déjà signalé).
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site vitrine Haute-Savoie" (118712 ×n, Malt, La Fabrique du Net Annecy/Chambéry, Codeur, ComeUp) et "agence web Lyon création site internet" (La Fabrique du Net, leblogdudirigeant, Sortlist, Clutch, digitiz, 118712, Codeur). `site:kotastudio.fr` : 0 page du domaine (Contra AUREA seule). Inchangé depuis le 07/09. Core update de novembre encore en déploiement (jusqu'à ~24/11).
+- Chantier : **nouvelle page ville `/creation-site-internet-thonon-les-bains`** (Thonon + Chablais). Voir "Chantiers faits".
+
 **Au 2026-11-17 (mardi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : `origin/main` = `4873138` avant run. **Correctif du 16/11 vérifié : `www.kotastudio.fr/` → 308 → `https://kotastudio.fr/`** ; `www…/agence-web-lyon` → 308 ; apex `/` 200 ; sitemap, llms.txt 200 ; URL inconnue 404. TXT google-site-verification toujours publié. hcetp.com 200. margauxcdr.com toujours injoignable (inchangé, déjà signalé).
@@ -701,6 +707,18 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-18 (mercredi) — Page ville « Création de site internet à Thonon-les-Bains » (Chablais)
+
+- Pourquoi : les pages « création site internet + ville » sont le levier principal ; Thonon/Chablais était en attente (item 17). Vérifié ce jour : la SERP « création site internet Thonon-les-Bains » ne contient **que des annuaires, profils Malt, partenaires Infomaniak et pages de formation** (118712, PagesJaunes, maformation, emagister, La Fabrique du Net Annecy…) — aucune page d'agence locale dédiée avec prix + délai. Thonon (~35 000 hab., sous-préfecture) n'avait aucune page sur le site, seulement une mention dans la FAQ Haute-Savoie. Pas de cannibalisation : la page départementale reste générique.
+- Distance vérifiée (OSRM, router.project-osrm.org) : Saint-Julien → Thonon = 42,8 km, ~55 min → écrit « environ 45 km et un peu moins d'une heure de route ».
+- Fait :
+  - `src/data/cities.js` : nouvelle entrée (slug `creation-site-internet-thonon-les-bains`, badge « Thonon-les-Bains · Chablais », date visible 18 novembre 2026), 5 Q/R à réponse directe (ordre conservé : Q2 = prix → bloc inclus/options, Q3 = délai → étapes du process). Angle propre : **activité saisonnière** (lac Léman, Évian, stations du Chablais) → ce que doit faire le site (horaires/périodes visibles, bouton d'appel/réservation mobile, admin pour mettre à jour, langue supplémentaire en option +390 € — prix réel de content.js). Communes du Chablais citées dans l'intro (Évian, Publier, Sciez, Douvaine, vallées d'Abondance et d'Aulps).
+  - FAQ Haute-Savoie : « des pages dédiées existent pour … Annemasse **et Thonon-les-Bains** » (texte + JSON-LD, même source) → sitemap lastmod de cette page passé au 2026-11-18 (date visible non changée : retouche mineure).
+  - Footer « Près de chez vous » (`content.js`) → lien depuis toutes les pages ; les pages villes/prix/choisir une agence la listent automatiquement (boucle sur `cities`).
+  - `index.html` : `areaServed` + City « Thonon-les-Bains ». `public/sitemap.xml` (+1 URL, 18 au total). `public/llms.txt` : ligne Zone + entrée de page.
+- Vérifié avant push : build OK (24 routes), HTML pré-rendu avec title/canonical propres, 2 blocs JSON-LD, **les 5 Q/R du FAQPage présentes mot pour mot dans le HTML visible**, `Service.areaServed` = City Thonon-les-Bains. Mobile (iPhone 13, Playwright) : aucun débordement horizontal, aucune erreur JS, H1/badge/H2 lisibles.
+- PAS fait : pas de page Évian séparée (même bassin, page mince) ; pas d'exemple client du Chablais (aucun n'existe dans content.js) ; H2 saisonnier non raccourci (long mais formulé comme une vraie question).
 
 ### 2026-11-17 (mardi) — Nouvelle page « Site internet pour artisan : quoi mettre, quel prix, quel délai ? » (contenu + GEO)
 
@@ -2346,7 +2364,7 @@ Par ordre de priorité pour les prochains runs :
 15. ~~Page "quelles pages pour un site vitrine"~~ — faite le 2026-09-30. Pistes
     suivantes à vérifier avant d'écrire : artisans/PME locales, créateurs TikTok.
 16. ~~Page propriété domaine~~ — faite le 2026-10-02. Pistes : artisans/PME, créateurs TikTok (vérifier la demande), Genève (bloqué).
-17. ~~Page artisans~~ — **faite le 2026-11-17** (`/creation-site-internet-artisan`). Pistes suivantes (vérifier la demande avant) : déclinaisons par métier seulement si Yanis a des clients réels du métier (sinon pages minces) ; créateurs TikTok ; Genève (bloqué) ; Thonon/Chablais (page ville, angle à trouver).
+17. ~~Page artisans~~ — **faite le 2026-11-17** (`/creation-site-internet-artisan`). ~~Thonon/Chablais~~ — **faite le 2026-11-18**. Pistes suivantes (vérifier la SERP avant) : autres pages villes de Haute-Savoie à SERP faible (Cluses / vallée de l'Arve, La Roche-sur-Foron, Sallanches) — un angle propre par ville, sinon pages minces ; déclinaisons par métier seulement avec clients réels ; créateurs TikTok ; Genève (bloqué).
 14. ~~Page "site sur-mesure ou WordPress/Wix"~~ — **faite le 2026-09-29**. Prochaine
     piste à rechercher : requête non couverte (ex. spécifique TikTok/créateurs,
     ou artisans/PME locales) — vérifier la demande avant d'écrire.
@@ -2354,6 +2372,8 @@ Par ordre de priorité pour les prochains runs :
 ---
 
 ## Hypothèses à vérifier
+
+- **Page Thonon (2026-11-18)** : (1) Yanis a-t-il déjà un client à Thonon / Évian / dans le Chablais ? Un exemple réel renforcerait fortement la page. (2) Confirmer qu'il se déplace bien jusqu'à Thonon pour un rendez-vous en présentiel (la page dit « possible si besoin », comme pour Annecy/Annemasse).
 
 - **Page artisans (2026-11-17)** : (1) Yanis peut fournir 1–2 phrases vraies sur le projet HCE BTP (ce que le client voulait, ce qui a été fait) pour étoffer l'encadré « Exemple réel » et la page projet (en noindex tant qu'elle est vide). (2) Préciser si le nom de domaine et l'hébergement sont inclus la 1re année et ce qu'ils coûtent ensuite : c'est la question n°1 des artisans dans les guides concurrents (« coût réel sur 3 ans »), la page ne peut pas y répondre aujourd'hui. (3) Autres clients artisans réels ? Ils permettraient des pages métier non minces.
 
@@ -3145,6 +3165,10 @@ Absent sur « agence web Annemasse création site internet » et « création si
 
 Absent sur « création site internet Saint-Julien-en-Genevois » et « refonte site internet Haute-Savoie agence » ; `site:kotastudio.fr` = 0 résultat. Inchangé. www racine désormais en 308.
 Après déploiement : `/creation-site-internet-artisan` en 200 en prod (title + canonical propres), sitemap à 17 URLs, lien footer servi sur `/agence-web-lyon`, `/`, page prix, llms.txt en 200. IndexNow : POST de la nouvelle URL + llms.txt → HTTP 200.
+
+### 2026-11-18
+
+Absent sur « création site vitrine Haute-Savoie » et « agence web Lyon création site internet » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé. SERP « création site internet Thonon-les-Bains » relevée : annuaires/Malt/formations uniquement (cible de la nouvelle page).
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 

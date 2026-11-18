@@ -151,6 +151,40 @@ export const cities = [
     ],
   },
   {
+    slug: "creation-site-internet-thonon-les-bains",
+    cityName: "Thonon-les-Bains",
+    badge: "Thonon-les-Bains · Chablais",
+    metaTitle: "Création de site internet à Thonon-les-Bains et dans le Chablais | Kota Studio",
+    metaDescription:
+      "Sites sur-mesure pour les entreprises de Thonon-les-Bains, Évian et du Chablais : prix fixe dès 790 €, livraison en 14 jours, révisions illimitées. Agence basée en Haute-Savoie.",
+    h1: "Création de site internet à Thonon-les-Bains",
+    intro:
+      "Kota Studio conçoit des sites internet sur-mesure pour les entreprises, artisans, commerces et indépendants de Thonon-les-Bains et du Chablais (Évian-les-Bains, Publier, Sciez, Douvaine, vallées d'Abondance et d'Aulps). L'agence est basée à Saint-Julien-en-Genevois, à environ 45 km de Thonon : le suivi se fait en visio, avec un rendez-vous en présentiel possible si besoin.",
+    updatedAt: "18 novembre 2026",
+    faqs: [
+      {
+        q: "Kota Studio a-t-il un bureau à Thonon-les-Bains ?",
+        a: "Non : Kota Studio est basé à Saint-Julien-en-Genevois, à environ 45 km et un peu moins d'une heure de route de Thonon-les-Bains. Les clients du Chablais sont suivis en visio pour l'essentiel du projet, avec un rendez-vous en présentiel possible si votre activité le demande. Vous avez un seul interlocuteur du premier appel à la mise en ligne.",
+      },
+      {
+        q: "Combien coûte un site internet à Thonon-les-Bains ?",
+        a: "Une landing page démarre à 790 € et un site sur-mesure complet à partir de 1 290 €, tout compris, que vous soyez à Thonon, à Évian ou ailleurs dans le Chablais. Le montant exact dépend du nombre de pages et des options choisies : un devis à prix fixe est donné après un appel de 15 minutes, sans engagement.",
+      },
+      {
+        q: "Combien de temps faut-il pour créer un site internet à Thonon ?",
+        a: "14 jours du premier échange à la mise en ligne, avec un processus cadré en 5 étapes détaillé ci-dessous. Si votre activité est saisonnière, l'idéal est de lancer le projet quelques semaines avant l'ouverture de la saison, pour que le site soit en ligne et à jour quand les clients commencent à chercher.",
+      },
+      {
+        q: "Mon activité dépend de la saison touristique (lac Léman, Évian, stations du Chablais) : que doit faire mon site ?",
+        a: "Il doit répondre en quelques secondes aux trois questions d'un visiteur de passage : êtes-vous ouvert en ce moment, où êtes-vous, comment réserver ou vous appeler. Concrètement : horaires et périodes d'ouverture visibles dès l'accueil, bouton d'appel ou de réservation accessible au pouce sur mobile, et un espace admin pour mettre à jour vous-même les horaires d'une saison à l'autre. Si une partie de votre clientèle est suisse ou étrangère, une langue supplémentaire est proposée en option (+390 €).",
+      },
+      {
+        q: "Qu'est-ce qui est inclus dans un projet Kota Studio ?",
+        a: "Un site 100% codé sur-mesure (aucun template), un design responsive pensé mobile en premier, un espace admin pour modifier le contenu vous-même, l'optimisation des performances et des révisions illimitées jusqu'à validation.",
+      },
+    ],
+  },
+  {
     slug: "creation-refonte-site-internet-haute-savoie",
     cityName: "Haute-Savoie",
     badge: "Haute-Savoie",
@@ -166,7 +200,7 @@ export const cities = [
     faqs: [
       {
         q: "Kota Studio intervient-il dans toute la Haute-Savoie ?",
-        a: "Oui. Basée à Saint-Julien-en-Genevois, l'agence conçoit des sites internet pour des entreprises, artisans et indépendants dans tout le département : Genevois, bassin annécien, Chablais, Faucigny (Annecy, Annemasse, Thonon-les-Bains, Cluses, Sallanches, La Roche-sur-Foron…). Des pages dédiées existent déjà pour Saint-Julien-en-Genevois, Annecy et Annemasse ; cette page centralise les informations valables pour le reste du département.",
+        a: "Oui. Basée à Saint-Julien-en-Genevois, l'agence conçoit des sites internet pour des entreprises, artisans et indépendants dans tout le département : Genevois, bassin annécien, Chablais, Faucigny (Annecy, Annemasse, Thonon-les-Bains, Cluses, Sallanches, La Roche-sur-Foron…). Des pages dédiées existent déjà pour Saint-Julien-en-Genevois, Annecy, Annemasse et Thonon-les-Bains ; cette page centralise les informations valables pour le reste du département.",
       },
       {
         q: "Combien coûte un site internet en Haute-Savoie ?",

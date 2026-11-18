@@ -479,6 +479,7 @@ export const footer = {
         { label: "Site internet à Annecy", href: "/creation-site-internet-annecy" },
         { label: "Agence web à Annemasse", href: "/agence-web-annemasse" },
         { label: "Agence web à Lyon", href: "/agence-web-lyon" },
+        { label: "Site internet à Thonon-les-Bains", href: "/creation-site-internet-thonon-les-bains" },
         { label: "Création & refonte de site en Haute-Savoie", href: "/creation-refonte-site-internet-haute-savoie" },
       ],
     },
