@@ -3,7 +3,14 @@ import { useParams, Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
-import { buildCityJsonLd, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
+import {
+  buildCityJsonLd,
+  PAGE_SCHEMA_ATTR,
+  PRICING_GUIDE_PATH,
+  ARTISAN_SITE_PATH,
+  REFONTE_SIGNS_PATH,
+  DOMAIN_OWNERSHIP_PATH,
+} from "../lib/jsonld";
 import { cities } from "../data/cities";
 import { offer, process, whatsapp } from "../data/content";
 import Logo from "../components/Logo";
@@ -208,11 +215,28 @@ export default function CityPage() {
             <h3 className="text-sm font-bold uppercase tracking-widest text-encre">
               Envie de comparer avant d'appeler ?
             </h3>
-            <p className="mt-2 text-sm text-taupe">
-              <Link to="/combien-coute-un-site-internet" className="font-semibold text-or hover:underline">
-                Combien coûte un site internet ? Prix, délais et inclus détaillés →
-              </Link>
-            </p>
+            <ul className="mt-2 flex flex-col gap-1.5 text-sm">
+              <li>
+                <Link to={PRICING_GUIDE_PATH} className="font-semibold text-or hover:underline">
+                  Combien coûte un site internet ? Prix, délais et inclus détaillés →
+                </Link>
+              </li>
+              <li>
+                <Link to={ARTISAN_SITE_PATH} className="font-semibold text-or hover:underline">
+                  Site internet pour artisan : quoi mettre, quel prix, quel délai ? →
+                </Link>
+              </li>
+              <li>
+                <Link to={REFONTE_SIGNS_PATH} className="font-semibold text-or hover:underline">
+                  Vous avez déjà un site : quand faut-il le refaire ? →
+                </Link>
+              </li>
+              <li>
+                <Link to={DOMAIN_OWNERSHIP_PATH} className="font-semibold text-or hover:underline">
+                  Qui est propriétaire de votre site et de votre nom de domaine ? →
+                </Link>
+              </li>
+            </ul>
             <h3 className="mt-5 text-sm font-bold uppercase tracking-widest text-encre">
               Nos autres zones d'intervention
             </h3>

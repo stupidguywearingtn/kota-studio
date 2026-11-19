@@ -37,6 +37,12 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-19 (jeudi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : `origin/main` = `c98e32a` avant run. `/`, `/creation-site-internet-thonon-les-bains`, `/creation-site-internet-artisan`, sitemap.xml (18 URLs), llms.txt en 200 ; URL inconnue 404 ; `www.kotastudio.fr/` → 308. Rien de cassé.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Annecy" (La Fabrique du Net, 118712, LOCAL.FR/avis-verifies ×5, Mappy, Codeur, Aladom, IUT Annecy) et "agence web Annemasse" (La Fabrique du Net, Gralon, 118712, Sortlist Clickalpe, Codeur, Incremys, Malt, Infomaniak partenaires). `site:kotastudio.fr` : 0 page du domaine (Contra AUREA seule). Inchangé depuis le 07/09.
+- Chantier : **maillage interne contextuel** — audit des liens hors footer/nav/header sur le HTML pré-rendu : 3 guides (`/creation-site-internet-artisan`, `/quand-refaire-son-site-internet`, `/nom-de-domaine-et-propriete-du-site`) ne recevaient AUCUN lien contextuel. Corrigé depuis les 6 pages villes. Voir "Chantiers faits".
+
 **Au 2026-11-18 (mercredi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : `origin/main` = `8243cf9` avant run. `/`, `/creation-site-internet-artisan`, page prix, sitemap.xml, llms.txt en 200 ; URL inconnue 404 ; `www.kotastudio.fr/` → 308 apex. TXT google-site-verification toujours publié. margauxcdr.com toujours injoignable (inchangé, déjà signalé).
@@ -707,6 +713,14 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-19 (jeudi) — Maillage interne : 3 guides orphelins reliés depuis les 6 pages villes
+
+- Pourquoi : deux runs de contenu d'affilée (artisan, Thonon) → angle différent aujourd'hui. Audit par script du HTML pré-rendu de `dist/` (liens `href="/..."` hors `<footer>`, `<nav>`, `<header>`) : `/creation-site-internet-artisan`, `/quand-refaire-son-site-internet` et `/nom-de-domaine-et-propriete-du-site` = **0 lien contextuel** (seulement le footer, lien sitewide que Google pondère faiblement). Ce sont pourtant les guides qui répondent aux objections d'un prospect local (« je suis artisan », « j'ai déjà un site », « à qui appartient le site »), et la page refonte soutient la requête visée « refonte site internet Haute-Savoie ». Les pages villes, elles, reçoivent déjà 7 liens contextuels chacune (Haute-Savoie 12, prix 14).
+- Fait : `src/pages/CityPage.jsx`, bloc « Envie de comparer avant d'appeler ? » (déjà existant, sous les Q/R, avant « Nos autres zones ») : le lien unique vers la page prix devient une liste de 4 liens (prix, puis artisan, refonte « Vous avez déjà un site : quand faut-il le refaire ? », propriété du site/nom de domaine). Chemins importés depuis `jsonld.js` (constantes `*_PATH`, pas de chaîne en dur). Même style que la liste « Nos autres zones » juste en dessous. Aucun texte de Q/R touché → FAQPage/JSON-LD inchangés.
+- Résultat (script) : chacun des 3 guides passe de 0 à **6 liens contextuels** (les 6 pages villes, Haute-Savoie comprise).
+- Vérifs : build OK (23 routes pré-rendues + 404) ; liens présents dans le HTML pré-rendu (crawlers sans JS) ; Playwright iPhone 13 sur `/creation-site-internet-annecy` et `/creation-refonte-site-internet-haute-savoie` : scrollWidth 390 = viewport, 0 erreur JS, 6 liens trouvés (3 guides + footer), capture relue (liste lisible, pas de débordement).
+- NE PAS fait : pas de lien ajouté sur l'accueil (sections validées) ; `lastmod` du sitemap et dates visibles NON changés (ajout de liens ≠ mise à jour du contenu) ; pas de ping IndexNow (aucune URL nouvelle) ; llms.txt inchangé (aucune page ajoutée) ; GEO étape 4 : aucun contenu rédactionnel touché, rien à appliquer.
 
 ### 2026-11-18 (mercredi) — Page ville « Création de site internet à Thonon-les-Bains » (Chablais)
 
@@ -2365,6 +2379,7 @@ Par ordre de priorité pour les prochains runs :
     suivantes à vérifier avant d'écrire : artisans/PME locales, créateurs TikTok.
 16. ~~Page propriété domaine~~ — faite le 2026-10-02. Pistes : artisans/PME, créateurs TikTok (vérifier la demande), Genève (bloqué).
 17. ~~Page artisans~~ — **faite le 2026-11-17** (`/creation-site-internet-artisan`). ~~Thonon/Chablais~~ — **faite le 2026-11-18**. Pistes suivantes (vérifier la SERP avant) : autres pages villes de Haute-Savoie à SERP faible (Cluses / vallée de l'Arve, La Roche-sur-Foron, Sallanches) — un angle propre par ville, sinon pages minces ; déclinaisons par métier seulement avec clients réels ; créateurs TikTok ; Genève (bloqué).
+18. **Maillage restant (audit du 19/11)** : liens contextuels reçus — `/apparaitre-dans-chatgpt-et-ia-site-local` 1, `/comment-choisir-une-agence-web` 2, `/site-internet-ou-reseaux-sociaux` 2. L'accueil ne lie aucun guide hors footer (sections validées : ne pas toucher sans accord de Yanis). Piste : un bloc « Pour aller plus loin » sur la page prix (la plus liée, 14) vers « choisir une agence » et « apparaître dans ChatGPT ». Script d'audit : parser `dist/**/index.html`, retirer footer/nav/header, compter les `href="/..."`.
 14. ~~Page "site sur-mesure ou WordPress/Wix"~~ — **faite le 2026-09-29**. Prochaine
     piste à rechercher : requête non couverte (ex. spécifique TikTok/créateurs,
     ou artisans/PME locales) — vérifier la demande avant d'écrire.
@@ -3170,6 +3185,10 @@ Après déploiement : `/creation-site-internet-artisan` en 200 en prod (title + 
 
 Absent sur « création site vitrine Haute-Savoie » et « agence web Lyon création site internet » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé. SERP « création site internet Thonon-les-Bains » relevée : annuaires/Malt/formations uniquement (cible de la nouvelle page).
 Après déploiement : `/creation-site-internet-thonon-les-bains` en 200 en prod (title + canonical propres), sitemap à 18 URLs, lien footer servi sur `/`. IndexNow : POST de la nouvelle URL + page Haute-Savoie + llms.txt → HTTP 200.
+
+### 2026-11-19
+
+Absent sur « création site internet Annecy » et « agence web Annemasse » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé.
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 
