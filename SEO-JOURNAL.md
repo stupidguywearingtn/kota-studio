@@ -3213,6 +3213,7 @@ Absent sur « création site internet Annecy » et « agence web Annemasse » ; 
 ### 2026-11-20
 
 Absent sur « création site internet Saint-Julien-en-Genevois » et « refonte site internet Haute-Savoie » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé. SERP « création site internet Pays de Gex » relevée : annuaires/Malt/partenaires Infomaniak uniquement (cible de la nouvelle page).
+Après déploiement : `/creation-site-internet-pays-de-gex` en 200 en prod (title + canonical propres), sitemap à 19 URLs, lien footer servi sur `/`. IndexNow : POST de la nouvelle URL + llms.txt + sitemap → HTTP 200.
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 
