@@ -37,6 +37,13 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-20 (vendredi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : `origin/main` = `25a4009` avant run. `/`, sitemap.xml, llms.txt, `/creation-site-internet-thonon-les-bains`, page prix en 200 ; URL inconnue 404 ; `www.kotastudio.fr/` → 308. **Maillage du 19/11 vérifié en prod** (lien vers `/creation-site-internet-artisan` servi sur `/creation-site-internet-annecy`). TXT google-site-verification toujours publié.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (Aladom, Infomaniak partenaire Genevois Informatique, 118712, PagesJaunes, edana.ch, Codeur, Malt) et "refonte site internet Haute-Savoie" (TED/BOAMP, Malt ×2, 118712, Infomaniak partenaires, francenum). `site:kotastudio.fr` : 0 page du domaine (Contra AUREA seule). Inchangé depuis le 07/09.
+- Audit technique rapide sur `dist/` (24 pages) : title, meta description, OG/Twitter, og:url = canonical, 1 H1, alt d'images → **rien à corriger**.
+- Chantier : **nouvelle page `/creation-site-internet-pays-de-gex`** (Pays de Gex, Ain). Voir "Chantiers faits".
+
 **Au 2026-11-19 (jeudi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : `origin/main` = `c98e32a` avant run. `/`, `/creation-site-internet-thonon-les-bains`, `/creation-site-internet-artisan`, sitemap.xml (18 URLs), llms.txt en 200 ; URL inconnue 404 ; `www.kotastudio.fr/` → 308. Rien de cassé.
@@ -713,6 +720,17 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-20 (vendredi) — Page zone « Création de site internet dans le Pays de Gex » (Ain)
+
+- Pourquoi : trois angles différents les 3 derniers jours (contenu artisan, ville Thonon, maillage) et l'audit technique du jour est vide → retour au levier principal (pages « création site internet + lieu »). Le Pays de Gex (Saint-Genis-Pouilly, Ferney-Voltaire, Gex, Divonne) est le bassin frontalier **voisin direct** de Saint-Julien, de l'autre côté de Genève, et n'était couvert nulle part (Ain ≠ Haute-Savoie). SERP vérifiée ce jour « création site internet Pays de Gex » : **uniquement annuaires (118712, Gralon), partenaires Infomaniak, profils Malt/graphiste.com, PDF de mairie** — aucune page d'agence dédiée avec prix + délai. Comparé à Cluses/vallée de l'Arve (SERP vérifiée aussi : surtout tourisme + 2-3 agences locales) : Gex retenu car plus proche (18 km contre ~60) et appuyé par un client réel dans l'Ain (HCE BTP, « Jura & Ain » dans content.js).
+- Distances vérifiées (OSRM, router.project-osrm.org, depuis Saint-Julien) : Saint-Genis-Pouilly 18,0 km, Ferney-Voltaire 17,2 km, Gex 29,6 km → écrit « environ 20 km » / « 30 km ». Aucune durée écrite (passage de frontière, trafic variable).
+- Fait :
+  - `src/data/cities.js` : nouvelle entrée (slug `creation-site-internet-pays-de-gex`, `areaType: "AdministrativeArea"`, `crossLinkLabel` pour éviter « à Pays de Gex » dans les listes de la page prix / choisir une agence, badge « Pays de Gex · Ain », date visible 20 novembre 2026). 5 Q/R à réponse directe (ordre conservé : Q2 prix → bloc inclus/options, Q3 délai → process). Angle propre : Q1 « travaillez-vous côté Ain ? » avec la preuve réelle HCE BTP ; Q4 **clientèle frontalière / internationale (Genève, CERN) : faut-il un site en anglais ?** → non par défaut, option langue +390 € (prix réel de content.js).
+  - Footer « Près de chez vous » (`content.js`) → lien depuis toutes les pages ; listes « autres zones » des pages villes/prix/agence automatiques.
+  - `index.html` : `areaServed` + AdministrativeArea « Pays de Gex ». `public/sitemap.xml` (+1 URL, 19 au total, lastmod 2026-11-20). `public/llms.txt` : ligne Zone + entrée de page.
+- Vérifs : build OK (24 routes pré-rendues + 404) ; HTML pré-rendu : title, canonical, aucune balise robots, BreadcrumbList « Accueil > Création de site internet dans le Pays de Gex », `Service.areaServed` = AdministrativeArea Pays de Gex ; **les 5 questions ET les 5 réponses du FAQPage présentes mot pour mot dans le texte visible** (script) ; ~860 mots. Playwright iPhone 13 : scrollWidth 390 = viewport sur la nouvelle page, Thonon et page prix, 0 erreur JS, 6 H2 ; captures relues (H1, badge, intro, Q4 lisibles).
+- NE PAS fait : retiré une phrase non vérifiable (« vraie traduction plutôt que traduction automatique » : on ne sait pas qui traduit) ; aucune population ni statistique frontalière (non sourcée) ; pas de pages séparées Saint-Genis / Ferney / Divonne (même bassin → pages minces) ; FAQ Haute-Savoie NON modifiée (le Pays de Gex n'est pas en Haute-Savoie) ; pas de lien depuis l'accueil (sections validées).
 
 ### 2026-11-19 (jeudi) — Maillage interne : 3 guides orphelins reliés depuis les 6 pages villes
 
@@ -2378,7 +2396,7 @@ Par ordre de priorité pour les prochains runs :
 15. ~~Page "quelles pages pour un site vitrine"~~ — faite le 2026-09-30. Pistes
     suivantes à vérifier avant d'écrire : artisans/PME locales, créateurs TikTok.
 16. ~~Page propriété domaine~~ — faite le 2026-10-02. Pistes : artisans/PME, créateurs TikTok (vérifier la demande), Genève (bloqué).
-17. ~~Page artisans~~ — **faite le 2026-11-17** (`/creation-site-internet-artisan`). ~~Thonon/Chablais~~ — **faite le 2026-11-18**. Pistes suivantes (vérifier la SERP avant) : autres pages villes de Haute-Savoie à SERP faible (Cluses / vallée de l'Arve, La Roche-sur-Foron, Sallanches) — un angle propre par ville, sinon pages minces ; déclinaisons par métier seulement avec clients réels ; créateurs TikTok ; Genève (bloqué).
+17. ~~Page artisans~~ — **faite le 2026-11-17** (`/creation-site-internet-artisan`). ~~Thonon/Chablais~~ — **faite le 2026-11-18**. ~~Pays de Gex (Ain)~~ — **faite le 2026-11-20**. Pistes restantes vérifiées le 20/11 : Cluses / vallée de l'Arve (SERP = tourisme + 2-3 agences locales, faisable avec un angle industrie/décolletage seulement si fait vérifié) ; Chambéry / Savoie à vérifier. Pistes suivantes (vérifier la SERP avant) : autres pages villes de Haute-Savoie à SERP faible (Cluses / vallée de l'Arve, La Roche-sur-Foron, Sallanches) — un angle propre par ville, sinon pages minces ; déclinaisons par métier seulement avec clients réels ; créateurs TikTok ; Genève (bloqué).
 18. **Maillage restant (audit du 19/11)** : liens contextuels reçus — `/apparaitre-dans-chatgpt-et-ia-site-local` 1, `/comment-choisir-une-agence-web` 2, `/site-internet-ou-reseaux-sociaux` 2. L'accueil ne lie aucun guide hors footer (sections validées : ne pas toucher sans accord de Yanis). Piste : un bloc « Pour aller plus loin » sur la page prix (la plus liée, 14) vers « choisir une agence » et « apparaître dans ChatGPT ». Script d'audit : parser `dist/**/index.html`, retirer footer/nav/header, compter les `href="/..."`.
 14. ~~Page "site sur-mesure ou WordPress/Wix"~~ — **faite le 2026-09-29**. Prochaine
     piste à rechercher : requête non couverte (ex. spécifique TikTok/créateurs,
@@ -2387,6 +2405,8 @@ Par ordre de priorité pour les prochains runs :
 ---
 
 ## Hypothèses à vérifier
+
+- **Page Pays de Gex (2026-11-20)** : (1) Yanis a-t-il des clients à Saint-Genis-Pouilly, Ferney-Voltaire, Gex ou Divonne ? Un exemple local renforcerait la page. (2) Confirmer qu'un rendez-vous en présentiel dans le Pays de Gex est possible (la page dit « possible si besoin »). (3) Langue supplémentaire à +390 € : est-ce bien **par langue**, et la traduction est-elle fournie par le client ou incluse ? (la page dit « +390 € par langue », sans plus).
 
 - **Page Thonon (2026-11-18)** : (1) Yanis a-t-il déjà un client à Thonon / Évian / dans le Chablais ? Un exemple réel renforcerait fortement la page. (2) Confirmer qu'il se déplace bien jusqu'à Thonon pour un rendez-vous en présentiel (la page dit « possible si besoin », comme pour Annecy/Annemasse).
 
@@ -3190,7 +3210,13 @@ Après déploiement : `/creation-site-internet-thonon-les-bains` en 200 en prod 
 
 Absent sur « création site internet Annecy » et « agence web Annemasse » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé.
 
+### 2026-11-20
+
+Absent sur « création site internet Saint-Julien-en-Genevois » et « refonte site internet Haute-Savoie » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé. SERP « création site internet Pays de Gex » relevée : annuaires/Malt/partenaires Infomaniak uniquement (cible de la nouvelle page).
+
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
+
+0sexies. **Pays de Gex (20/11)** : clients réels dans le Pays de Gex ? présentiel possible ? option langue +390 € = par langue, traduction incluse ou non ?
 
 0quinquies. **Artisans (17/11)** : coût domaine + hébergement après la 1re année (inclus ou non ?) et 1–2 phrases vraies sur le projet HCE BTP.
 

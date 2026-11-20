@@ -185,6 +185,42 @@ export const cities = [
     ],
   },
   {
+    slug: "creation-site-internet-pays-de-gex",
+    cityName: "Pays de Gex",
+    badge: "Pays de Gex · Ain",
+    areaType: "AdministrativeArea",
+    crossLinkLabel: "Création de site internet dans le Pays de Gex",
+    metaTitle: "Création de site internet dans le Pays de Gex (Saint-Genis, Ferney, Gex) | Kota Studio",
+    metaDescription:
+      "Sites sur-mesure pour les entreprises du Pays de Gex : Saint-Genis-Pouilly, Ferney-Voltaire, Gex, Divonne. Prix fixe dès 790 €, livraison en 14 jours, agence à 20 km.",
+    h1: "Création de site internet dans le Pays de Gex",
+    intro:
+      "Kota Studio conçoit des sites internet sur-mesure pour les entreprises, artisans, commerces et indépendants du Pays de Gex (Saint-Genis-Pouilly, Ferney-Voltaire, Prévessin-Moëns, Thoiry, Cessy, Gex, Divonne-les-Bains). L'agence est basée à Saint-Julien-en-Genevois, de l'autre côté de Genève, à environ 20 km de Saint-Genis-Pouilly et de Ferney-Voltaire : le suivi se fait en visio, avec un rendez-vous en présentiel possible si besoin.",
+    updatedAt: "20 novembre 2026",
+    faqs: [
+      {
+        q: "Kota Studio travaille-t-il dans le Pays de Gex, côté Ain ?",
+        a: "Oui. Kota Studio est basé à Saint-Julien-en-Genevois, en Haute-Savoie, à environ 20 km de Saint-Genis-Pouilly et de Ferney-Voltaire et 30 km de Gex. Le studio ne s'arrête pas à la limite du département : il a déjà livré le site d'une entreprise de travaux publics du Jura et de l'Ain (HCE BTP, en ligne sur hcetp.com). Le projet se suit en visio, avec un seul interlocuteur du premier appel à la mise en ligne.",
+      },
+      {
+        q: "Combien coûte un site internet dans le Pays de Gex ?",
+        a: "Une landing page démarre à 790 € et un site sur-mesure complet à partir de 1 290 €, tout compris, que vous soyez à Saint-Genis-Pouilly, à Ferney-Voltaire ou à Gex. Le montant exact dépend du nombre de pages et des options choisies : un devis à prix fixe est donné après un appel de 15 minutes, sans engagement.",
+      },
+      {
+        q: "Combien de temps faut-il pour créer un site internet dans le Pays de Gex ?",
+        a: "14 jours du premier échange à la mise en ligne, avec un processus cadré en 5 étapes détaillé ci-dessous. Le délai est le même pour une entreprise du Pays de Gex que pour une entreprise de Haute-Savoie : tout le projet se pilote à distance, les déplacements ne le rallongent pas.",
+      },
+      {
+        q: "Une partie de mes clients est suisse ou internationale (Genève, CERN) : mon site doit-il être en anglais ?",
+        a: "Pas forcément : si vos clients lisent le français, un site bien fait en français suffit. Si une part réelle de votre clientèle est anglophone ou internationale, ce qui est fréquent autour de Genève et du CERN, une langue supplémentaire est proposée en option (+390 € par langue). Dans tous les cas, l'adresse, la zone desservie et le moyen de vous contacter doivent être visibles dès l'accueil, sur mobile comme sur ordinateur.",
+      },
+      {
+        q: "Qu'est-ce qui est inclus dans un projet Kota Studio ?",
+        a: "Un site 100% codé sur-mesure (aucun template), un design responsive pensé mobile en premier, un espace admin pour modifier le contenu vous-même, l'optimisation des performances et des révisions illimitées jusqu'à validation.",
+      },
+    ],
+  },
+  {
     slug: "creation-refonte-site-internet-haute-savoie",
     cityName: "Haute-Savoie",
     badge: "Haute-Savoie",

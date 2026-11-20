@@ -480,6 +480,7 @@ export const footer = {
         { label: "Agence web à Annemasse", href: "/agence-web-annemasse" },
         { label: "Agence web à Lyon", href: "/agence-web-lyon" },
         { label: "Site internet à Thonon-les-Bains", href: "/creation-site-internet-thonon-les-bains" },
+        { label: "Site internet dans le Pays de Gex", href: "/creation-site-internet-pays-de-gex" },
         { label: "Création & refonte de site en Haute-Savoie", href: "/creation-refonte-site-internet-haute-savoie" },
       ],
     },
