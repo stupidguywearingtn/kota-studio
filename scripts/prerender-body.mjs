@@ -90,6 +90,10 @@ const routes = [
     filePath: path.join(distDir, "creation-site-internet-artisan", "index.html"),
   },
   {
+    routePath: "/boutique-shopify",
+    filePath: path.join(distDir, "boutique-shopify", "index.html"),
+  },
+  {
     routePath: "/mentions-legales",
     filePath: path.join(distDir, "mentions-legales", "index.html"),
   },

@@ -470,6 +470,7 @@ export const footer = {
         { label: "Landing page", href: "#ce-quon-fait" },
         { label: "Refonte", href: "#ce-quon-fait" },
         { label: "SEO", href: "#ce-quon-fait" },
+        { label: "Boutique Shopify clé en main", href: "/boutique-shopify" },
       ],
     },
     {

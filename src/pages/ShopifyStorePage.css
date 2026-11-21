@@ -1,0 +1,148 @@
+/* ============================================================================
+   KOTA BOUTIQUE (/boutique-shopify) — styles propres à la page, préfixe kb-.
+   Réutilise la DA « atelier » du site (index.css : --mat, --hi, --ink, mat,
+   k-h2, k-hl, k-eyebrow, k-faq, k-cmp, btn-3d, postit, tape, hero-phone-*).
+   ============================================================================ */
+
+/* ---- Hero : bloc prix jaune incliné (même geste que le mot rotatif de l'accueil) ---- */
+.kb-price-block{display:inline-block;background:var(--hi);color:var(--ink);border-radius:10px;padding:.08em .22em .1em;box-shadow:5px 5px 0 #0b1a14;transform:rotate(-1.5deg);margin-top:.14em}
+
+/* ---- Téléphone : boutique démo codée en HTML/CSS (aucune image) ---- */
+.kb-phone{position:relative;width:min(272px,72vw);margin-inline:auto}
+.kb-phone .hero-phone-frame{border-radius:46px;padding:10px}
+.kb-screen{position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#F6F1E8;color:#2a2420;font-family:"Instrument Sans",sans-serif;display:flex;flex-direction:column}
+.kb-screen .island{position:absolute;top:9px;left:50%;width:34%;height:22px;margin-left:-17%;border-radius:20px;background:#000;z-index:3}
+.kb-status{height:40px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 22px 4px;font:600 10.5px "Instrument Sans",sans-serif;color:#2a2420}
+.kb-ann{flex:none;background:#3B4A3F;color:#EFE9DD;text-align:center;font:500 8.5px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;padding:5px 8px}
+.kb-nav{flex:none;display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid #2a242014}
+.kb-nav .brand{font:800 13px "Unbounded",sans-serif;letter-spacing:.08em}
+.kb-nav .ic{width:16px;height:16px;display:grid;place-items:center;font-size:16px;line-height:1;position:relative}
+.kb-nav .bag i{position:absolute;top:-4px;right:-6px;width:12px;height:12px;border-radius:99px;background:#C2683F;color:#fff;font:700 7.5px/12px "Instrument Sans",sans-serif;font-style:normal;text-align:center}
+.kb-hero{position:relative;flex:none;height:46%;background:radial-gradient(120% 90% at 30% 20%,#E9D5BE 0%,#D9B99A 55%,#C99E7E 100%);overflow:hidden}
+.kb-hero .sun{position:absolute;right:14%;top:12%;width:34%;aspect-ratio:1;border-radius:50%;background:#F3E3CC;opacity:.75}
+.kb-hero .shelf{position:absolute;left:0;right:0;bottom:0;height:26%;background:#B98B6B}
+.kb-hero .tag{position:absolute;left:12px;top:12px;background:#fffffff0;border-radius:99px;padding:3px 8px;font:600 8.5px "Instrument Sans",sans-serif;letter-spacing:.02em}
+/* vase en grès dessiné en CSS */
+.kb-vase{position:absolute;left:50%;bottom:20%;width:30%;height:62%;transform:translateX(-50%)}
+.kb-vase .neck{position:absolute;left:32%;right:32%;top:0;height:24%;background:linear-gradient(90deg,#6F5544,#9C7A62 45%,#7A5D4B);border-radius:5px 5px 2px 2px}
+.kb-vase .lip{position:absolute;left:26%;right:26%;top:-3%;height:7%;border-radius:50%;background:#5c4535}
+.kb-vase .body{position:absolute;left:0;right:0;top:18%;bottom:0;border-radius:48% 48% 38% 38%/56% 56% 30% 30%;background:radial-gradient(80% 70% at 35% 35%,#B48F74 0%,#8E6B54 55%,#6A4F3E 100%)}
+.kb-vase .body::after{content:"";position:absolute;left:14%;right:14%;top:42%;height:2px;background:#ffffff2e;border-radius:2px;box-shadow:0 9px 0 #ffffff1c}
+.kb-vase .shadow{position:absolute;left:-16%;right:-16%;bottom:-7%;height:12%;border-radius:50%;background:#0000002e;filter:blur(3px)}
+.kb-prod{flex:none;padding:11px 14px 0}
+.kb-prod .row{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.kb-prod .t{font:700 12.5px "Instrument Sans",sans-serif;letter-spacing:-.01em}
+.kb-prod .p{font:700 12.5px "Instrument Sans",sans-serif}
+.kb-prod .sub{font-size:9.5px;color:#6b625b;margin-top:2px}
+.kb-swatch{display:flex;gap:6px;margin-top:8px}
+.kb-swatch i{width:13px;height:13px;border-radius:99px;box-shadow:0 0 0 1px #2a242022}
+.kb-swatch i.on{box-shadow:0 0 0 1.5px #F6F1E8,0 0 0 2.6px #2a2420}
+.kb-cta{margin-top:10px;background:#2a2420;color:#F6F1E8;border-radius:9px;text-align:center;padding:8px 0;font:600 10.5px "Instrument Sans",sans-serif}
+.kb-safe{margin-top:6px;text-align:center;font-size:8.5px;color:#6b625b}
+.kb-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 14px 0}
+.kb-grid > div{border-radius:9px;height:64px;position:relative;overflow:hidden}
+.kb-grid .a{background:#DCD3C3}.kb-grid .b{background:#3B4A3F}
+.kb-grid .mug{position:absolute;left:34%;bottom:16%;width:30%;height:44%;border-radius:3px 3px 8px 8px;background:#EFE9DD}
+.kb-grid .mug::after{content:"";position:absolute;right:-34%;top:20%;width:34%;height:45%;border:3px solid #EFE9DD;border-left:0;border-radius:0 9px 9px 0}
+.kb-grid .bowl{position:absolute;left:24%;right:24%;bottom:22%;height:30%;border-radius:0 0 50% 50%/0 0 100% 100%;background:#C99E7E}
+.kb-grid .bowl::before{content:"";position:absolute;left:0;right:0;top:-3px;height:6px;border-radius:50%;background:#B48F74}
+
+/* étiquettes posées autour du téléphone */
+.kb-sticker{position:absolute;z-index:5;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--paper);color:var(--ink);border:1.5px solid var(--ink);border-radius:7px;padding:5px 9px;box-shadow:3px 3px 0 #0b1a14;white-space:nowrap}
+.kb-checklist{position:absolute;z-index:4;background:#FBFAF5;color:var(--ink);border-radius:4px;padding:12px 14px 14px;box-shadow:6px 6px 0 #0b1a14;font-size:13px;line-height:1.25}
+.kb-checklist p{font:500 10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin:0 0 6px}
+.kb-checklist li{display:flex;gap:7px;align-items:center;font-weight:600;padding:2px 0}
+.kb-checklist li::before{content:"✓";font:700 18px/1 "Caveat",cursive;color:var(--hot)}
+
+/* ---- Comparaison 37 € / 79 € ---- */
+.kb-vs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:22px;align-items:center}
+.kb-bill{position:relative;border-radius:4px;padding:22px 20px 26px;color:var(--ink)}
+.kb-bill.else{background:#ECEAE2;border:1.5px dashed #14171466}
+.kb-bill.kota{background:var(--hi) url(/hand/postit.jpg) 0 0/256px;box-shadow:7px 7px 0 var(--ink);transform:rotate(.8deg)}
+.kb-bill .who{font:500 11.5px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase}
+.kb-bill .big{font:900 clamp(40px,7vw,58px)/.95 "Unbounded",sans-serif;letter-spacing:-.06em;margin-top:6px}
+.kb-bill ul{list-style:none;margin:14px 0 0;padding:0;display:grid}
+.kb-bill li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-top:1.5px dashed #14171433;font-size:14.5px}
+.kb-bill li b{font:600 11.5px "JetBrains Mono",monospace;letter-spacing:.04em;text-align:right;white-space:nowrap}
+.kb-bill.else li b{color:#B4482B}
+.kb-bill .tot{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--ink);margin-top:4px;padding-top:12px}
+.kb-bill .tot span{font:500 11.5px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase}
+.kb-bill .tot b{font:900 30px/1 "Unbounded",sans-serif;letter-spacing:-.05em}
+.kb-vs-badge{width:58px;height:58px;border-radius:99px;display:grid;place-items:center;background:var(--ink);color:var(--hi);font:900 17px "Unbounded",sans-serif;letter-spacing:-.04em;box-shadow:3px 3px 0 #0b1a1466}
+@media (max-width:767px){
+  .kb-vs{grid-template-columns:1fr;gap:14px}
+  .kb-vs-badge{margin:-4px auto;width:50px;height:50px;font-size:15px;position:relative;z-index:2}
+}
+
+/* ---- Packs : cartes atelier (ticket / post-it / carte noire) ---- */
+.kb-plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px;align-items:stretch}
+.kb-plans .k-plan{display:flex;flex-direction:column;gap:14px}
+.kb-plans .k-plan ul{flex:1 1 auto;align-content:start}
+.kb-plans .k-plan .btn-3d{margin-top:auto}
+.kb-plans .k-plan li{font-size:14px;line-height:1.35}
+.kb-plans .k-plan.rc li{font-size:13px}
+.kb-plans .k-plan .tl{font-size:14px;line-height:1.35;opacity:.85;margin:0}
+.kb-plans .k-plan .meta{display:flex;flex-wrap:wrap;gap:6px}
+.kb-plans .k-plan .meta span{font:500 10.5px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;border:1.3px solid currentColor;border-radius:6px;padding:3px 7px;opacity:.85}
+.kb-plans .k-plan.pi .h{top:20px;right:18px}
+@media (max-width:1023px){.kb-plans{grid-template-columns:1fr;max-width:460px;margin-inline:auto;gap:34px}}
+
+/* ---- Simulateur ---- */
+.kb-step{border-top:1.5px solid var(--ink);padding:22px 0 26px}
+.kb-step h3{display:flex;align-items:baseline;gap:12px;font:700 clamp(16px,2vw,19px)/1.2 "Unbounded",sans-serif;letter-spacing:-.02em;margin:0 0 14px}
+.kb-step h3 em{font-style:normal;font:500 11.5px "JetBrains Mono",monospace;letter-spacing:.12em;color:var(--ink2)}
+.kb-choice{position:relative;display:block;cursor:pointer;border:1.5px solid var(--ink);border-radius:12px;background:#FBFAF5;transition:background-color .15s,box-shadow .15s,transform .15s;-webkit-tap-highlight-color:transparent}
+.kb-choice:hover{box-shadow:3px 3px 0 var(--ink);transform:translate(-1px,-1px)}
+.kb-choice[aria-pressed="true"],.kb-choice[aria-checked="true"],.kb-choice:has(input:checked){background:var(--hi);box-shadow:3px 3px 0 var(--ink)}
+.kb-choice:has(input:disabled){opacity:.45;cursor:not-allowed;box-shadow:none;transform:none;background:transparent}
+.kb-choice:has(input:focus-visible),.kb-choice:focus-visible{outline:3px solid var(--grid2);outline-offset:2px}
+.kb-box{flex:none;width:20px;height:20px;border:1.5px solid var(--ink);border-radius:5px;background:#fff;display:grid;place-items:center;font:700 14px/1 "Instrument Sans",sans-serif}
+.kb-choice:has(input:checked) .kb-box{background:var(--ink);color:var(--hi)}
+.kb-receipt{position:relative;background:#FBFAF5 url(/hand/receipt.jpg) 0 0/400px;color:var(--ink);padding:26px 22px 38px;font-family:"JetBrains Mono",monospace;box-shadow:0 18px 30px #0003;
+  -webkit-mask:linear-gradient(#000,#000) top/100% calc(100% - 12px) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/16px 12px repeat-x;
+  mask:linear-gradient(#000,#000) top/100% calc(100% - 12px) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/16px 12px repeat-x}
+.kb-receipt .ln{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:13px;line-height:1.35;padding:5px 0}
+.kb-receipt .ln span:last-child{white-space:nowrap;font-weight:600}
+.kb-receipt .dash{border-top:1.5px dashed #14171455;margin:10px 0}
+.kb-receipt .total{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.kb-receipt .total b{font:900 clamp(38px,5vw,48px)/1 "Unbounded",sans-serif;letter-spacing:-.06em;white-space:nowrap}
+.kb-total-bar{position:sticky;bottom:12px;z-index:20;margin-right:78px}
+
+/* ---- Étapes ---- */
+.kb-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;counter-reset:s}
+.kb-steps li{position:relative;border:1.5px solid var(--grid2);border-radius:16px;padding:20px 18px 22px;background:var(--mat2)}
+.kb-steps li .n{font:900 52px/1 "Unbounded",sans-serif;letter-spacing:-.06em;color:var(--hi)}
+.kb-steps li b{display:block;margin-top:12px;font:700 17px/1.2 "Unbounded",sans-serif;letter-spacing:-.02em;color:var(--onmat)}
+.kb-steps li p{margin:8px 0 0;color:var(--onmat2);font-size:15px;line-height:1.45}
+@media (max-width:1023px){.kb-steps{grid-template-columns:1fr 1fr}}
+@media (max-width:639px){.kb-steps{grid-template-columns:1fr}.kb-steps li{display:grid;grid-template-columns:56px 1fr;column-gap:10px;padding:16px}.kb-steps li .n{font-size:40px;grid-row:span 2}.kb-steps li b{margin-top:2px}}
+
+/* ---- Listes transparence ---- */
+.kb-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.kb-list li{position:relative;padding-left:28px;font-size:15.5px;line-height:1.45}
+.kb-list li::before{position:absolute;left:0;top:-2px;font:700 22px/1 "Caveat",cursive}
+.kb-list.ok li::before{content:"✓";color:var(--hot)}
+.kb-list.you li::before{content:"→";font-family:"Instrument Sans",sans-serif;font-size:17px;top:1px}
+.kb-list.no li::before{content:"✕";color:#FF8A66;font-family:"Instrument Sans",sans-serif;font-size:15px;top:2px}
+.kb-card{border:1.5px solid var(--ink);border-radius:18px;padding:24px 22px;background:#FBFAF5;box-shadow:5px 5px 0 var(--ink)}
+.kb-card.y{background:var(--hi)}
+.kb-card.k{background:var(--ink);color:var(--paper);box-shadow:5px 5px 0 #0b1a1466}
+.kb-card.k .kb-list.no li{color:#E7E9E4}
+.kb-card h3{font:800 clamp(18px,2.2vw,22px)/1.15 "Unbounded",sans-serif;letter-spacing:-.03em;margin:0 0 16px;text-transform:uppercase}
+
+/* ---- Suivi mensuel ---- */
+.kb-follow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:28px;align-items:center}
+.kb-follow .amt{font:900 clamp(54px,8vw,96px)/.9 "Unbounded",sans-serif;letter-spacing:-.06em;white-space:nowrap}
+.kb-follow .amt small{font:600 .26em "Instrument Sans",sans-serif;letter-spacing:0;margin-left:.2em}
+@media (max-width:899px){.kb-follow{grid-template-columns:1fr;gap:16px}}
+
+/* prix des tableaux : jamais coupés en deux lignes */
+.kb-nowrap td:last-child{white-space:nowrap;vertical-align:top}
+
+/* tarifs à la carte repliables */
+.kb-fold{border:1.5px solid var(--grid2);border-radius:16px;padding:0 18px;background:#16362980}
+.kb-fold summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px;padding:18px 34px 18px 0;position:relative;font:700 clamp(16px,2vw,19px)/1.2 "Unbounded",sans-serif;letter-spacing:-.02em;color:var(--onmat)}
+.kb-fold summary::-webkit-details-marker{display:none}
+.kb-fold summary::after{content:"+";position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:26px;line-height:1;color:var(--hi)}
+.kb-fold[open] summary::after{content:"−"}
+.kb-fold[open]{padding-bottom:22px}

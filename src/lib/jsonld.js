@@ -10,6 +10,7 @@
    ============================================================================ */
 
 import { offer, process, promises } from "../data/content.js";
+import { boutiquePacks, boutiqueFollowUp } from "../data/kotaBoutique.js";
 
 export const SITE_URL = "https://kotastudio.fr";
 
@@ -649,6 +650,121 @@ export function buildArtisanSiteJsonLd() {
       {
         "@type": "FAQPage",
         mainEntity: artisanSiteFaqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+    ],
+  };
+}
+
+export const SHOPIFY_STORE_PATH = "/boutique-shopify";
+
+/* Les 8 questions/réponses affichées sur ShopifyStorePage.jsx (Kota Boutique),
+   reprises mot pour mot dans le JSON-LD FAQPage. Page ajoutée le 2026-11-21 :
+   landing discrète servie par le trafic TikTok (pas de lien dans la navbar ni
+   le hero de l'accueil, seulement un lien dans le footer). Questions tirées des
+   vrais commentaires TikTok ; prix issus de src/data/kotaBoutique.js. Aucune
+   promesse de ventes ni de revenus. */
+export const shopifyStoreFaqs = [
+  {
+    q: "C'est 79 € par mois ?",
+    a: "Non. 79 €, c'est une seule fois, pour la création de ta boutique avec le pack Lancement. Le seul abonnement, c'est celui de Shopify, que tu payes directement à Shopify : environ 36 € par mois en Basic, ou 1 € par mois pendant 3 mois si tu crées toi-même ton compte (selon l'offre Shopify du moment). Le suivi mensuel Kota à 29 € par mois est une option, sans engagement.",
+  },
+  {
+    q: "Le fournisseur est compris ?",
+    a: "Pas dans les packs : tu viens avec tes produits ou ton fournisseur. Si tu veux qu'on t'en trouve, il y a l'option produit sourcé à 19 € par produit : le produit, un fournisseur vérifié, le délai de livraison en Europe et ta marge calculée. Sans garantie de rentabilité.",
+  },
+  {
+    q: "Je peux l'avoir avec mes propres produits et mon logo ?",
+    a: "Oui, c'est le cas normal. Tu nous envoies tes produits, tes photos et ton logo dans un formulaire de 5 minutes. Pas encore de logo ? Le pack Lancement inclut un logo typographique simple, le pack Boutique un logo pro, et le pack Marque un logo avec une mini charte.",
+  },
+  {
+    q: "J'aurai l'accès complet à ma boutique ?",
+    a: "Oui. La boutique est à ton nom, sur ton compte Shopify, et tu as tous les accès. Le design qu'on fait pour toi n'est jamais revendu à quelqu'un d'autre.",
+  },
+  {
+    q: "On peut la modifier facilement après ?",
+    a: "Oui. C'est une boutique Shopify classique : tu changes tes produits, tes prix, tes textes et tes photos depuis l'admin Shopify, sans coder. Tu reçois une vidéo de prise en main pour ça. Si tu préfères qu'on s'en occupe, le suivi mensuel à 29 € par mois comprend 3 modifications et 10 produits ajoutés par mois.",
+  },
+  {
+    q: "Je n'ai pas encore de produit, je fais comment ?",
+    a: "Tu as deux solutions. On peut te sourcer des produits (19 € par produit : produit, fournisseur vérifié, délai Europe et marge calculée), ou tu prends le coaching lancement d'une heure (59 €) pour choisir quoi vendre avant de te lancer. On ne te vendra pas de « produit gagnant » : personne ne peut le garantir.",
+  },
+  {
+    q: "C'est du dropshipping ?",
+    a: "Pas forcément. On construit ta boutique, et tu y vends ce que tu veux : tes créations, ton stock ou des produits en dropshipping. Le modèle, c'est toi qui le choisis.",
+  },
+  {
+    q: "Est-ce que je vais faire des ventes ?",
+    a: "On ne peut pas te le promettre, et personne d'honnête ne le peut. Tes ventes dépendent de ton produit, de ton prix et de la façon dont tu le fais connaître. Ce qu'on garantit : une boutique complète, à ton nom, livrée dans le délai. Pour t'aider à la faire connaître, on propose des vidéos produit prêtes à poster : 49 € l'unité, 129 € les 3, ou 3 incluses dans le pack Marque.",
+  },
+];
+
+export function buildShopifyStoreJsonLd() {
+  const pageUrl = `${SITE_URL}${SHOPIFY_STORE_PATH}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE_URL}/` },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Boutique Shopify clé en main",
+            item: pageUrl,
+          },
+        ],
+      },
+      {
+        "@type": "Service",
+        name: "Kota Boutique : boutique Shopify clé en main",
+        serviceType: "Création de boutique Shopify clé en main",
+        url: pageUrl,
+        description:
+          "Boutique Shopify clé en main dès 79 € : paiement configuré, pages légales (modèles Shopify + formulaire de rétractation + checklist), domaine connecté, boutique à ton nom. Livrée en 72 h à réception des éléments.",
+        areaServed: [
+          { "@type": "Country", name: "France" },
+          { "@type": "Country", name: "Belgique" },
+          { "@type": "Country", name: "Suisse" },
+        ],
+        provider: {
+          "@type": "ProfessionalService",
+          "@id": `${SITE_URL}/#organisation`,
+          name: "Kota Studio",
+          url: `${SITE_URL}/`,
+          telephone: "+33615802619",
+        },
+        offers: [
+          ...boutiquePacks.map((p) => ({
+            "@type": "Offer",
+            name: `Pack ${p.name}`,
+            description: p.features.join(" · "),
+            price: String(p.price),
+            priceCurrency: "EUR",
+            url: `${pageUrl}#packs`,
+          })),
+          {
+            "@type": "Offer",
+            name: "Suivi mensuel",
+            description: boutiqueFollowUp.includes.join(" · ") + ". Sans engagement.",
+            priceCurrency: "EUR",
+            price: String(boutiqueFollowUp.monthly),
+            priceSpecification: {
+              "@type": "UnitPriceSpecification",
+              price: String(boutiqueFollowUp.monthly),
+              priceCurrency: "EUR",
+              unitText: "mois",
+            },
+          },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: shopifyStoreFaqs.map((f) => ({
           "@type": "Question",
           name: f.q,
           acceptedAnswer: { "@type": "Answer", text: f.a },

@@ -18,6 +18,7 @@ import DomainOwnershipPage from "./pages/DomainOwnershipPage";
 import SocialVsSitePage from "./pages/SocialVsSitePage";
 import AiVisibilityPage from "./pages/AiVisibilityPage";
 import ArtisanSitePage from "./pages/ArtisanSitePage";
+import ShopifyStorePage from "./pages/ShopifyStorePage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -117,6 +118,9 @@ export default function App() {
           path="/creation-site-internet-artisan"
           element={<ArtisanSitePage />}
         />
+        {/* Kota Boutique : landing discrète servie par TikTok (pas de lien
+            navbar/hero, seulement dans le footer). */}
+        <Route path="/boutique-shopify" element={<ShopifyStorePage />} />
         {/* Pages villes SEO local (src/data/cities.js) — catch-all volontaire,
             gère aussi le 404 propre pour un slug inconnu (comme /projets/:slug). */}
         <Route path="/:citySlug" element={<CityPage />} />
