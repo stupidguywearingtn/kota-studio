@@ -105,7 +105,7 @@ export const boutiqueOptions = [
     id: "express",
     label: "Express 24 h",
     price: 29,
-    note: "Pack Lancement uniquement, jusqu'à +10 produits",
+    note: "Pack Lancement uniquement, jusqu'à +10 produits. Les 24 h comptent à partir du démarrage (immédiat si tu coches la case Démarrage)",
     onlyFor: ["lancement"],
     maxExtra: 10,
   },
