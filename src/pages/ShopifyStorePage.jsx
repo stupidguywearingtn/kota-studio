@@ -20,6 +20,8 @@ import {
   boutiqueClientCosts,
   PREMIUM_PER_PRODUCT,
   formatEuro,
+  optionFor,
+  computeDelay,
 } from "../data/kotaBoutique";
 import Logo from "../components/Logo";
 import Button from "../components/Button";
@@ -42,7 +44,7 @@ import "./ShopifyStorePage.css";
 const SITE_URL = "https://kotastudio.fr";
 const META_TITLE = "Boutique Shopify clé en main dès 79 € | Kota Boutique";
 const META_DESCRIPTION =
-  "Ta boutique Shopify clé en main dès 79 € : paiement, pages légales et domaine inclus, boutique à ton nom, livrée en 72 h. Entreprise française, prix affichés, zéro promesse de ventes.";
+  "Ta boutique Shopify clé en main dès 79 € : paiement, pages légales et connexion du domaine inclus, boutique sur ton compte, livrée 72 h après réception de tes éléments (pack Lancement). Entreprise française, prix affichés.";
 
 /* Paiement en ligne : pas encore actif (Stripe pas encore validé). Quand les
    liens de paiement Stripe existeront, les renseigner ici (un par pack) : le
@@ -112,7 +114,6 @@ function DemoStorePhone() {
               <i style={{ background: "#3B4A3F" }} />
             </div>
             <div className="kb-cta">Ajouter au panier</div>
-            <p className="kb-safe">Paiement sécurisé · Retour sous 14 jours</p>
           </div>
           <div className="kb-grid">
             <div className="a"><span className="mug" /></div>
@@ -137,6 +138,9 @@ export default function ShopifyStorePage() {
   const [premium, setPremium] = useState(false);
   const [opts, setOpts] = useState([]);
   const [followUp, setFollowUp] = useState(false);
+  /* Démarrage immédiat = demande expresse + renonciation au droit de
+     rétractation une fois la boutique entièrement livrée. Non coché par défaut. */
+  const [immediateStart, setImmediateStart] = useState(false);
 
   useEffect(() => {
     const ctx = gsap.context(() => setupReveals(), mainRef);
@@ -189,13 +193,14 @@ export default function ShopifyStorePage() {
     // (pack Marque : ses 50 fiches sont déjà premium -> seulement les produits en plus).
     const premiumCount = premium ? (pack.premiumIncluded ? extra.qty : totalProducts) : 0;
     const premiumCost = premiumCount * PREMIUM_PER_PRODUCT;
-    const activeOpts = boutiqueOptions.filter(
-      (o) => opts.includes(o.id) && (!o.onlyFor || o.onlyFor.includes(pack.id))
-    );
+    const activeOpts = boutiqueOptions
+      .filter((o) => opts.includes(o.id))
+      .map((o) => optionFor(o, pack.id, extra.qty))
+      .filter(Boolean);
     const optsCost = activeOpts.reduce((s, o) => s + o.price, 0);
     const total = pack.price + extra.price + premiumCost + optsCost;
     const express = activeOpts.some((o) => o.id === "express");
-    const delay = express ? "24 h" : pack.delay;
+    const delay = computeDelay({ packId: pack.id, extraQty: extra.qty, premiumCount, express }).label;
     const split = pack.id === "marque";
     return { pack, extra, totalProducts, premiumCount, premiumCost, activeOpts, total, delay, split };
   }, [packId, extraIdx, premium, opts]);
@@ -222,13 +227,30 @@ export default function ShopifyStorePage() {
     q.activeOpts.forEach((o) => lines.push(`- ${o.label} : ${fmt(o.price)}`));
     lines.push(`Total : ${fmt(q.total)}${q.split ? ` (50 % à la commande : ${fmt(q.total / 2)})` : ""}`);
     if (followUp) lines.push(`+ Suivi mensuel : ${boutiqueFollowUp.monthly} €/mois`);
-    lines.push(`Délai : ${q.delay} à réception de mes éléments`);
+    lines.push(`Délai : ${q.delay} après réception de mes éléments`);
+    lines.push(
+      immediateStart
+        ? "Je demande le démarrage immédiat et je renonce à mon droit de rétractation une fois la boutique entièrement livrée."
+        : "Démarrage après le délai de rétractation de 14 jours."
+    );
     lines.push("", "(Récap fait sur kotastudio.fr/boutique-shopify)");
     return lines.join("\n");
-  }, [quote, followUp]);
+  }, [quote, followUp, immediateStart]);
+
+  /* Changer de pack : sur Lancement, les produits en plus sont limités
+     (maxExtra) -> on ramène le palier au maximum autorisé. */
+  const selectPack = (id) => {
+    const pack = boutiquePacks.find((p) => p.id === id);
+    setPackId(id);
+    if (pack.maxExtra != null) {
+      setExtraIdx((i) => (extraProductTiers[i].qty > pack.maxExtra
+        ? extraProductTiers.reduce((best, t, k) => (t.qty <= pack.maxExtra ? k : best), 0)
+        : i));
+    }
+  };
 
   const goSimulator = (id) => {
-    if (id) setPackId(id);
+    if (id) selectPack(id);
     navigate({ hash: "#simulateur" });
   };
 
@@ -271,7 +293,7 @@ export default function ShopifyStorePage() {
               </h1>
 
               <p className="mt-8 max-w-[36ch] text-lg leading-relaxed text-onmat sm:text-xl">
-                Tout ce qui est obligatoire est inclus. La boutique est à ton nom. Livrée en 72 h.
+                Paiement, pages légales et connexion du domaine inclus. Abonnement Shopify et domaine à ton nom, annoncés avant.
               </p>
 
               <div className="mt-9 flex flex-col gap-4 sm:flex-row">
@@ -287,57 +309,60 @@ export default function ShopifyStorePage() {
                 <li>✦ Paiement + pages légales inclus</li>
                 <li>✦ Boutique à ton nom</li>
                 <li>✦ Entreprise française · SIREN{"\u00a0"}{SIREN}</li>
-                <li>✦ Livrée en 72 h</li>
+                <li>✦ Livrée en 72 h*</li>
               </ul>
+              <p className="mt-3 text-[12.5px] text-onmat2">
+                * Pack Lancement : 72 h après réception de tes éléments.
+              </p>
             </div>
 
             {/* Visuel : téléphone + boutique démo codée */}
             <div className="relative mx-auto w-full max-w-[440px] py-4">
               <span className="kb-sticker left-[2%] top-[6%] -rotate-6 sm:left-[4%]">Boutique démo</span>
               <DemoStorePhone />
-              <div className="kb-checklist bottom-[1%] left-0 w-[150px] -rotate-3 sm:left-[-2%] sm:w-[168px]">
+              <div className="kb-checklist bottom-[1%] left-[-14px] w-[146px] -rotate-3 sm:left-[calc(-2%-14px)] sm:w-[164px]">
                 <p>Inclus dès 79 €</p>
                 <ul>
                   <li>Paiement</li>
                   <li>Pages légales</li>
-                  <li>Domaine</li>
+                  <li>Connexion domaine</li>
                 </ul>
               </div>
-              <div className="postit absolute right-0 top-[14%] z-20 w-[112px] rotate-[6deg] rounded-[3px] p-3 sm:right-[-2%] sm:w-[132px] sm:p-3.5">
+              <div className="postit absolute right-[-14px] top-[14%] z-20 w-[112px] rotate-[6deg] rounded-[3px] p-3 sm:right-[calc(-2%-14px)] sm:w-[132px] sm:p-3.5">
                 <p className="font-display text-[22px] font-black leading-none sm:text-[26px]">72 H</p>
-                <p className="mt-1 text-[12px] font-medium leading-tight">à réception de tes éléments</p>
+                <p className="mt-1 text-[12px] font-medium leading-tight">pack Lancement, après réception*</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ===================== 2. 37 € AILLEURS / 79 € ===================== */}
+        {/* ================ 2. COMPARAISON LIGNE PAR LIGNE ================
+            Comparaison factuelle d'UNE offre concurrente (non nommée), relevée le
+            21/11/2026. Pas de total « réel » ni d'écart calculé : les deux offres
+            n'incluent pas les mêmes choses (l'offre à 37 € inclut aussi un
+            fournisseur AliExpress, 3 mois Shopify à 1 € et un e-book ; son
+            option domaine achète le domaine, chez Kota il reste à acheter). */}
         <section className="k-paper relative">
           <div className="mx-auto max-w-7xl px-5 py-20 sm:px-6 lg:py-24">
             <header className="reveal max-w-4xl">
-              <p className="k-eyebrow">Le vrai prix</p>
+              <p className="k-eyebrow">Comparaison</p>
               <h2 className="k-h2 !text-[clamp(28px,5vw,60px)]">
-                37 € affichés. <span className="k-hl">≈ 72 € réels.</span>
+                Ce qui est inclus, <span className="k-hl">ligne par ligne.</span>
               </h2>
-              <p className="mt-5 max-w-[58ch] text-lg text-taupe">
-                Ailleurs, le paiement, les pages légales et le domaine sont « à prévoir séparément ». Chez Kota, ils sont dans les 79 €.
+              <p className="mt-5 max-w-[66ch] text-lg text-taupe">
+                Une offre à 37 € vue le 21/11/2026 : configuration du paiement + pages légales en option à 19,90 €, domaine en option à 14,90 €/an. Chez Kota : configuration du paiement, modèles de pages légales et connexion du domaine inclus dans les 79 € ; le domaine reste à acheter à ton nom (~10‑15 €/an).
               </p>
             </header>
 
             <div className="kb-vs reveal mt-12">
               <div className="kb-bill else">
-                <p className="who">Ailleurs · offre à 37 €</p>
+                <p className="who">Une offre à 37 € · vue le 21/11/2026</p>
                 <p className="big">37 €</p>
                 <ul>
-                  <li>Boutique Shopify <b>37 €</b></li>
-                  <li>Paiement configuré <b>à prévoir séparément</b></li>
-                  <li>Pages légales <b>à prévoir séparément</b></li>
-                  <li>Domaine connecté <b>à prévoir séparément</b></li>
+                  <li>Configuration du paiement + pages légales <b>option 19,90 €</b></li>
+                  <li>Nom de domaine <b>option 14,90 €/an</b></li>
+                  <li className="n">Aussi inclus chez eux <b>fournisseur AliExpress, 3 mois Shopify à 1 €, e-book</b></li>
                 </ul>
-                <div className="tot">
-                  <span>Total réel</span>
-                  <b>≈ 72 €</b>
-                </div>
               </div>
 
               <div className="kb-vs-badge" aria-hidden="true">VS</div>
@@ -346,20 +371,16 @@ export default function ShopifyStorePage() {
                 <p className="who">Chez Kota · pack Lancement</p>
                 <p className="big">79 €</p>
                 <ul>
-                  <li>Boutique Shopify à ton nom <b>inclus</b></li>
-                  <li>Paiement configuré <b>inclus</b></li>
-                  <li>Pages légales <b>incluses</b></li>
-                  <li>Domaine connecté <b>inclus</b></li>
+                  <li>Configuration du paiement <b>incluse</b></li>
+                  <li>Modèles de pages légales <b>inclus</b></li>
+                  <li>Connexion du domaine <b>incluse</b></li>
+                  <li>Nom de domaine <b>à acheter à ton nom, ~10-15 €/an</b></li>
                 </ul>
-                <div className="tot">
-                  <span>Total</span>
-                  <b>79 €</b>
-                </div>
               </div>
             </div>
 
             <p className="reveal mt-8 max-w-[62ch] text-[15px] text-taupe">
-              Environ 7 € d'écart, et rien d'obligatoire à aller chercher toi-même. Comparaison indicative, faite sur des offres à 37 € vues en ligne en novembre 2026.
+              Comparaison indicative, faite sur une seule offre vue en ligne le 21/11/2026. Ses tarifs et son contenu peuvent changer.
             </p>
           </div>
         </section>
@@ -373,7 +394,7 @@ export default function ShopifyStorePage() {
                 3 packs. <span className="k-hl">Prix fixe.</span>
               </h2>
               <p className="mt-5 max-w-[60ch] text-lg text-onmat2">
-                Paiement, pages légales et domaine dans les trois. Tu choisis selon ton nombre de produits et le niveau de finition.
+                Configuration du paiement, modèles de pages légales, connexion du domaine et bandeau cookies dans les trois. Tu choisis selon ton nombre de produits et le niveau de finition.
               </p>
             </header>
 
@@ -406,7 +427,7 @@ export default function ShopifyStorePage() {
                     </p>
                     <p className="tl">{p.tagline}</p>
                     <div className="meta">
-                      <span>Livrée en {p.delay}</span>
+                      <span>{p.delay} après réception</span>
                       <span>{p.id === "marque" ? "50 / 50" : "Payé à la commande"}</span>
                     </div>
                     {variant === "rc" && <div className="dash" />}
@@ -428,7 +449,7 @@ export default function ShopifyStorePage() {
             </div>
 
             <p className="reveal mx-auto mt-12 max-w-[78ch] text-center text-[14px] leading-relaxed text-onmat2">
-              Pages légales des 3 packs : modèles Shopify intégrés + formulaire de rétractation + checklist à valider. Délais comptés à réception de tous tes éléments ; en retard, l'express t'est remboursé. Prix nets, TVA non applicable (art. 293 B du CGI).
+              Pages légales des 3 packs : modèles Shopify intégrés + formulaire de rétractation + checklist à valider. Délais comptés à réception de tous tes éléments. En retard : on te rembourse l'Express si tu l'as pris. Tu gardes aussi tous tes droits légaux. Prix nets, TVA non applicable (art. 293 B du CGI).
             </p>
 
             {/* Tarifs à la carte : repliés par défaut (le simulateur les reprend),
@@ -455,6 +476,9 @@ export default function ShopifyStorePage() {
                       </tr>
                     ))}
                     <tr>
+                      <td colSpan={2} className="!whitespace-normal !text-left !font-normal !text-onmat2 text-[13.5px]">Pack Lancement : +5 ou +10 produits au maximum. Au-delà, prends le pack Boutique.</td>
+                    </tr>
+                    <tr>
                       <td>Fiche premium (texte de vente relu, photos détourées fond uni, titre et description Google)</td>
                       <td>+{PREMIUM_PER_PRODUCT} € / produit</td>
                     </tr>
@@ -474,9 +498,19 @@ export default function ShopifyStorePage() {
                       <tr key={o.id}>
                         <td>
                           {o.label}
+                          {o.id === "logo" ? <span className="text-onmat2"> · Pack Lancement</span> : null}
                           {o.note ? <span className="text-onmat2"> · {o.note}</span> : null}
                         </td>
                         <td>{formatEuro(o.price)}</td>
+                      </tr>
+                    ))}
+                    {Object.entries(boutiqueOptions.find((o) => o.id === "logo").variants).map(([packKey, v]) => (
+                      <tr key={`logo-${packKey}`}>
+                        <td>
+                          {v.label}
+                          <span className="text-onmat2"> · Pack Boutique (logo pro déjà inclus)</span>
+                        </td>
+                        <td>{formatEuro(v.price)}</td>
                       </tr>
                     ))}
                     {boutiqueOtherPrices.map((o) => (
@@ -520,7 +554,7 @@ export default function ShopifyStorePage() {
                         type="button"
                         role="radio"
                         aria-checked={packId === p.id}
-                        onClick={() => setPackId(p.id)}
+                        onClick={() => selectPack(p.id)}
                         className="kb-choice flex items-center justify-between gap-3 px-4 py-3 text-left sm:block"
                       >
                         <span className="block font-display text-[15px] font-bold tracking-[-.02em]">{p.name}</span>
@@ -541,6 +575,7 @@ export default function ShopifyStorePage() {
                         key={t.qty}
                         type="button"
                         role="radio"
+                        disabled={quote.pack.maxExtra != null && t.qty > quote.pack.maxExtra}
                         aria-checked={extraIdx === i}
                         aria-label={t.qty ? `+${t.qty} produits, ${formatEuro(t.price)}` : "Aucun produit en plus"}
                         onClick={() => setExtraIdx(i)}
@@ -553,6 +588,11 @@ export default function ShopifyStorePage() {
                       </button>
                     ))}
                   </div>
+                  {quote.pack.maxExtra != null && (
+                    <p className="mt-3 text-sm text-taupe">
+                      Pack {quote.pack.name} : +{quote.pack.maxExtra} produits au maximum. Au-delà, prends le pack Boutique.
+                    </p>
+                  )}
                   <p className="mt-3 text-sm text-taupe">
                     Total : <b className="text-encre">{quote.totalProducts.toLocaleString("fr-FR").replace(/ | /g, " ")} produit{quote.totalProducts > 1 ? "s" : ""}</b> dans ta boutique.
                   </p>
@@ -584,14 +624,16 @@ export default function ShopifyStorePage() {
                 <div className="kb-step">
                   <h3><em>03</em>Options</h3>
                   <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                    {boutiqueOptions.map((o) => {
-                      const available = !o.onlyFor || o.onlyFor.includes(quote.pack.id);
+                    {boutiqueOptions.map((base) => {
+                      const resolved = optionFor(base, quote.pack.id, quote.extra.qty);
+                      const available = !!resolved;
+                      const o = resolved || base;
                       const checked = available && opts.includes(o.id);
                       const why =
                         !available && o.id === "logo"
                           ? "Déjà inclus dans le pack Marque"
-                          : !available
-                          ? o.note
+                          : o.id === "logo" && quote.pack.id === "boutique"
+                          ? "Le logo pro est déjà inclus dans le pack Boutique"
                           : o.note;
                       return (
                         <label key={o.id} className="kb-choice flex items-start gap-3 px-4 py-3">
@@ -600,7 +642,7 @@ export default function ShopifyStorePage() {
                             className="sr-only"
                             checked={checked}
                             disabled={!available}
-                            onChange={() => toggleOpt(o)}
+                            onChange={() => toggleOpt(base)}
                           />
                           <span className="kb-box mt-0.5" aria-hidden="true">{checked ? "✓" : ""}</span>
                           <span className="min-w-0 flex-1">
@@ -634,6 +676,28 @@ export default function ShopifyStorePage() {
                       </span>
                       <span className="mt-1 block text-[13.5px] leading-snug text-taupe">
                         3 modifications + 10 produits par mois + mises à jour. Payé à part, chaque mois.
+                      </span>
+                    </span>
+                  </label>
+                </div>
+
+                {/* 5. démarrage : droit de rétractation (non coché par défaut) */}
+                <div className="kb-step">
+                  <h3><em>05</em>Démarrage</h3>
+                  <label className="kb-choice flex items-start gap-3 px-4 py-3.5">
+                    <input
+                      type="checkbox"
+                      className="sr-only"
+                      checked={immediateStart}
+                      onChange={(e) => setImmediateStart(e.target.checked)}
+                    />
+                    <span className="kb-box mt-0.5" aria-hidden="true">{immediateStart ? "✓" : ""}</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[14.5px] font-semibold leading-snug">
+                        Je demande le démarrage immédiat et je renonce à mon droit de rétractation une fois la boutique entièrement livrée
+                      </span>
+                      <span className="mt-1 block text-[13px] leading-snug text-taupe">
+                        Facultatif. Sans cette case, on démarre après le délai de rétractation de 14 jours.
                       </span>
                     </span>
                   </label>
@@ -704,8 +768,16 @@ export default function ShopifyStorePage() {
                     <span>{quote.delay}</span>
                   </div>
                   <p className="text-[11.5px] leading-snug opacity-75">
-                    À réception de tous tes éléments.
-                    {quote.extra.qty >= 100 ? " Gros volume de produits : on te confirme le délai sur WhatsApp avant de commencer." : ""}
+                    Après réception de tous tes éléments.
+                  </p>
+                  <div className="ln">
+                    <span>Démarrage</span>
+                    <span>{immediateStart ? "immédiat" : "après 14 jours"}</span>
+                  </div>
+                  <p className="text-[11.5px] leading-snug opacity-75">
+                    {immediateStart
+                      ? "À ta demande. Tu renonces à ton droit de rétractation une fois la boutique entièrement livrée."
+                      : "Après le délai de rétractation de 14 jours."}
                   </p>
                   <p className="mt-1 text-[11.5px] leading-snug opacity-75">TVA non applicable, art. 293 B du CGI.</p>
 
@@ -727,7 +799,7 @@ export default function ShopifyStorePage() {
                     )}
                   </div>
                   <p className="mt-3 font-sans text-[12.5px] leading-snug text-taupe">
-                    Le message est pré-rempli avec ton récap. On te répond, on valide ensemble, puis tu règles ta commande.
+                    Le message est pré-rempli avec ton récap. On te répond et on t'envoie les conditions générales de vente avec ton récap, avant paiement.
                   </p>
                 </div>
               </aside>
@@ -748,12 +820,12 @@ export default function ShopifyStorePage() {
               <li>
                 <span className="n">1</span>
                 <b>Tu choisis</b>
-                <p>Ton pack et ton nombre de produits. Tu commandes sur WhatsApp, on valide ensemble et tu règles ta commande.</p>
+                <p>Ton pack et ton nombre de produits. Tu commandes sur WhatsApp, tu reçois ton récap et les CGV, puis tu règles ta commande.</p>
               </li>
               <li>
                 <span className="n">2</span>
                 <b>Tu remplis un formulaire</b>
-                <p>5 minutes : ton produit, tes couleurs, des exemples que tu aimes, tes accès.</p>
+                <p>5 minutes : ton produit, tes couleurs, des exemples que tu aimes. Tu crées ton compte Shopify (on te guide) et tu nous ajoutes en collaborateur.</p>
               </li>
               <li>
                 <span className="n">3</span>
@@ -784,9 +856,10 @@ export default function ShopifyStorePage() {
                 <h3>On s'occupe de</h3>
                 <ul className="kb-list ok">
                   <li>Le design de ta boutique, à tes couleurs</li>
-                  <li>Le paiement configuré</li>
+                  <li>La configuration du paiement</li>
                   <li>Les pages légales : modèles Shopify, formulaire de rétractation, checklist</li>
                   <li>La connexion de ton nom de domaine</li>
+                  <li>Le bandeau cookies Shopify configuré</li>
                   <li>L'import de tes produits</li>
                   <li>La vidéo de prise en main et les retouches de ton pack</li>
                 </ul>
@@ -795,7 +868,8 @@ export default function ShopifyStorePage() {
                 <h3>Ça dépend de toi</h3>
                 <ul className="kb-list you">
                   <li>Nous envoyer tes éléments : le délai démarre à réception</li>
-                  <li>Ton abonnement Shopify et ton nom de domaine, à ton nom</li>
+                  <li>Ton accès Shopify + ta vérification d'identité pour les paiements (5 min, par toi)</li>
+                  <li>Ton compte Shopify (tu le crées, on te guide) et ton nom de domaine, à ton nom</li>
                   <li>Relire et valider tes pages légales avec la checklist</li>
                   <li>Ton stock ou ton fournisseur, tes envois, ton service client</li>
                   <li>Faire connaître ta boutique : réseaux, vidéos, pub</li>
@@ -804,10 +878,10 @@ export default function ShopifyStorePage() {
               <div className="kb-card y">
                 <h3>Ce qu'on promet</h3>
                 <ul className="kb-list ok">
-                  <li>Le délai respecté à réception de tes éléments. En retard, l'express t'est remboursé.</li>
-                  <li>La boutique à ton nom, avec tous les accès</li>
-                  <li>Un design jamais revendu</li>
-                  <li>Rien d'obligatoire caché en option</li>
+                  <li>Le délai respecté à réception de tes éléments. En retard : on te rembourse l'Express si tu l'as pris. Tu gardes aussi tous tes droits légaux.</li>
+                  <li>La boutique sur ton compte Shopify, à ton nom, avec tous les accès</li>
+                  <li>Ton logo, tes textes et ta boutique t'appartiennent</li>
+                  <li>Rien d'obligatoire caché : les frais à prévoir sont annoncés avant</li>
                   <li>Une entreprise française, SIREN{"\u00a0"}{SIREN}</li>
                 </ul>
               </div>
@@ -845,7 +919,7 @@ export default function ShopifyStorePage() {
                 Une boutique Shopify a des frais à elle. Tu les payes directement aux plateformes, pas à Kota.
               </p>
             </header>
-            <div className="k-cmp kb-nowrap reveal mt-10">
+            <div className="k-cmp reveal mt-10">
               <table className="!min-w-0">
                 <thead>
                   <tr>
@@ -858,9 +932,19 @@ export default function ShopifyStorePage() {
                     <tr key={c.label}>
                       <td>
                         <span className="block font-semibold text-onmat">{c.label}</span>
-                        <span className="mt-0.5 block text-[13.5px] text-onmat2">{c.note}</span>
+                        <span className="mt-0.5 block text-[13.5px] text-onmat2">
+                          {c.note}
+                          {c.href && (
+                            <>
+                              {" "}
+                              <a href={c.href} target="_blank" rel="noopener noreferrer" className="underline hover:text-hi">
+                                Tarifs Shopify
+                              </a>
+                            </>
+                          )}
+                        </span>
                       </td>
-                      <td className="align-top">{c.price}</td>
+                      <td className="w-[34%] align-top sm:w-auto sm:whitespace-nowrap">{c.price}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -901,7 +985,46 @@ export default function ShopifyStorePage() {
           </div>
         </section>
 
-        {/* =========================== 9. FAQ =========================== */}
+        {/* ============== 9. COMMANDE ET DROIT DE RÉTRACTATION ==============
+            Vente à distance à un consommateur (Code de la consommation) : 14 jours
+            de rétractation. TODO légal : renseigner le médiateur de la
+            consommation (nom + site web) dans les CGV Kota Boutique.
+            Médiateur de la consommation : [à compléter]
+            (ne pas afficher ce placeholder à l'écran). */}
+        <section id="retractation" className="k-paper relative">
+          <div className="mx-auto max-w-7xl px-5 pt-20 sm:px-6 lg:pt-24">
+            <header className="reveal max-w-4xl">
+              <p className="k-eyebrow">Commande</p>
+              <h2 className="k-h2 !text-[clamp(28px,5vw,60px)]">
+                Commande et <span className="k-hl">droit de rétractation.</span>
+              </h2>
+            </header>
+            <div className="reveal mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="kb-card">
+                <h3>Tes 14 jours</h3>
+                <ul className="kb-list you">
+                  <li>Tu as 14 jours pour te rétracter à compter de ta commande.</li>
+                  <li>Si tu veux qu'on démarre tout de suite, tu le demandes expressément. Tu reconnais alors perdre ton droit de rétractation une fois la boutique entièrement livrée.</li>
+                  <li>Si tu te rétractes après le démarrage, tu paies la part déjà réalisée.</li>
+                </ul>
+              </div>
+              <div className="kb-card">
+                <h3>Qui te vend</h3>
+                <p className="text-[15.5px] leading-relaxed">
+                  Yanis Ouammou EI — Kota Studio, micro-entreprise, SIREN{"\u00a0"}{SIREN}.
+                </p>
+                <p className="mt-3 text-[15px] leading-relaxed text-taupe">
+                  Conditions générales de vente Kota Boutique : envoyées avec ton récap avant paiement.
+                </p>
+                <p className="mt-3 text-[15px] leading-relaxed text-taupe">
+                  En cas de litige, tu peux recourir gratuitement à un médiateur de la consommation (coordonnées dans les CGV).
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =========================== 10. FAQ =========================== */}
         <section id="faq" className="k-paper relative">
           <div className="k-faq mx-auto max-w-7xl px-5 py-20 sm:px-6 lg:py-24">
             <header className="reveal mb-10 max-w-4xl">
@@ -919,17 +1042,20 @@ export default function ShopifyStorePage() {
           </div>
         </section>
 
-        {/* ========================= 10. CTA FINAL ========================= */}
+        {/* ========================= 11. CTA FINAL ========================= */}
         <section className="k-paper relative">
           <div className="mx-auto max-w-7xl px-5 pb-24 sm:px-6">
             <div className="reveal mat relative overflow-hidden rounded-[28px] px-6 py-12 text-center shadow-soft-lg sm:px-10 lg:px-16 lg:py-16">
               <h2 className="k-h2 !text-[clamp(28px,5.4vw,64px)] text-onmat">
                 <span className="block">Ta boutique.</span>
                 <span className="block">À ton nom.</span>
-                <span className="k-hl">En 72 h.</span>
+                <span className="k-hl">En 72 h*.</span>
               </h2>
-              <p className="mx-auto mt-5 max-w-[46ch] text-lg text-onmat2">
-                Dès 79 €, tout l'obligatoire inclus. Une question avant de te lancer ? Écris-nous, on répond vite.
+              <p className="mx-auto mt-5 max-w-[52ch] text-lg text-onmat2">
+                Dès 79 € : paiement, pages légales et connexion du domaine inclus. Abonnement Shopify et domaine à ton nom, annoncés avant.
+              </p>
+              <p className="mx-auto mt-3 max-w-[52ch] text-[13.5px] text-onmat2">
+                * Pack Lancement : 72 h après réception de tes éléments.
               </p>
               <div className="mt-9 flex flex-col justify-center gap-4 sm:flex-row">
                 <Button href="#packs" variant="primary">
@@ -940,7 +1066,7 @@ export default function ShopifyStorePage() {
                 </Button>
               </div>
               <p className="mt-9 font-mono text-[11.5px] uppercase tracking-[.12em] text-onmat2">
-                Kota Studio · micro-entreprise française · SIREN{"\u00a0"}{SIREN} · Saint-Julien-en-Genevois
+                Yanis Ouammou EI — Kota Studio · micro-entreprise · SIREN{"\u00a0"}{SIREN} · Saint-Julien-en-Genevois
               </p>
             </div>
           </div>

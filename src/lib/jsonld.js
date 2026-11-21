@@ -670,7 +670,7 @@ export const SHOPIFY_STORE_PATH = "/boutique-shopify";
 export const shopifyStoreFaqs = [
   {
     q: "C'est 79 € par mois ?",
-    a: "Non. 79 €, c'est une seule fois, pour la création de ta boutique avec le pack Lancement. Le seul abonnement, c'est celui de Shopify, que tu payes directement à Shopify : environ 36 € par mois en Basic, ou 1 € par mois pendant 3 mois si tu crées toi-même ton compte (selon l'offre Shopify du moment). Le suivi mensuel Kota à 29 € par mois est une option, sans engagement.",
+    a: "Non. 79 €, c'est une seule fois, pour la création de ta boutique avec le pack Lancement. Le seul abonnement, c'est celui de Shopify, que tu payes directement à Shopify : tu crées ton compte toi-même (on te guide), tu profites de l'offre de Shopify du moment (souvent 1 € par mois pendant 3 mois), puis environ 36 € par mois en Basic. Le suivi mensuel Kota à 29 € par mois est une option, sans engagement.",
   },
   {
     q: "Le fournisseur est compris ?",
@@ -682,7 +682,7 @@ export const shopifyStoreFaqs = [
   },
   {
     q: "J'aurai l'accès complet à ma boutique ?",
-    a: "Oui. La boutique est à ton nom, sur ton compte Shopify, et tu as tous les accès. Le design qu'on fait pour toi n'est jamais revendu à quelqu'un d'autre.",
+    a: "Oui. Tu crées toi-même ton compte Shopify (on te guide) et tu nous ajoutes en collaborateur : la boutique est sur ton compte, à ton nom, dès le premier jour, et tu as tous les accès. Tu fais aussi ta vérification d'identité pour les paiements (5 minutes). Ton logo, tes textes et ta boutique t'appartiennent ; seul le thème de base est partagé.",
   },
   {
     q: "On peut la modifier facilement après ?",
@@ -725,7 +725,7 @@ export function buildShopifyStoreJsonLd() {
         serviceType: "Création de boutique Shopify clé en main",
         url: pageUrl,
         description:
-          "Boutique Shopify clé en main dès 79 € : paiement configuré, pages légales (modèles Shopify + formulaire de rétractation + checklist), domaine connecté, boutique à ton nom. Livrée en 72 h à réception des éléments.",
+          "Boutique Shopify clé en main dès 79 € : configuration du paiement, modèles de pages légales (modèles Shopify + formulaire de rétractation + checklist), connexion du domaine et bandeau cookies inclus, boutique sur le compte Shopify du client. Pack Lancement livré 72 h après réception des éléments.",
         areaServed: [
           { "@type": "Country", name: "France" },
           { "@type": "Country", name: "Belgique" },

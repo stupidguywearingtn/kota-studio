@@ -63,14 +63,14 @@
 .kb-bill .big{font:900 clamp(40px,7vw,58px)/.95 "Unbounded",sans-serif;letter-spacing:-.06em;margin-top:6px}
 .kb-bill ul{list-style:none;margin:14px 0 0;padding:0;display:grid}
 .kb-bill li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-top:1.5px dashed #14171433;font-size:14.5px}
-.kb-bill li b{font:600 11.5px "JetBrains Mono",monospace;letter-spacing:.04em;text-align:right;white-space:nowrap}
+.kb-bill li b{font:600 11.5px/1.35 "JetBrains Mono",monospace;letter-spacing:.04em;text-align:right;max-width:56%;flex:none}
 .kb-bill.else li b{color:#B4482B}
 .kb-bill .tot{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--ink);margin-top:4px;padding-top:12px}
 .kb-bill .tot span{font:500 11.5px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase}
 .kb-bill .tot b{font:900 30px/1 "Unbounded",sans-serif;letter-spacing:-.05em}
 .kb-vs-badge{width:58px;height:58px;border-radius:99px;display:grid;place-items:center;background:var(--ink);color:var(--hi);font:900 17px "Unbounded",sans-serif;letter-spacing:-.04em;box-shadow:3px 3px 0 #0b1a1466}
 @media (max-width:767px){
-  .kb-vs{grid-template-columns:1fr;gap:14px}
+  .kb-vs{grid-template-columns:minmax(0,1fr);gap:14px}
   .kb-vs-badge{margin:-4px auto;width:50px;height:50px;font-size:15px;position:relative;z-index:2}
 }
 
@@ -146,3 +146,7 @@
 .kb-fold summary::after{content:"+";position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:26px;line-height:1;color:var(--hi)}
 .kb-fold[open] summary::after{content:"−"}
 .kb-fold[open]{padding-bottom:22px}
+
+/* palier de produits indisponible pour le pack choisi */
+.kb-choice:disabled{opacity:.38;cursor:not-allowed;box-shadow:none;transform:none;background:transparent}
+.kb-bill.else li.n b{color:var(--ink2)}

@@ -234,7 +234,7 @@ writeRoute("/creation-site-internet-artisan", {
 writeRoute("/boutique-shopify", {
   title: "Boutique Shopify clé en main dès 79 € | Kota Boutique",
   description:
-    "Ta boutique Shopify clé en main dès 79 € : paiement, pages légales et domaine inclus, boutique à ton nom, livrée en 72 h. Entreprise française, prix affichés, zéro promesse de ventes.",
+    "Ta boutique Shopify clé en main dès 79 € : paiement, pages légales et connexion du domaine inclus, boutique sur ton compte, livrée 72 h après réception de tes éléments (pack Lancement). Entreprise française, prix affichés.",
   schemaId: "shopify-store",
   jsonLd: buildShopifyStoreJsonLd(),
 });

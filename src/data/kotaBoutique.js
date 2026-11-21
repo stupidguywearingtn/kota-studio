@@ -18,16 +18,18 @@ export const boutiquePacks = [
     includedProducts: 1,
     premiumIncluded: false,
     delay: "72 h",
+    maxExtra: 10, // au-delà de +10 produits : pack Boutique
     payment: "100 % à la commande",
     tagline: "Pour lancer un premier produit, proprement.",
     features: [
       "1 produit importé",
       "Thème Shopify personnalisé à tes couleurs",
       "Logo typographique simple",
-      "Paiement configuré, pages légales et domaine connecté",
+      "Configuration du paiement, modèles de pages légales et connexion du domaine",
+      "Bandeau cookies Shopify configuré",
       "Vidéo de prise en main",
       "1 tour de retouches",
-      "Livrée en 72 h",
+      "Livrée 72 h après réception de tes éléments",
     ],
   },
   {
@@ -44,11 +46,12 @@ export const boutiquePacks = [
       "20 produits importés",
       "Thème à tes couleurs + sections animées, bannières, page À propos + FAQ",
       "Logo pro",
-      "Paiement configuré, pages légales et domaine connecté",
-      "App d'avis + pixel TikTok",
+      "Configuration du paiement, modèles de pages légales et connexion du domaine",
+      "Bandeau cookies Shopify configuré",
+      "App d'avis + pixel TikTok installé avec ton bandeau cookies",
       "Vidéo de prise en main",
       "2 tours de retouches",
-      "Livrée en 5 jours",
+      "Livrée 5 jours après réception de tes éléments",
     ],
   },
   {
@@ -64,12 +67,13 @@ export const boutiquePacks = [
       "50 produits en fiches premium",
       "Identité complète (logo, palette, typos) + accueil premium",
       "Logo + mini charte",
-      "Paiement configuré, pages légales et domaine connecté",
-      "App d'avis + pixel TikTok",
+      "Configuration du paiement, modèles de pages légales et connexion du domaine",
+      "Bandeau cookies Shopify configuré",
+      "App d'avis + pixel TikTok installé avec ton bandeau cookies",
       "3 vidéos produit prêtes à poster",
       "Vidéo de prise en main + appel de 30 min",
       "3 tours de retouches",
-      "Livrée en 10 jours",
+      "Livrée 10 jours après réception de tes éléments",
     ],
   },
 ];
@@ -97,15 +101,55 @@ export const SOURCED_PER_PRODUCT = 19;
 /* Options du simulateur. `onlyFor` = packs où l'option est proposée ;
    `group` = options exclusives entre elles (une seule cochée). */
 export const boutiqueOptions = [
-  { id: "express", label: "Express 24 h", price: 29, note: "Pack Lancement uniquement", onlyFor: ["lancement"] },
+  {
+    id: "express",
+    label: "Express 24 h",
+    price: 29,
+    note: "Pack Lancement uniquement, jusqu'à +10 produits",
+    onlyFor: ["lancement"],
+    maxExtra: 10,
+  },
   { id: "video1", label: "1 vidéo produit prête à poster", price: 49, group: "video" },
   { id: "video3", label: "Pack 3 vidéos produit", price: 129, group: "video" },
   { id: "tiktokshop", label: "TikTok Shop connecté", price: 79 },
   { id: "traduction", label: "Traduction de la boutique (1 langue)", price: 39 },
-  { id: "logo", label: "Logo pro + mini charte", price: 89, onlyFor: ["lancement", "boutique"] },
+  /* Logo : prix selon le pack (le pack Boutique inclut déjà un logo pro ->
+     seule la mini charte est proposée ; le pack Marque inclut tout). */
+  {
+    id: "logo",
+    label: "Logo pro + mini charte",
+    price: 89,
+    onlyFor: ["lancement", "boutique"],
+    variants: { boutique: { label: "Mini charte (palette + typos)", price: 49 } },
+  },
   { id: "mail", label: "Mail pro configuré", price: 19 },
   { id: "coaching", label: "Coaching lancement (1 h)", price: 59 },
 ];
+
+/* Option telle que proposée pour un pack donné (libellé/prix selon le pack),
+   ou null si elle n'est pas disponible pour ce pack / ce nombre de produits. */
+export function optionFor(option, packId, extraQty = 0) {
+  if (option.onlyFor && !option.onlyFor.includes(packId)) return null;
+  if (option.maxExtra != null && extraQty > option.maxExtra) return null;
+  return { ...option, ...(option.variants?.[packId] || {}) };
+}
+
+/* Délai affiché, compté à réception de tous les éléments :
+   Lancement 72 h (24 h en Express) ; Boutique 5 jours ; Marque 10 jours ;
+   + 2 jours ouvrés par tranche de 50 produits en plus au-delà de 50 ;
+   + 2 jours ouvrés si fiches premium sur plus de 25 produits. */
+export function computeDelay({ packId, extraQty = 0, premiumCount = 0, express = false }) {
+  const pack = boutiquePacks.find((p) => p.id === packId);
+  const base = packId === "lancement" && express ? "24 h" : pack.delay;
+  let extraDays = 0;
+  if (extraQty > 50) extraDays += Math.ceil((extraQty - 50) / 50) * 2;
+  if (premiumCount > 25) extraDays += 2;
+  return {
+    base,
+    extraDays,
+    label: extraDays ? `${base} + ${extraDays} jours ouvrés` : base,
+  };
+}
 
 /* Tarifs affichés hors simulateur (tableau des options). */
 export const boutiqueOtherPrices = [
@@ -124,7 +168,13 @@ export const boutiqueClientCosts = [
   {
     label: "Abonnement Shopify (Basic)",
     price: "≈ 36 € / mois",
-    note: "Ou 1 € / mois pendant 3 mois si tu crées toi-même ton compte (offre Shopify du moment).",
+    note: "Tu crées ton compte Shopify toi-même (on te guide) : tu profites de l'offre de Shopify du moment (souvent 1 € / mois pendant 3 mois), puis environ 36 € / mois en Basic.",
+  },
+  {
+    label: "Frais par vente (Shopify Payments)",
+    price: "≈ 1,5 à 2,9 % + 0,25 €",
+    note: "Environ 1,5 % à 2,9 % + 0,25 € selon la carte, voir la page tarifs de Shopify.",
+    href: "https://www.shopify.com/fr/tarifs",
   },
   { label: "Nom de domaine", price: "≈ 10 à 15 € / an", note: "Payé au registraire, à ton nom." },
   { label: "Apps payantes", price: "si tu en veux", note: "Facultatif, selon les fonctions que tu veux ajouter." },
