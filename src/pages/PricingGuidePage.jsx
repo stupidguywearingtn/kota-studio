@@ -3,7 +3,16 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
-import { buildPricingGuideJsonLd, pricingGuideFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
+import {
+  buildPricingGuideJsonLd,
+  pricingGuideFaqs,
+  PAGE_SCHEMA_ATTR,
+  AGENCY_GUIDE_PATH,
+  CUSTOM_VS_CMS_PATH,
+  SITE_PAGES_PATH,
+  SOCIAL_VS_SITE_PATH,
+  AI_VISIBILITY_PATH,
+} from "../lib/jsonld";
 import { offer, process, whatWeDo, promises, whatsapp } from "../data/content";
 import { cities } from "../data/cities";
 import Logo from "../components/Logo";
@@ -233,6 +242,42 @@ export default function PricingGuidePage() {
               )}
             </div>
           ))}
+        </section>
+
+        {/* ---- Maillage interne : guides (questions suivantes d'un prospect) ---- */}
+        <section className="reveal mx-auto max-w-4xl px-6 pb-10">
+          <div className="rounded-2xl border border-encre/10 bg-sable/40 px-6 py-6">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-encre">
+              Les questions qu'on se pose ensuite
+            </h3>
+            <ul className="mt-3 flex flex-col gap-2 text-sm">
+              <li>
+                <Link to={AGENCY_GUIDE_PATH} className="font-semibold text-or hover:underline">
+                  Comment choisir une agence de création de site internet ? →
+                </Link>
+              </li>
+              <li>
+                <Link to={CUSTOM_VS_CMS_PATH} className="font-semibold text-or hover:underline">
+                  Site sur-mesure ou WordPress / Wix : que choisir ? →
+                </Link>
+              </li>
+              <li>
+                <Link to={SITE_PAGES_PATH} className="font-semibold text-or hover:underline">
+                  Quelles pages pour un site vitrine ? →
+                </Link>
+              </li>
+              <li>
+                <Link to={SOCIAL_VS_SITE_PATH} className="font-semibold text-or hover:underline">
+                  Site internet ou réseaux sociaux : faut-il les deux ? →
+                </Link>
+              </li>
+              <li>
+                <Link to={AI_VISIBILITY_PATH} className="font-semibold text-or hover:underline">
+                  Comment apparaître dans ChatGPT et les IA avec un site local ? →
+                </Link>
+              </li>
+            </ul>
+          </div>
         </section>
 
         {/* ---- Maillage interne : pages villes ---- */}

@@ -7,6 +7,7 @@ import {
   buildCityJsonLd,
   PAGE_SCHEMA_ATTR,
   PRICING_GUIDE_PATH,
+  AGENCY_GUIDE_PATH,
   ARTISAN_SITE_PATH,
   REFONTE_SIGNS_PATH,
   DOMAIN_OWNERSHIP_PATH,
@@ -219,6 +220,11 @@ export default function CityPage() {
               <li>
                 <Link to={PRICING_GUIDE_PATH} className="font-semibold text-or hover:underline">
                   Combien coûte un site internet ? Prix, délais et inclus détaillés →
+                </Link>
+              </li>
+              <li>
+                <Link to={AGENCY_GUIDE_PATH} className="font-semibold text-or hover:underline">
+                  Comment choisir une agence de création de site internet ? →
                 </Link>
               </li>
               <li>

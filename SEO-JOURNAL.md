@@ -37,6 +37,12 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-22 (dimanche — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : `origin/main` = `f0dbde8` avant run. `/`, robots.txt (Allow /), sitemap.xml (19 URLs), llms.txt, `/creation-site-internet-pays-de-gex`, page prix en 200 ; URL inconnue 404 ; aucune balise/en-tête noindex sur l'accueil. NAP servi sur l'accueil : +33615802619, « Paluel » ; ancien 06 68 82 33 96 absent du code. Rien de cassé.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Lyon agence web" (La Fabrique du Net ×n, Codeur ×2, digitiz, PagesJaunes, 118712, leblogdudirigeant) et "création site vitrine Haute-Savoie" (118712 ×n, Malt ×3, Codeur, La Fabrique du Net Annecy/Chambéry, Infomaniak partenaires, Sortlist, ComeUp). `site:kotastudio.fr` : 0 page du domaine (Contra AUREA seule). Inchangé depuis le 07/09. Le blocage reste l'indexation (Search Console non validée côté Yanis), pas le contenu.
+- Chantier : **maillage interne vers les guides les moins liés** (item 18 du backlog). Voir "Chantiers faits".
+
 **Au 2026-11-20 (vendredi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : `origin/main` = `25a4009` avant run. `/`, sitemap.xml, llms.txt, `/creation-site-internet-thonon-les-bains`, page prix en 200 ; URL inconnue 404 ; `www.kotastudio.fr/` → 308. **Maillage du 19/11 vérifié en prod** (lien vers `/creation-site-internet-artisan` servi sur `/creation-site-internet-annecy`). TXT google-site-verification toujours publié.
@@ -720,6 +726,16 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-22 (dimanche) — Maillage interne : page prix → 5 guides peu liés, pages villes → « choisir une agence »
+
+- Pourquoi : angle alterné (20/11 = page zone, 19/11 = maillage villes → guides). Item 18 du backlog. Audit par script du HTML pré-rendu (`dist/**/index.html`, liens `href="/..."` hors footer/nav/header) AVANT : `/apparaitre-dans-chatgpt-et-ia-site-local` **1** lien contextuel, `/comment-choisir-une-agence-web` 2, `/site-internet-ou-reseaux-sociaux` 2, `/quelles-pages-pour-un-site-vitrine` 3, `/site-sur-mesure-ou-wordpress-wix` 4. La page prix (15 liens reçus, page pivot) ne liait AUCUN guide. « Comment choisir une agence web » est pourtant LA question que les prospects posent aux IA (« quelle agence web choisir »).
+- Fait :
+  - `src/pages/PricingGuidePage.jsx` : nouveau bloc « Les questions qu'on se pose ensuite » (même style que le bloc villes juste en dessous, placé entre les Q/R et « Vous cherchez une agence près de chez vous ? ») → 5 liens à ancre-question : choisir une agence, sur-mesure ou WordPress/Wix, quelles pages pour un site vitrine, site ou réseaux sociaux, apparaître dans ChatGPT. Chemins importés depuis `jsonld.js` (`*_PATH`).
+  - `src/pages/CityPage.jsx` : bloc « Envie de comparer avant d'appeler ? » → +1 lien « Comment choisir une agence de création de site internet ? » (2e position, après la page prix) sur les 7 pages villes/zones.
+- Résultat (script, APRÈS) : choisir une agence 2 → **10**, GEO/ChatGPT 1 → 2, réseaux sociaux 2 → 3, pages vitrine 3 → 4, WordPress/Wix 4 → 5.
+- Vérifs : build OK (24 routes pré-rendues + 404), bloc présent dans le HTML pré-rendu de la page prix (crawlers sans JS) ; Playwright iPhone 13 sur la page prix et `/creation-site-internet-annecy` : scrollWidth 390 = viewport, 0 erreur JS, captures relues (listes lisibles, aucun débordement).
+- NE PAS fait : aucun texte de Q/R touché → FAQPage/JSON-LD inchangés ; date visible « Dernière mise à jour » et `lastmod` du sitemap NON changés (ajout de liens ≠ mise à jour du contenu) ; llms.txt inchangé (aucune page ajoutée) ; pas de ping IndexNow (aucune URL nouvelle) ; accueil non touché (sections validées) ; pas de nouvelle page alors que le site n'est toujours pas indexé — empiler des pages ne débloquera rien tant que Search Console n'est pas validé.
 
 ### 2026-11-20 (vendredi) — Page zone « Création de site internet dans le Pays de Gex » (Ain)
 
@@ -2397,7 +2413,7 @@ Par ordre de priorité pour les prochains runs :
     suivantes à vérifier avant d'écrire : artisans/PME locales, créateurs TikTok.
 16. ~~Page propriété domaine~~ — faite le 2026-10-02. Pistes : artisans/PME, créateurs TikTok (vérifier la demande), Genève (bloqué).
 17. ~~Page artisans~~ — **faite le 2026-11-17** (`/creation-site-internet-artisan`). ~~Thonon/Chablais~~ — **faite le 2026-11-18**. ~~Pays de Gex (Ain)~~ — **faite le 2026-11-20**. Pistes restantes vérifiées le 20/11 : Cluses / vallée de l'Arve (SERP = tourisme + 2-3 agences locales, faisable avec un angle industrie/décolletage seulement si fait vérifié) ; Chambéry / Savoie à vérifier. Pistes suivantes (vérifier la SERP avant) : autres pages villes de Haute-Savoie à SERP faible (Cluses / vallée de l'Arve, La Roche-sur-Foron, Sallanches) — un angle propre par ville, sinon pages minces ; déclinaisons par métier seulement avec clients réels ; créateurs TikTok ; Genève (bloqué).
-18. **Maillage restant (audit du 19/11)** : liens contextuels reçus — `/apparaitre-dans-chatgpt-et-ia-site-local` 1, `/comment-choisir-une-agence-web` 2, `/site-internet-ou-reseaux-sociaux` 2. L'accueil ne lie aucun guide hors footer (sections validées : ne pas toucher sans accord de Yanis). Piste : un bloc « Pour aller plus loin » sur la page prix (la plus liée, 14) vers « choisir une agence » et « apparaître dans ChatGPT ». Script d'audit : parser `dist/**/index.html`, retirer footer/nav/header, compter les `href="/..."`.
+18. ~~Bloc « Pour aller plus loin » sur la page prix~~ — **fait le 2026-11-22** (5 guides liés + « choisir une agence » sur les pages villes). Reste : le GEO/ChatGPT (2) et réseaux sociaux (3) restent les moins liés ; piste = lien contextuel depuis `/creation-site-internet-artisan` et `/comment-choisir-une-agence-web` dans leur bloc « Pour aller plus loin » si pertinent. **Maillage restant (audit du 19/11)** : liens contextuels reçus — `/apparaitre-dans-chatgpt-et-ia-site-local` 1, `/comment-choisir-une-agence-web` 2, `/site-internet-ou-reseaux-sociaux` 2. L'accueil ne lie aucun guide hors footer (sections validées : ne pas toucher sans accord de Yanis). Piste : un bloc « Pour aller plus loin » sur la page prix (la plus liée, 14) vers « choisir une agence » et « apparaître dans ChatGPT ». Script d'audit : parser `dist/**/index.html`, retirer footer/nav/header, compter les `href="/..."`.
 14. ~~Page "site sur-mesure ou WordPress/Wix"~~ — **faite le 2026-09-29**. Prochaine
     piste à rechercher : requête non couverte (ex. spécifique TikTok/créateurs,
     ou artisans/PME locales) — vérifier la demande avant d'écrire.
@@ -3215,7 +3231,13 @@ Absent sur « création site internet Annecy » et « agence web Annemasse » ; 
 Absent sur « création site internet Saint-Julien-en-Genevois » et « refonte site internet Haute-Savoie » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé. SERP « création site internet Pays de Gex » relevée : annuaires/Malt/partenaires Infomaniak uniquement (cible de la nouvelle page).
 Après déploiement : `/creation-site-internet-pays-de-gex` en 200 en prod (title + canonical propres), sitemap à 19 URLs, lien footer servi sur `/`. IndexNow : POST de la nouvelle URL + llms.txt + sitemap → HTTP 200.
 
+### 2026-11-22
+
+Absent sur « création site internet Lyon agence web » et « création site vitrine Haute-Savoie » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé.
+
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
+
+0septies. **TOUJOURS URGENT (22/11)** : 2,5 mois sans aucune page indexée. Rien ne bloque côté site (robots Allow, pas de noindex, sitemap OK). Le seul levier qui manque est la validation Search Console (item 0) + soumission du sitemap + « Demander l'indexation » de l'accueil et de la page prix.
 
 0sexies. **Pays de Gex (20/11)** : clients réels dans le Pays de Gex ? présentiel possible ? option langue +390 € = par langue, traduction incluse ou non ?
 
