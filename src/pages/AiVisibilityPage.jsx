@@ -15,9 +15,9 @@ const PAGE_PATH = "/apparaitre-dans-chatgpt-et-ia-site-local";
 const META_TITLE = "Apparaître dans ChatGPT et les IA quand on a un site local | Kota Studio";
 const META_DESCRIPTION =
   "Comment apparaître dans ChatGPT et les AI Overviews de Google : ce que disent Google et OpenAI, ce qui rend une page citable et ce que Kota Studio applique sur son site.";
-const UPDATED_AT = "1er octobre 2026";
+const UPDATED_AT = "23 novembre 2026";
 
-/* Les 5 questions/réponses affichées ci-dessous + reprises mot pour mot dans
+/* Les 6 questions/réponses affichées ci-dessous + reprises mot pour mot dans
    le JSON-LD FAQPage. Définies une seule fois dans lib/jsonld.js (source de
    vérité partagée avec le pré-rendu statique), réutilisées ici pour
    l'affichage sous le nom `faqs`. */
@@ -129,7 +129,7 @@ export default function AiVisibilityPage() {
               <h2 className="kota-title text-2xl lg:text-3xl">{f.q}</h2>
               <p className="mt-4 leading-relaxed text-taupe">{f.a}</p>
 
-              {/* Q2 / Q3 -> sources officielles */}
+              {/* Q2 / Q3 / Q4 -> sources officielles */}
               {i === 1 && (
                 <p className="mt-4 text-sm">
                   <a
@@ -152,7 +152,20 @@ export default function AiVisibilityPage() {
                   >
                     Source : documentation OpenAI sur ses robots d'exploration →
                   </a>
-                  <span className="ml-2 text-taupe/70">(consultée le 1er octobre 2026)</span>
+                  <span className="ml-2 text-taupe/70">(consultée le 23 novembre 2026)</span>
+                </p>
+              )}
+              {i === 3 && (
+                <p className="mt-4 text-sm">
+                  <a
+                    href="https://help.openai.com/en/articles/20001635-setting-up-your-business-on-chatgpt"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-or hover:underline"
+                  >
+                    Source : aide OpenAI sur les entreprises dans ChatGPT →
+                  </a>
+                  <span className="ml-2 text-taupe/70">(consultée le 23 novembre 2026)</span>
                 </p>
               )}
 

@@ -474,8 +474,11 @@ export function buildDomainOwnershipJsonLd() {
 
 export const AI_VISIBILITY_PATH = "/apparaitre-dans-chatgpt-et-ia-site-local";
 
-/* Les 5 questions/réponses affichées sur AiVisibilityPage.jsx, reprises mot
-   pour mot dans le JSON-LD FAQPage. Page ajoutée le 2026-10-01 (GEO) : seules
+/* Les 6 questions/réponses affichées sur AiVisibilityPage.jsx, reprises mot
+   pour mot dans le JSON-LD FAQPage. Page ajoutée le 2026-10-01 (GEO), Q4
+   (Business Hub de ChatGPT) ajoutée le 2026-11-23 d'après l'aide OpenAI
+   « Setting up your business on ChatGPT » (help.openai.com, article 20001635,
+   consultée le 2026-11-23 ; bêta ouverte le 10/11/2026). Seules
    affirmations externes = documentation officielle Google (« Top ways to
    ensure your content performs well in Google's AI experiences », màj
    10 déc. 2025) et OpenAI (« Overview of OpenAI Crawlers »), consultées le
@@ -494,6 +497,10 @@ export const aiVisibilityFaqs = [
   {
     q: "Faut-il autoriser les robots d'OpenAI dans le fichier robots.txt ?",
     a: "Si vous voulez pouvoir être affiché dans les réponses de recherche de ChatGPT, oui : OpenAI indique qu'un site qui bloque OAI-SearchBot n'apparaît pas dans ces réponses (il peut seulement rester accessible par lien). OpenAI précise aussi que GPTBot sert à l'entraînement de ses modèles, et qu'un changement de robots.txt peut mettre environ 24 heures à être pris en compte.",
+  },
+  {
+    q: "Peut-on créer une fiche pour son entreprise dans ChatGPT, comme sur Google ?",
+    a: "En partie, et depuis peu : le 10 novembre 2026, OpenAI a ouvert en bêta « Business Hub », accessible depuis la barre latérale de ChatGPT, pour revendiquer la fiche de son entreprise, y renseigner son site, sa description, sa catégorie et son logo, et consulter des statistiques. La vérification passe par le téléphone, l'e-mail professionnel, un enregistrement DNS sur le nom de domaine ou une boutique Shopify, puis par une vérification d'identité. D'après l'aide d'OpenAI consultée le 23 novembre 2026, les commerces et restaurants locaux ne peuvent pour l'instant revendiquer qu'une fiche existante aux États-Unis, et revendiquer sa fiche ne garantit aucune visibilité supplémentaire dans les réponses. Pour une entreprise locale en France, la fiche Google Business Profile et un site indexable restent la base.",
   },
   {
     q: "Qu'est-ce qui rend une page facile à citer pour une IA ?",

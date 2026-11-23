@@ -37,6 +37,13 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-23 (lundi — recherche du lundi faite) :**
+
+- Prod : `origin/main` = `880dbc2` avant run (maillage du 22/11 servi en prod : bloc « Les questions qu'on se pose ensuite » présent sur la page prix). `/`, page prix, choisir une agence, sitemap.xml (19 URLs), llms.txt, robots.txt en 200 ; URL inconnue 404 ; `www.kotastudio.fr/` → 308. TXT google-site-verification toujours publié. Googlebot/bingbot/OAI-SearchBot/PerplexityBot (user-agents) reçoivent 200 + HTML complet (test depuis le sandbox, pas depuis les IP réelles des robots).
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "agence web Annemasse création site internet" (La Fabrique du Net, Gralon, 118712 ×3, Aladom ×3, Malt, Sortlist, francenum, Infomaniak partenaires, MaFormation) et "freelance création site internet Genève" (Malt ×14, Codeur ×3, Infomaniak partenaires ×2). `site:kotastudio.fr` : 0 page du domaine (Contra AUREA seule). **NOUVEAU : Bing non plus** (`bing.com/search?q=site:kotastudio.fr` → aucun résultat du domaine, Bing retombe sur des résultats sans rapport) malgré les pings IndexNow : IndexNow seul ne suffit pas à faire indexer un domaine neuf → Bing Webmaster Tools nécessaire (Yanis).
+- Recherche du lundi : core update de novembre **toujours en cours** (aucune note de fin sur le dashboard trouvée au 23/11) ; Gemini 4 Hydrogen modèle par défaut d'AI Mode (12/11) ; **ChatGPT Business Hub** en bêta depuis le 10/11 (voir "Techniques apprises").
+- Chantier : **page GEO `/apparaitre-dans-chatgpt-et-ia-site-local` actualisée** (nouvelle Q/R Business Hub sourcée, sources existantes revérifiées). Voir "Chantiers faits".
+
 **Au 2026-11-22 (dimanche — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : `origin/main` = `f0dbde8` avant run. `/`, robots.txt (Allow /), sitemap.xml (19 URLs), llms.txt, `/creation-site-internet-pays-de-gex`, page prix en 200 ; URL inconnue 404 ; aucune balise/en-tête noindex sur l'accueil. NAP servi sur l'accueil : +33615802619, « Paluel » ; ancien 06 68 82 33 96 absent du code. Rien de cassé.
@@ -726,6 +733,16 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-23 (lundi) — Page GEO « Apparaître dans ChatGPT et les IA » : Q/R Business Hub + sources revérifiées
+
+- Pourquoi : angle alterné (22/11 maillage, 20/11 page zone, 19/11 maillage, 18/11 page ville). La recherche du lundi a trouvé un fait **nouveau, officiel et applicable** : OpenAI a ouvert le 10/11/2026 « Business Hub » (fiche entreprise revendicable dans ChatGPT). C'est exactement la question « comment apparaître dans ChatGPT » à laquelle répond cette page, publiée le 01/10 et jamais actualisée depuis ; une page GEO datée d'octobre qui ignore la nouveauté majeure de novembre perd sa valeur de citation. Info vérifiée sur la source primaire (help.openai.com, article 20001635 « Setting up your business on ChatGPT »), pas seulement sur les blogs (SEJ SEO Pulse du 14/11 en complément).
+- Fait :
+  - `src/lib/jsonld.js` (`aiVisibilityFaqs`, source unique texte + FAQPage) : nouvelle Q4 « Peut-on créer une fiche pour son entreprise dans ChatGPT, comme sur Google ? » — réponse directe autonome : date de la bêta, où la trouver (barre latérale), ce qu'on renseigne, les 4 méthodes de vérification + vérification d'identité, **limite actuelle (commerces/restaurants locaux : seulement une fiche existante aux États-Unis)**, aucune garantie de visibilité, conclusion pour une entreprise locale française (fiche Google + site indexable restent la base). Commentaire de source mis à jour.
+  - `src/pages/AiVisibilityPage.jsx` : lien source vers l'aide OpenAI sous la Q4 « (consultée le 23 novembre 2026) » ; date visible « Dernière mise à jour » 1er octobre → **23 novembre 2026** ; date de consultation de la source OpenAI robots (Q3) → 23/11 (revérifiée aujourd'hui : OAI-SearchBot / GPTBot / ~24 h toujours exacts). Doc Google AI features revérifiée aussi (« no additional requirements », pas de schema spécial, indexée + éligible au snippet) → Q2 inchangée.
+  - `public/sitemap.xml` : lastmod de la page 2026-10-01 → 2026-11-23 (= date visible). `public/llms.txt` : description de la page complétée (Business Hub).
+- Vérifs : build OK (24 routes pré-rendues + 404) ; script sur le HTML pré-rendu : FAQPage = **6 Q, les 6 questions ET les 6 réponses présentes mot pour mot dans le texte visible** ; date visible + lien help.openai.com présents ; aucune balise noindex. Playwright iPhone 13 (serveur statique local) : scrollWidth 390 = viewport, 0 erreur JS, 7 H2, 2 blocs JSON-LD ; capture relue (H2 + réponse lisibles, pas de débordement ; la bulle WhatsApp flottante recouvre le texte en bas d'écran comme sur toutes les pages, comportement existant non touché).
+- NE PAS fait : pas de recommandation « revendiquez votre fiche ChatGPT » présentée comme acquise (non disponible pour un commerce local français d'après l'aide OpenAI) ; aucun chiffre de blogs/vendeurs (« AI Overviews sur 80 % des recherches », études BrightLocal/8ight) — non officiels et contradictoires ; rien sur Gemini 4 Hydrogen (aucune conséquence concrète pour un prospect) ; meta title/description inchangés ; aucune autre page touchée ; pas de ping IndexNow avant d'avoir vu le déploiement (et Bing n'indexe rien de toute façon tant que Bing Webmaster Tools n'est pas configuré).
 
 ### 2026-11-22 (dimanche) — Maillage interne : page prix → 5 guides peu liés, pages villes → « choisir une agence »
 
@@ -2413,6 +2430,7 @@ Par ordre de priorité pour les prochains runs :
     suivantes à vérifier avant d'écrire : artisans/PME locales, créateurs TikTok.
 16. ~~Page propriété domaine~~ — faite le 2026-10-02. Pistes : artisans/PME, créateurs TikTok (vérifier la demande), Genève (bloqué).
 17. ~~Page artisans~~ — **faite le 2026-11-17** (`/creation-site-internet-artisan`). ~~Thonon/Chablais~~ — **faite le 2026-11-18**. ~~Pays de Gex (Ain)~~ — **faite le 2026-11-20**. Pistes restantes vérifiées le 20/11 : Cluses / vallée de l'Arve (SERP = tourisme + 2-3 agences locales, faisable avec un angle industrie/décolletage seulement si fait vérifié) ; Chambéry / Savoie à vérifier. Pistes suivantes (vérifier la SERP avant) : autres pages villes de Haute-Savoie à SERP faible (Cluses / vallée de l'Arve, La Roche-sur-Foron, Sallanches) — un angle propre par ville, sinon pages minces ; déclinaisons par métier seulement avec clients réels ; créateurs TikTok ; Genève (bloqué).
+19. **Après le run du 23/11** : (a) vérifier en prod que `/apparaitre-dans-chatgpt-et-ia-site-local` sert la Q4 Business Hub + date 23/11, puis pinger IndexNow (URL + llms.txt + sitemap). (b) Revérifier Business Hub chaque lundi : dès que les entreprises françaises/services locaux deviennent éligibles, mettre à jour la Q4 (texte + date). (c) Prochain angle suggéré (alternance) : contenu ou page ville (Cluses / La Roche-sur-Foron / Chambéry, SERP à vérifier), le maillage ayant été fait les 19 et 22/11.
 18. ~~Bloc « Pour aller plus loin » sur la page prix~~ — **fait le 2026-11-22** (5 guides liés + « choisir une agence » sur les pages villes). Reste : le GEO/ChatGPT (2) et réseaux sociaux (3) restent les moins liés ; piste = lien contextuel depuis `/creation-site-internet-artisan` et `/comment-choisir-une-agence-web` dans leur bloc « Pour aller plus loin » si pertinent. **Maillage restant (audit du 19/11)** : liens contextuels reçus — `/apparaitre-dans-chatgpt-et-ia-site-local` 1, `/comment-choisir-une-agence-web` 2, `/site-internet-ou-reseaux-sociaux` 2. L'accueil ne lie aucun guide hors footer (sections validées : ne pas toucher sans accord de Yanis). Piste : un bloc « Pour aller plus loin » sur la page prix (la plus liée, 14) vers « choisir une agence » et « apparaître dans ChatGPT ». Script d'audit : parser `dist/**/index.html`, retirer footer/nav/header, compter les `href="/..."`.
 14. ~~Page "site sur-mesure ou WordPress/Wix"~~ — **faite le 2026-09-29**. Prochaine
     piste à rechercher : requête non couverte (ex. spécifique TikTok/créateurs,
@@ -2614,6 +2632,8 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 ---
 
 ## Techniques apprises
+
+- **2026-11-23 (lundi)** : (1) **ChatGPT « Business Hub »** (bêta ouverte le 10/11/2026 ; source primaire help.openai.com/en/articles/20001635, + SEJ SEO Pulse 14/11) : revendication de la fiche entreprise dans ChatGPT (barre latérale → Business Hub), vérification par téléphone / e-mail pro / **TXT DNS sur le domaine** / Shopify + identité (Persona) ; renseigne site, description, catégorie, logo ; Insights = mentions (pour une entreprise en ligne, une mention = ChatGPT cite le **site**, pas le nom seul), clics, sujets, sur 28 jours. Limites : commerces/restaurants locaux = fiche US existante seulement pour l'instant ; aucune garantie de visibilité ; la pub n'influence pas les réponses. **Applicable** : page GEO actualisée ; Yanis peut tester l'éligibilité de Kota Studio (gratuit, 5 min) — si accepté, les Insights donneraient enfin une mesure GEO réelle. (2) Google : core update de novembre toujours affiché « en cours » (lancé 10/11, ~2 semaines, les updates de novembre 2023/2024 ont dépassé 3 semaines) ; **Gemini 4 Hydrogen** modèle par défaut d'AI Mode depuis le 12/11 (annonce Robby Stein, blog Google), meilleur « query fan-out » → plus de liens différents cités ; rien à coder (sources : searchenginejournal.com SEO Pulse 14/11, seroundtable.com). (3) Doc Google « AI features » relue le 23/11 : inchangée (aucune exigence ni balisage spécial). Doc OpenAI bots relue : inchangée.
 
 - **2026-11-16 (lundi)** : (1) **Google November 2026 core update** lancé le 10/11/2026 vers 13 h ET, global, toutes langues, « jusqu'à 2 semaines » de déploiement (fin attendue ~24/11) ; Google le décrit comme une mise à jour régulière, pas une pénalité, sans post sur le blog Search Central (sources : seroundtable.com/google-november-2026-core-update-42504.html, searchenginejournal.com, annonce LinkedIn de Google citée). Applicable ici : ne pas toucher au contenu existant pendant le déploiement et ne pas interpréter de variation avant ~24/11 (le site n'étant pas indexé, effet attendu nul). (2) Local + IA (études éditeurs : Steady Demand, BrightLocal, Whitespark — chiffres non officiels et contradictoires entre versions) : AI Mode cite surtout Google Maps / fiche Business pour les requêtes locales, AI Overviews davantage le site de l'entreprise ; la cohérence schema du site ↔ fiche Google est présentée comme un facteur de confiance. Rien de nouveau à coder ; confirme que **trancher l'écart d'adresse Paluel/Palluel (14/11)** est la priorité NAP.
 
@@ -3235,7 +3255,13 @@ Après déploiement : `/creation-site-internet-pays-de-gex` en 200 en prod (titl
 
 Absent sur « création site internet Lyon agence web » et « création site vitrine Haute-Savoie » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé.
 
+### 2026-11-23
+
+Absent sur « agence web Annemasse création site internet » et « freelance création site internet Genève » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé. **Bing : 0 page indexée** (site: sans résultat du domaine) malgré IndexNow.
+
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
+
+0octies. **NOUVEAU (23/11) — 5 min chacun** : (a) **Bing Webmaster Tools** : Bing n'a toujours AUCUNE page du site malgré IndexNow ; ajouter le site (import depuis Search Console une fois validée, sinon vérification par fichier/DNS) et soumettre `sitemap.xml` — ChatGPT Search s'appuie largement sur Bing. (b) **ChatGPT Business Hub** : ouvrir ChatGPT → barre latérale → Business Hub, chercher « Kota Studio » et voir si la revendication est proposée (probablement pas encore pour une entreprise française ; si oui, choisir la vérification par TXT DNS chez OVH comme pour Google, et dire au run suivant ce qui a été renseigné).
 
 0septies. **TOUJOURS URGENT (22/11)** : 2,5 mois sans aucune page indexée. Rien ne bloque côté site (robots Allow, pas de noindex, sitemap OK). Le seul levier qui manque est la validation Search Console (item 0) + soumission du sitemap + « Demander l'indexation » de l'accueil et de la page prix.
 
