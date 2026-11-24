@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
-import { whatsapp } from "../data/content";
 import Logo from "../components/Logo";
 import Button from "../components/Button";
 
@@ -15,7 +14,7 @@ import Button from "../components/Button";
 
 const CV_URL = "/yanis/CV_Yanis_Ouammou_Com_Marketing_IA.pdf";
 const EMAIL = "yanisouammou063@gmail.com";
-const PHONE = "+33 6 68 82 33 96";
+const PHONE = "+33 6 15 80 26 19";
 
 const STATS = [
   { n: "1,9M", l: "vues sur une seule vidéo" },
@@ -215,7 +214,7 @@ export default function YanisPage() {
   }, []);
 
   const whatsappHref =
-    "https://wa.me/" + whatsapp.number + "?text=" + encodeURIComponent("Bonjour Yanis, j'ai vu ton portfolio");
+    "https://wa.me/33615802619?text=" + encodeURIComponent("Bonjour Yanis, j'ai vu ton portfolio");
 
   return (
     <div ref={mainRef} className="relative overflow-x-hidden">
