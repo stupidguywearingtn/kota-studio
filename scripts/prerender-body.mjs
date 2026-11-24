@@ -53,6 +53,7 @@ const routes = [
     routePath: `/projets/${p.slug}`,
     filePath: path.join(distDir, "projets", p.slug, "index.html"),
   })),
+  { routePath: "/yanis", filePath: path.join(distDir, "yanis", "index.html") },
   {
     routePath: "/combien-coute-un-site-internet",
     filePath: path.join(distDir, "combien-coute-un-site-internet", "index.html"),

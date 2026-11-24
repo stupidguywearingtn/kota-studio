@@ -230,6 +230,14 @@ writeRoute("/creation-site-internet-artisan", {
   jsonLd: buildArtisanSiteJsonLd(),
 });
 
+writeRoute("/yanis", {
+  title: "Yanis Ouammou — Communication, contenu viral & IA",
+  description: "Portfolio de Yanis Ouammou : vidéos virales, idées de contenus et IA appliquée au marketing. Genève et Haute-Savoie.",
+  schemaId: "yanis",
+  jsonLd: null,
+  noindex: true,
+});
+
 writeRoute("/mentions-legales", {
   title: "Mentions légales | Kota Studio",
   description:
