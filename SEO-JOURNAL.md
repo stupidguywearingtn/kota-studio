@@ -37,6 +37,12 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-24 (mardi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : `origin/main` = `6ef6248` avant run. `/`, page prix, page GEO/ChatGPT, sitemap.xml (19 URLs), llms.txt, robots.txt en 200 ; URL inconnue 404 ; `www.kotastudio.fr/` → 308 apex. TXT google-site-verification toujours publié. NAP servi sur l'accueil : +33615802619, « Paluel ». Rien de cassé.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (Aladom, Infomaniak partenaire Genevois Informatique ×n, 118712, PagesJaunes, edana.ch, Codeur, Malt) et "création site internet Annecy" (La Fabrique du Net, 118712, LOCAL.FR/avis-verifies ×n, Mappy, Codeur, Aladom, IUT Annecy). `site:kotastudio.fr` : 0 page du domaine (Contra AUREA seule). Inchangé depuis le 07/09. Core update de novembre censé se terminer vers le 24/11 : sans indexation, il ne peut rien changer pour nous.
+- Chantier : **nouvelle page ville `/creation-site-internet-cluses`** (Cluses + vallée de l'Arve). Voir "Chantiers faits".
+
 **Au 2026-11-23 (lundi — recherche du lundi faite) :**
 
 - Prod : `origin/main` = `880dbc2` avant run (maillage du 22/11 servi en prod : bloc « Les questions qu'on se pose ensuite » présent sur la page prix). `/`, page prix, choisir une agence, sitemap.xml (19 URLs), llms.txt, robots.txt en 200 ; URL inconnue 404 ; `www.kotastudio.fr/` → 308. TXT google-site-verification toujours publié. Googlebot/bingbot/OAI-SearchBot/PerplexityBot (user-agents) reçoivent 200 + HTML complet (test depuis le sandbox, pas depuis les IP réelles des robots).
@@ -733,6 +739,17 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-24 (mardi) — Page ville « Création de site internet à Cluses et dans la vallée de l'Arve »
+
+- Pourquoi : angle suggéré par le run du 23/11 (alternance : maillage 19 et 22/11, GEO 23/11 → page ville). SERP vérifiées ce jour : « création site internet La Roche-sur-Foron » = 118712 ×8 + PDF de mairie + Wikipédia (aucune agence) ; « création site internet Cluses vallée de l'Arve » = office de tourisme, annuaires (118712, Gralon, Cylex), 2 prestataires locaux (PM'Comm, Micro Création/Infomaniak), **aucune page d'agence avec prix + délai**. Cluses retenue plutôt que La Roche : ville plus grande, bassin plus large (Scionzier, Marnaz, Thyez, Bonneville, Sallanches) et **angle propre vérifiable** (sous-traitance industrielle / décolletage) qui évite une page clonée. Fait sourcé : tourisme-haute-savoie.com titre « Cluses : Porte d'entrée des Alpes et capitale du décolletage » et parle d'horlogerie + décolletage comme histoire industrielle de la ville → écrit « historiquement la capitale du décolletage », sans aucun chiffre.
+- Distances vérifiées (OSRM, depuis Saint-Julien) : Cluses 53,2 km, Bonneville 36,2 km, Scionzier 48,9 km, Sallanches 64,5 km → écrit « environ 50 km » / « 35 km de Bonneville ». Aucune durée écrite (trafic vallée de l'Arve très variable).
+- Fait :
+  - `src/data/cities.js` : nouvelle entrée (slug `creation-site-internet-cluses`, `cityName` Cluses → areaServed City, badge « Cluses · Vallée de l'Arve », `crossLinkLabel`, date visible 24 novembre 2026). 5 Q/R à réponse directe (ordre gabarit conservé : Q2 prix, Q3 délai). Q4 propre : **« Je suis sous-traitant industriel (décolletage, mécanique de précision) : que doit montrer mon site ? »** → pièces, matières, séries, machines, secteurs, certifications *réellement détenues*, demande de devis directe, version anglaise +390 €/langue (prix réel de content.js). Q3 avec un angle différent des autres villes (retours client = ce qui fait tenir le planning).
+  - Page Haute-Savoie, Q1 : la liste « des pages dédiées existent déjà pour… » inclut désormais Cluses (texte + FAQPage générés de la même source) ; lastmod sitemap → 2026-11-24 (date visible inchangée : simple ajout d'un nom).
+  - Footer « Près de chez vous » (`content.js`), `index.html` areaServed + City Cluses, `public/sitemap.xml` (+1 URL → 20), `public/llms.txt` (ligne Zone + entrée de page). Listes « autres zones » des pages prix / choisir une agence / villes : automatiques.
+- Vérifs : `npm ci` nécessaire (node_modules absent dans le conteneur) ; build OK (25 routes pré-rendues + 404) ; HTML pré-rendu : title, canonical, aucune balise noindex, BreadcrumbList « Accueil > Création de site internet à Cluses… », Service.areaServed = City Cluses, **5 Q et 5 R du FAQPage présentes mot pour mot dans le texte visible** (script), ~895 mots. Lien présent dans le HTML de l'accueil (footer), page prix, choisir une agence, Haute-Savoie. Playwright iPhone 13 (vite preview) : scrollWidth 390 = viewport sur Cluses et Haute-Savoie, 6 H2, 0 erreur JS ; captures relues (H1, badge, intro, Q4 lisibles).
+- NE PAS fait : aucune statistique industrielle (part du décolletage national, nombre d'entreprises : trouvées seulement dans des sources non vérifiées) ; aucune certification citée comme exemple chiffré (ISO etc.) pour ne pas suggérer d'exigence inventée ; pas de promesse d'envoi de plans/fichiers par formulaire (fonction non vérifiée dans le site actuel) ; pas de page La Roche-sur-Foron ni Sallanches séparées (pages minces) ; accueil non touché (sections validées) ; insécable avant « € » non ajouté (même rendu que les autres pages villes, pas de changement global sans besoin).
 
 ### 2026-11-23 (lundi) — Page GEO « Apparaître dans ChatGPT et les IA » : Q/R Business Hub + sources revérifiées
 
@@ -2431,6 +2448,7 @@ Par ordre de priorité pour les prochains runs :
 16. ~~Page propriété domaine~~ — faite le 2026-10-02. Pistes : artisans/PME, créateurs TikTok (vérifier la demande), Genève (bloqué).
 17. ~~Page artisans~~ — **faite le 2026-11-17** (`/creation-site-internet-artisan`). ~~Thonon/Chablais~~ — **faite le 2026-11-18**. ~~Pays de Gex (Ain)~~ — **faite le 2026-11-20**. Pistes restantes vérifiées le 20/11 : Cluses / vallée de l'Arve (SERP = tourisme + 2-3 agences locales, faisable avec un angle industrie/décolletage seulement si fait vérifié) ; Chambéry / Savoie à vérifier. Pistes suivantes (vérifier la SERP avant) : autres pages villes de Haute-Savoie à SERP faible (Cluses / vallée de l'Arve, La Roche-sur-Foron, Sallanches) — un angle propre par ville, sinon pages minces ; déclinaisons par métier seulement avec clients réels ; créateurs TikTok ; Genève (bloqué).
 19. **Après le run du 23/11** : (a) ~~vérif prod + IndexNow~~ fait le 23/11 même. (b) Revérifier Business Hub chaque lundi : dès que les entreprises françaises/services locaux deviennent éligibles, mettre à jour la Q4 (texte + date). (c) Prochain angle suggéré (alternance) : contenu ou page ville (Cluses / La Roche-sur-Foron / Chambéry, SERP à vérifier), le maillage ayant été fait les 19 et 22/11.
+20. **Après le run du 24/11** : (a) vérifier en prod `/creation-site-internet-cluses` (200, title, canonical) + sitemap 20 URLs, puis ping IndexNow (page + llms.txt + sitemap). (b) Prochain angle suggéré : contenu de fond ou technique (pages villes faites 18, 20 et 24/11). Piste contenu à vérifier : « site internet pour entreprise industrielle / sous-traitant » en guide national seulement si la SERP montre une vraie demande et sans cannibaliser la Q4 Cluses. Pistes villes restantes : La Roche-sur-Foron (SERP vide mais petit volume probable), Chambéry/Savoie (à vérifier).
 18. ~~Bloc « Pour aller plus loin » sur la page prix~~ — **fait le 2026-11-22** (5 guides liés + « choisir une agence » sur les pages villes). Reste : le GEO/ChatGPT (2) et réseaux sociaux (3) restent les moins liés ; piste = lien contextuel depuis `/creation-site-internet-artisan` et `/comment-choisir-une-agence-web` dans leur bloc « Pour aller plus loin » si pertinent. **Maillage restant (audit du 19/11)** : liens contextuels reçus — `/apparaitre-dans-chatgpt-et-ia-site-local` 1, `/comment-choisir-une-agence-web` 2, `/site-internet-ou-reseaux-sociaux` 2. L'accueil ne lie aucun guide hors footer (sections validées : ne pas toucher sans accord de Yanis). Piste : un bloc « Pour aller plus loin » sur la page prix (la plus liée, 14) vers « choisir une agence » et « apparaître dans ChatGPT ». Script d'audit : parser `dist/**/index.html`, retirer footer/nav/header, compter les `href="/..."`.
 14. ~~Page "site sur-mesure ou WordPress/Wix"~~ — **faite le 2026-09-29**. Prochaine
     piste à rechercher : requête non couverte (ex. spécifique TikTok/créateurs,
@@ -2439,6 +2457,8 @@ Par ordre de priorité pour les prochains runs :
 ---
 
 ## Hypothèses à vérifier
+
+- **Page Cluses (2026-11-24)** : (1) Yanis a-t-il un client (ou un prospect) dans la vallée de l'Arve, en particulier un sous-traitant industriel ? Un exemple réel renforcerait fortement la Q4. (2) Confirmer le présentiel possible à Cluses (~50 km). (3) Le formulaire de contact peut-il recevoir un fichier (plan de pièce) ? Si oui, l'ajouter à la Q4.
 
 - **Page Pays de Gex (2026-11-20)** : (1) Yanis a-t-il des clients à Saint-Genis-Pouilly, Ferney-Voltaire, Gex ou Divonne ? Un exemple local renforcerait la page. (2) Confirmer qu'un rendez-vous en présentiel dans le Pays de Gex est possible (la page dit « possible si besoin »). (3) Langue supplémentaire à +390 € : est-ce bien **par langue**, et la traduction est-elle fournie par le client ou incluse ? (la page dit « +390 € par langue », sans plus).
 
@@ -3260,7 +3280,13 @@ Absent sur « création site internet Lyon agence web » et « création site vi
 Absent sur « agence web Annemasse création site internet » et « freelance création site internet Genève » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé. **Bing : 0 page indexée** (site: sans résultat du domaine) malgré IndexNow.
 Après déploiement : `/apparaitre-dans-chatgpt-et-ia-site-local` sert la Q4 Business Hub en prod (~30 s après push), sitemap lastmod 2026-11-23, llms.txt à jour. IndexNow : POST page + llms.txt + sitemap → HTTP 200.
 
+### 2026-11-24
+
+Absent sur « création site internet Saint-Julien-en-Genevois » et « création site internet Annecy » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé. SERP « création site internet Cluses vallée de l'Arve » et « … La Roche-sur-Foron » relevées : annuaires/tourisme + 2 prestataires locaux, aucune page d'agence avec prix (cible de la nouvelle page Cluses).
+
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
+
+0nonies. **Cluses (24/11)** : client réel dans la vallée de l'Arve ? présentiel à Cluses possible ? le formulaire accepte-t-il un fichier joint ?
 
 0octies. **NOUVEAU (23/11) — 5 min chacun** : (a) **Bing Webmaster Tools** : Bing n'a toujours AUCUNE page du site malgré IndexNow ; ajouter le site (import depuis Search Console une fois validée, sinon vérification par fichier/DNS) et soumettre `sitemap.xml` — ChatGPT Search s'appuie largement sur Bing. (b) **ChatGPT Business Hub** : ouvrir ChatGPT → barre latérale → Business Hub, chercher « Kota Studio » et voir si la revendication est proposée (probablement pas encore pour une entreprise française ; si oui, choisir la vérification par TXT DNS chez OVH comme pour Google, et dire au run suivant ce qui a été renseigné).
 

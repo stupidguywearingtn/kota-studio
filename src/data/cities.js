@@ -221,6 +221,41 @@ export const cities = [
     ],
   },
   {
+    slug: "creation-site-internet-cluses",
+    cityName: "Cluses",
+    badge: "Cluses · Vallée de l'Arve",
+    crossLinkLabel: "Création de site internet à Cluses et dans la vallée de l'Arve",
+    metaTitle: "Création de site internet à Cluses et dans la vallée de l'Arve | Kota Studio",
+    metaDescription:
+      "Sites sur-mesure pour les entreprises de Cluses, Scionzier, Bonneville et Sallanches : artisans, commerces, sous-traitants industriels. Prix fixe dès 790 €, livraison en 14 jours.",
+    h1: "Création de site internet à Cluses et dans la vallée de l'Arve",
+    intro:
+      "Kota Studio conçoit des sites internet sur-mesure pour les entreprises, artisans, commerces, indépendants et sous-traitants industriels de Cluses et de la vallée de l'Arve (Scionzier, Marnaz, Thyez, Bonneville, Sallanches). L'agence est basée à Saint-Julien-en-Genevois, à environ 50 km de Cluses par l'autoroute : le suivi se fait en visio, avec un rendez-vous en présentiel possible si besoin.",
+    updatedAt: "24 novembre 2026",
+    faqs: [
+      {
+        q: "Kota Studio a-t-il un bureau à Cluses ?",
+        a: "Non : Kota Studio est basé à Saint-Julien-en-Genevois, à environ 50 km de Cluses et 35 km de Bonneville par l'autoroute. Les entreprises de la vallée de l'Arve sont suivies en visio pour l'essentiel du projet, avec un rendez-vous en présentiel possible si votre activité le demande. Vous avez un seul interlocuteur du premier appel à la mise en ligne.",
+      },
+      {
+        q: "Combien coûte un site internet à Cluses ?",
+        a: "Une landing page démarre à 790 € et un site sur-mesure complet à partir de 1 290 €, tout compris, que vous soyez à Cluses, à Scionzier, à Bonneville ou à Sallanches. Le montant exact dépend du nombre de pages et des options choisies : un devis à prix fixe est donné après un appel de 15 minutes, sans engagement.",
+      },
+      {
+        q: "Combien de temps faut-il pour créer un site internet à Cluses ?",
+        a: "14 jours du premier échange à la mise en ligne, avec un processus cadré en 5 étapes détaillé ci-dessous. Le délai ne dépend pas de la distance : tout le projet se pilote à distance, et c'est la rapidité de vos retours (textes, photos, validations) qui fait tenir le planning.",
+      },
+      {
+        q: "Je suis sous-traitant industriel (décolletage, mécanique de précision) : que doit montrer mon site ?",
+        a: "Votre site doit permettre à un acheteur qui ne vous connaît pas de savoir en une minute si vous pouvez fabriquer sa pièce : ce que vous usinez, en quelles matières et quelles séries, vos machines, les secteurs que vous servez et les certifications que vous détenez réellement. Il doit ensuite lui donner un moyen direct de demander un devis (formulaire, email, téléphone). Si vous travaillez à l'export, une version anglaise est proposée en option (+390 € par langue). Cluses étant historiquement la capitale du décolletage, la concurrence locale est forte : c'est la clarté de ces informations qui vous distingue, pas un discours générique.",
+      },
+      {
+        q: "Qu'est-ce qui est inclus dans un projet Kota Studio ?",
+        a: "Un site 100% codé sur-mesure (aucun template), un design responsive pensé mobile en premier, un espace admin pour modifier le contenu vous-même, l'optimisation des performances et des révisions illimitées jusqu'à validation.",
+      },
+    ],
+  },
+  {
     slug: "creation-refonte-site-internet-haute-savoie",
     cityName: "Haute-Savoie",
     badge: "Haute-Savoie",
@@ -236,7 +271,7 @@ export const cities = [
     faqs: [
       {
         q: "Kota Studio intervient-il dans toute la Haute-Savoie ?",
-        a: "Oui. Basée à Saint-Julien-en-Genevois, l'agence conçoit des sites internet pour des entreprises, artisans et indépendants dans tout le département : Genevois, bassin annécien, Chablais, Faucigny (Annecy, Annemasse, Thonon-les-Bains, Cluses, Sallanches, La Roche-sur-Foron…). Des pages dédiées existent déjà pour Saint-Julien-en-Genevois, Annecy, Annemasse et Thonon-les-Bains ; cette page centralise les informations valables pour le reste du département.",
+        a: "Oui. Basée à Saint-Julien-en-Genevois, l'agence conçoit des sites internet pour des entreprises, artisans et indépendants dans tout le département : Genevois, bassin annécien, Chablais, Faucigny (Annecy, Annemasse, Thonon-les-Bains, Cluses, Sallanches, La Roche-sur-Foron…). Des pages dédiées existent déjà pour Saint-Julien-en-Genevois, Annecy, Annemasse, Thonon-les-Bains et Cluses (vallée de l'Arve) ; cette page centralise les informations valables pour le reste du département.",
       },
       {
         q: "Combien coûte un site internet en Haute-Savoie ?",
