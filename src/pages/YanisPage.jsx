@@ -30,7 +30,7 @@ const STATS = [
    /public/yanis/ et l'indiquer dans `src`. Une case vide (url et src vides)
    affiche « Vidéo à venir ». */
 const TIKTOK_URL = "https://www.tiktok.com/@kota.studiofx";
-const GAME_URL = ""; // ← coller ici le lien du site du jeu vidéo
+const GAME_URL = "https://isleofus.app"; // site du jeu vidéo
 
 const VIDEO_GROUPS = [
   {
@@ -71,7 +71,7 @@ const VIDEO_GROUPS = [
     intro: "Communication de jeux, prises de vues aériennes et vidéos produites avec l'IA.",
     link: GAME_URL ? { label: "Voir le site du jeu", href: GAME_URL } : null,
     videos: [
-      { client: "Jeu vidéo", views: "", url: "" },
+      { client: "Jeu vidéo · Isle of Us", views: "", url: "" },
       { client: "Drone · Genève", views: "", url: "" },
       { client: "IA · motion design", views: "", url: "" },
     ],
