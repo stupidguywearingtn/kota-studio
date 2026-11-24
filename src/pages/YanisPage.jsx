@@ -24,14 +24,71 @@ const STATS = [
   { n: "20+", l: "marques accompagnées" },
 ];
 
-const VIDEOS = [
-  { tag: "Restaurant / bar", title: "Vidéo promo — Café de la Pointe", views: "", src: "", embed: "" },
-  { tag: "Viral", title: "Vidéo à +1M de vues", views: "", src: "", embed: "" },
-  { tag: "E-commerce", title: "Contenu compte e-commerce", views: "", src: "", embed: "" },
-  { tag: "Kota Studio", title: "Format avant / après", views: "", src: "", embed: "" },
-  { tag: "Drone", title: "Prises de vues aériennes — Genève", views: "", src: "", embed: "" },
-  { tag: "IA · Motion", title: "Vidéo produite avec l'IA", views: "", src: "", embed: "" },
+/* ===== VIDÉOS =====
+   Pour ajouter une vidéo : coller son lien dans `url` (Instagram, TikTok ou
+   YouTube) — elle s'affiche toute seule. Ou mettre un fichier dans
+   /public/yanis/ et l'indiquer dans `src`. Une case vide (url et src vides)
+   affiche « Vidéo à venir ». */
+const TIKTOK_URL = "https://www.tiktok.com/@kota.studiofx";
+const GAME_URL = ""; // ← coller ici le lien du site du jeu vidéo
+
+const VIDEO_GROUPS = [
+  {
+    title: "Restauration & bars",
+    intro: "Reels tournés et montés pour des restaurants et bars de Genève et Carouge.",
+    videos: [
+      { client: "Constantine Kebab · Carouge", views: "95,7k", url: "https://www.instagram.com/reel/DJHetXGotA0/" },
+      { client: "Constantine Kebab · Carouge", views: "61,6k", url: "https://www.instagram.com/reel/DJCVGECoYzF/" },
+      { client: "Constantine Kebab · Carouge", views: "51,5k", url: "https://www.instagram.com/reel/DKoyeyUo159/" },
+      { client: "Bring Eat · Genève", views: "42,3k", url: "https://www.instagram.com/reel/C7J-KLyo6v_/" },
+      { client: "Bring Eat · Genève", views: "11k", url: "https://www.instagram.com/reel/C5yd8_1I7JW/" },
+      { client: "Café de la Pointe · Genève", views: "3,8k", url: "https://www.instagram.com/reel/C7q0n0Pod3G/" },
+      { client: "Café de la Pointe · Genève", views: "2,9k", url: "https://www.instagram.com/reel/C7oXUL4IQBl/" },
+      { client: "Montage food", views: "", src: "/yanis/resto-1.mp4", poster: "/yanis/resto-1.jpg" },
+    ],
+  },
+  {
+    title: "Kota Studio · mon compte TikTok",
+    intro: "Mes propres vidéos : c'est comme ça que je trouve mes clients.",
+    link: { label: "Voir @kota.studiofx sur TikTok", href: TIKTOK_URL },
+    videos: [
+      { client: "Avant / après de site", views: "", url: "" },
+      { client: "Avant / après de site", views: "", url: "" },
+      { client: "Vidéo virale", views: "", url: "" },
+    ],
+  },
+  {
+    title: "E-commerce & entrepreneurs",
+    intro: "Comptes accompagnés avec DVD.production : jusqu'à 1,9M de vues sur une vidéo.",
+    videos: [
+      { client: "Compte e-commerce", views: "", url: "" },
+      { client: "Compte entrepreneur", views: "", url: "" },
+      { client: "Vidéo +1M de vues", views: "", url: "" },
+    ],
+  },
+  {
+    title: "Jeux vidéo, drone & IA",
+    intro: "Communication de jeux, prises de vues aériennes et vidéos produites avec l'IA.",
+    link: GAME_URL ? { label: "Voir le site du jeu", href: GAME_URL } : null,
+    videos: [
+      { client: "Jeu vidéo", views: "", url: "" },
+      { client: "Drone · Genève", views: "", url: "" },
+      { client: "IA · motion design", views: "", url: "" },
+    ],
+  },
 ];
+
+/* Transforme un lien normal (Instagram, TikTok, YouTube) en lecteur intégrable. */
+function toEmbed(url) {
+  if (!url) return "";
+  let m = url.match(/instagram\.com\/(?:[\w.]+\/)?(?:reel|p|tv)\/([\w-]+)/);
+  if (m) return `https://www.instagram.com/reel/${m[1]}/embed`;
+  m = url.match(/tiktok\.com\/.*\/video\/(\d+)/);
+  if (m) return `https://www.tiktok.com/embed/v2/${m[1]}`;
+  m = url.match(/(?:youtube\.com\/(?:shorts\/|watch\?v=)|youtu\.be\/)([\w-]+)/);
+  if (m) return `https://www.youtube.com/embed/${m[1]}`;
+  return "";
+}
 
 const IDEAS = [
   {
@@ -95,32 +152,38 @@ const SKILLS = [
 const PATH = [
   { y: "2021 →", t: "Fondateur de Kota Studio", d: "Agence de contenu et de sites web. Clients trouvés grâce à mes propres vidéos TikTok/Instagram." },
   { y: "2025", t: "Videographer & content strategist — DVD.production", d: "Comptes entrepreneurs et e-commerce, vidéos à 1,3M / 1,6M / 1,9M vues." },
+  { y: "2024-25", t: "Créateur de contenu — Bring Eat & Constantine Kebab", d: "Reels à 95,7k, 61,6k, 51,5k et 42,3k vues." },
   { y: "2024", t: "Community manager — Café de la Pointe, Genève", d: "Stratégie Instagram/TikTok, vidéos promo, affiches d'événements." },
-  { y: "—", t: "Télépilote de drone — événement à Genève", d: "Prises de vues aériennes pour la communication de l'événement." },
-  { y: "—", t: "Création et communication de jeux vidéo", d: "Direction artistique, contenus courts, mise en avant sur les réseaux." },
+  { y: "2023", t: "Télépilote de drone — événement à Genève", d: "Prises de vues aériennes pour la communication de l'événement." },
+  { y: "2022-23", t: "Création et communication de jeux vidéo", d: "Direction artistique, contenus courts, mise en avant sur les réseaux." },
   { y: "2024", t: "Bachelor Marketing & Communication — Ynov Lyon", d: "" },
 ];
 
 function VideoSlot({ v }) {
+  const embed = toEmbed(v.url);
   return (
     <div className="reveal flex flex-col">
       <div className="relative aspect-[9/16] w-full overflow-hidden rounded-2xl border-[1.5px] border-encre bg-sable/60 shadow-soft">
         {v.src ? (
-          <video src={v.src} className="h-full w-full object-cover" controls playsInline preload="metadata" />
-        ) : v.embed ? (
-          <iframe src={v.embed} title={v.title} className="h-full w-full" allow="autoplay; encrypted-media" allowFullScreen />
+          <video src={v.src} poster={v.poster} className="h-full w-full object-cover" controls playsInline preload="none" />
+        ) : embed ? (
+          <iframe src={embed} title={v.client} loading="lazy" className="h-full w-full" allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen />
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-3 p-4 text-center">
             <iconify-icon icon="solar:play-circle-linear" class="text-5xl text-encre/40" aria-hidden="true"></iconify-icon>
             <span className="text-xs font-semibold uppercase tracking-widest text-taupe">Vidéo à venir</span>
           </div>
         )}
-        <span className="absolute left-3 top-3 rounded-full bg-hi px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-encre">
-          {v.tag}
-        </span>
       </div>
-      <p className="mt-3 text-sm font-semibold text-encre">{v.title}</p>
-      {v.views && <p className="text-xs text-taupe">{v.views} vues</p>}
+      <div className="mt-3 flex items-baseline justify-between gap-2">
+        <p className="text-sm font-semibold text-encre">{v.client}</p>
+        {v.views && <span className="shrink-0 rounded-full bg-hi px-2.5 py-0.5 text-xs font-bold text-encre">{v.views} vues</span>}
+      </div>
+      {v.url && (
+        <a href={v.url} target="_blank" rel="noopener noreferrer" className="mt-1 text-xs text-taupe underline hover:text-or">
+          Voir l'original
+        </a>
+      )}
     </div>
   );
 }
@@ -192,6 +255,9 @@ export default function YanisPage() {
             <Button href={`mailto:${EMAIL}`} variant="secondary" icon="solar:letter-linear">
               M'écrire
             </Button>
+            <Button href={TIKTOK_URL} variant="secondary" icon="ic:baseline-tiktok" target="_blank" rel="noopener noreferrer">
+              Mon TikTok
+            </Button>
             <Button href={whatsappHref} variant="secondary" icon="mdi:whatsapp" target="_blank" rel="noopener noreferrer">
               WhatsApp
             </Button>
@@ -213,9 +279,26 @@ export default function YanisPage() {
             <span className="tag-label">Réalisations</span>
             <h2 className="kota-title mt-4 text-3xl lg:text-5xl">Ce que j'ai déjà tourné</h2>
           </div>
-          <div className="grid grid-cols-2 gap-5 md:grid-cols-3">
-            {VIDEOS.map((v, i) => (
-              <VideoSlot key={i} v={v} />
+          <div className="space-y-20">
+            {VIDEO_GROUPS.map((g) => (
+              <div key={g.title}>
+                <div className="reveal mb-6 flex flex-wrap items-end justify-between gap-4">
+                  <div>
+                    <h3 className="kota-title text-2xl lg:text-3xl">{g.title}</h3>
+                    <p className="mt-2 text-taupe">{g.intro}</p>
+                  </div>
+                  {g.link && (
+                    <Button href={g.link.href} variant="secondary" target="_blank" rel="noopener noreferrer">
+                      {g.link.label}
+                    </Button>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
+                  {g.videos.map((v, i) => (
+                    <VideoSlot key={i} v={v} />
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </section>
@@ -289,7 +372,7 @@ export default function YanisPage() {
           </div>
           <ol className="reveal-stagger space-y-4">
             {PATH.map((p) => (
-              <li key={p.t} className="grid grid-cols-[72px_1fr] gap-4 rounded-2xl border border-encre/10 bg-creme px-5 py-4 shadow-soft">
+              <li key={p.t} className="grid grid-cols-[80px_1fr] gap-4 rounded-2xl border border-encre/10 bg-creme px-5 py-4 shadow-soft">
                 <span className="font-mono text-sm font-bold text-or">{p.y}</span>
                 <div>
                   <p className="font-bold text-encre">{p.t}</p>
