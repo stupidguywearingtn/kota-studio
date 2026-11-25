@@ -2470,7 +2470,7 @@ Par ordre de priorité pour les prochains runs :
     piste à rechercher : requête non couverte (ex. spécifique TikTok/créateurs,
     ou artisans/PME locales) — vérifier la demande avant d'écrire.
 
-21. **Après le run du 25/11** : (a) vérifier en prod `/que-preparer-avant-de-creer-son-site-internet` (200, canonical, FAQ) + ping IndexNow si pas fait le jour même. (b) Prochain angle suggéré : technique ou données structurées (contenus les 17, 24, 25/11). Piste : ajouter un lien contextuel vers le nouveau guide depuis `/comment-choisir-une-agence-web` (Q « questions à poser ») et `/creation-site-internet-artisan` (Q5 parle déjà de « préparer ») si pertinent. (c) Dès que Yanis répond sur domaine/hébergement et délais client : compléter Q3/Q5 du guide (texte + date).
+21. **Après le run du 25/11** : (a) ~~vérif prod + IndexNow~~ fait le 25/11 même. (b) Prochain angle suggéré : technique ou données structurées (contenus les 17, 24, 25/11). Piste : ajouter un lien contextuel vers le nouveau guide depuis `/comment-choisir-une-agence-web` (Q « questions à poser ») et `/creation-site-internet-artisan` (Q5 parle déjà de « préparer ») si pertinent. (c) Dès que Yanis répond sur domaine/hébergement et délais client : compléter Q3/Q5 du guide (texte + date).
 
 ---
 
@@ -3308,6 +3308,7 @@ Après déploiement : `/creation-site-internet-cluses` en 200 en prod (title + c
 ### 2026-11-25
 
 Absent sur « agence web Annemasse création site internet » et « refonte site internet Haute-Savoie » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé. SERP « que préparer avant de faire créer son site internet » relevée : blogs nationaux génériques, aucun prestataire ne dit ce qu'il demande au client (cible du nouveau guide).
+Après déploiement : `/que-preparer-avant-de-creer-son-site-internet` en 200 en prod (canonical propre, FAQ JSON-LD = visible 6/6), sitemap à 21 URLs, `/` en 200. IndexNow : POST nouvelle page + page prix + llms.txt + sitemap → HTTP 200.
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 
