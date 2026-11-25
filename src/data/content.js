@@ -497,6 +497,7 @@ export const footer = {
         { label: "Site internet ou réseaux sociaux ?", href: "/site-internet-ou-reseaux-sociaux" },
         { label: "Apparaître dans ChatGPT et les IA", href: "/apparaitre-dans-chatgpt-et-ia-site-local" },
         { label: "Site internet pour artisan", href: "/creation-site-internet-artisan" },
+        { label: "Que préparer avant de créer son site ?", href: "/que-preparer-avant-de-creer-son-site-internet" },
       ],
     },
     {

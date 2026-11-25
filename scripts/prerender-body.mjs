@@ -91,6 +91,10 @@ const routes = [
     filePath: path.join(distDir, "creation-site-internet-artisan", "index.html"),
   },
   {
+    routePath: "/que-preparer-avant-de-creer-son-site-internet",
+    filePath: path.join(distDir, "que-preparer-avant-de-creer-son-site-internet", "index.html"),
+  },
+  {
     routePath: "/mentions-legales",
     filePath: path.join(distDir, "mentions-legales", "index.html"),
   },

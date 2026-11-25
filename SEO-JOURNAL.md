@@ -37,6 +37,12 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-25 (mercredi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : `main` distant = `bcbcabe` avant run (⚠️ la ref locale `origin/main` du conteneur était périmée à `6ef6248` : toujours vérifier avec `git ls-remote origin` avant de conclure). Commits hors run depuis le 24/11 : page portfolio perso `/yanis` (Yanis) — vérifiée : `noindex, follow`, absente du sitemap et de llms.txt, téléphone affiché +33 6 15 80 26 19 (NAP cohérent). `/`, `/creation-site-internet-cluses`, page prix, sitemap.xml (20 URLs), llms.txt, robots.txt en 200 ; URL inconnue 404 noindex ; `www.kotastudio.fr/` → 308 apex. Rien de cassé.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "agence web Annemasse création site internet" (La Fabrique du Net, Gralon, 118712 ×3, Aladom ×3, Malt, Sortlist, francenum, Infomaniak partenaires, MaFormation, Medium) et "refonte site internet Haute-Savoie" (TED/BOAMP ×4, Ametys, Malt ×2, Infomaniak partenaires ×4, Syane, francenum). `site:kotastudio.fr` : 0 page du domaine (Contra AUREA seule). Inchangé depuis le 07/09 : le blocage reste l'indexation (Search Console / Bing Webmaster Tools côté Yanis).
+- Chantier : **nouveau guide `/que-preparer-avant-de-creer-son-site-internet`** (contenu de fond, angle suggéré par le run du 24/11 : contenu ou technique après 3 pages villes). Voir "Chantiers faits".
+
 **Au 2026-11-24 (mardi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : `origin/main` = `6ef6248` avant run. `/`, page prix, page GEO/ChatGPT, sitemap.xml (19 URLs), llms.txt, robots.txt en 200 ; URL inconnue 404 ; `www.kotastudio.fr/` → 308 apex. TXT google-site-verification toujours publié. NAP servi sur l'accueil : +33615802619, « Paluel ». Rien de cassé.
@@ -739,6 +745,16 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-25 (mercredi) — Guide « Que préparer avant de faire créer son site internet ? »
+
+- Pourquoi : angle « contenu de fond » (pages villes les 18, 20, 24/11 ; maillage 19 et 22/11 ; GEO 23/11). Requête réelle vérifiée ce jour : « que préparer avant de faire créer son site internet par une agence » → SERP = JDN, Codeur (blog devis), La Fabrique du Net ×n, petite-entreprise.net, siecledigital (2017), propulsebyca : **que des conseils génériques, aucun prestataire ne publie ce qu'il demande réellement au client**. C'est précisément une donnée propre au studio (calendrier jour par jour, options chiffrées). Pistes écartées : « combien de temps pour créer un site » (déjà couvert par la Q2 + HowTo de la page prix → cannibalisation) ; « site internet pour entreprise industrielle » (SERP = annuaires Usine Nouvelle/Kompass, pas de demande d'agence, et déjà traité dans la Q4 Cluses).
+- Fait :
+  - `src/lib/jsonld.js` : `PREPARE_SITE_PATH`, `prepareSiteFaqs` (6 Q/R, réponse directe autonome en tête de chaque H2, questions formulées comme à l'oral), `buildPrepareSiteJsonLd()` (BreadcrumbList + FAQPage, mot pour mot identique au visible — vérifié par script sur le HTML pré-rendu : 6/6). Questions : (1) que préparer avant de demander un devis, (2) quels éléments fournir à l'agence, (3) faut-il déjà un nom de domaine avant de commencer, (4) faut-il un cahier des charges pour un petit site, (5) qu'est-ce qui retarde le plus souvent la création d'un site, (6) quel budget prévoir.
+  - `src/pages/PrepareSitePage.jsx` (gabarit de la page artisan, DA inchangée) : date visible « 25 novembre 2026 », checklist de 6 cartes sous la Q2 (logo, photos réelles, prestations, coordonnées identiques à la fiche Google, textes, accès existants), liens contextuels sous Q3 (propriété du domaine), Q4 (quelles pages), Q6 (page prix), bloc « Pour aller plus loin » (choisir une agence, artisan, réseaux sociaux, Haute-Savoie), CTA final.
+  - Câblage : route `App.jsx`, `<head>` statique (`generate-static-heads.mjs`), corps pré-rendu (`prerender-body.mjs`), footer « Guides » (`content.js`), `sitemap.xml` (21 URLs, lastmod 2026-11-25), `llms.txt`, et **premier lien du bloc « Les questions qu'on se pose ensuite » de la page prix** (page la plus liée → nouveau guide).
+  - Vérifs : build OK (27 routes pré-rendues), title/canonical/og:url exacts, 1 H1, FAQ JSON-LD = visible sur la nouvelle page ET toujours sur accueil (8/8), prix (5/5), Cluses (5/5). Mobile iPhone 13 (Playwright) : scrollWidth = 390 = viewport, 0 erreur JS, cartes et titres lisibles.
+- NE PAS fait : aucun chiffre externe ; **rien affirmé sur qui achète/paie le nom de domaine ni sur l'hébergement** (inconnu → la Q3 a été recentrée sur « faut-il déjà un domaine », la mention « hébergement » retirée de la question pour ne pas promettre une réponse non sourcée) ; rien sur ce qui se passe si le client tarde (report du délai ? inconnu) ; rien sur les formats de fichiers acceptés ; pas de `HowTo` (déjà sur la page prix) ; pas de lien depuis l'accueil (sections validées) ; lastmod de la page prix inchangé (ajout d'un lien ≠ mise à jour de contenu).
 
 ### 2026-11-24 (mardi) — Page ville « Création de site internet à Cluses et dans la vallée de l'Arve »
 
@@ -2454,9 +2470,13 @@ Par ordre de priorité pour les prochains runs :
     piste à rechercher : requête non couverte (ex. spécifique TikTok/créateurs,
     ou artisans/PME locales) — vérifier la demande avant d'écrire.
 
+21. **Après le run du 25/11** : (a) vérifier en prod `/que-preparer-avant-de-creer-son-site-internet` (200, canonical, FAQ) + ping IndexNow si pas fait le jour même. (b) Prochain angle suggéré : technique ou données structurées (contenus les 17, 24, 25/11). Piste : ajouter un lien contextuel vers le nouveau guide depuis `/comment-choisir-une-agence-web` (Q « questions à poser ») et `/creation-site-internet-artisan` (Q5 parle déjà de « préparer ») si pertinent. (c) Dès que Yanis répond sur domaine/hébergement et délais client : compléter Q3/Q5 du guide (texte + date).
+
 ---
 
 ## Hypothèses à vérifier
+
+- **Guide « Que préparer » (2026-11-25)** : (1) Qui achète et au nom de qui est enregistré le nom de domaine d'un client sans domaine ? Coût domaine + hébergement inclus la 1re année, et après ? (réponse attendue aussi pour la page artisan). (2) Si le client fournit ses contenus ou ses retours en retard, le délai de 14 jours est-il simplement décalé d'autant ? (3) Formats acceptés pour logo/photos (et Kota peut-il utiliser des photos libres de droits si le client n'en a pas ?). (4) Le client peut-il envoyer ses éléments par WhatsApp / lien de partage ? Chaque réponse permettrait d'ajouter une phrase vraie au guide.
 
 - **Page Cluses (2026-11-24)** : (1) Yanis a-t-il un client (ou un prospect) dans la vallée de l'Arve, en particulier un sous-traitant industriel ? Un exemple réel renforcerait fortement la Q4. (2) Confirmer le présentiel possible à Cluses (~50 km). (3) Le formulaire de contact peut-il recevoir un fichier (plan de pièce) ? Si oui, l'ajouter à la Q4.
 
@@ -3285,7 +3305,13 @@ Après déploiement : `/apparaitre-dans-chatgpt-et-ia-site-local` sert la Q4 Bus
 Absent sur « création site internet Saint-Julien-en-Genevois » et « création site internet Annecy » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé. SERP « création site internet Cluses vallée de l'Arve » et « … La Roche-sur-Foron » relevées : annuaires/tourisme + 2 prestataires locaux, aucune page d'agence avec prix (cible de la nouvelle page Cluses).
 Après déploiement : `/creation-site-internet-cluses` en 200 en prod (title + canonical propres), sitemap à 20 URLs, llms.txt à jour. IndexNow : POST page Cluses + page Haute-Savoie + llms.txt + sitemap → HTTP 200.
 
+### 2026-11-25
+
+Absent sur « agence web Annemasse création site internet » et « refonte site internet Haute-Savoie » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé. SERP « que préparer avant de faire créer son site internet » relevée : blogs nationaux génériques, aucun prestataire ne dit ce qu'il demande au client (cible du nouveau guide).
+
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
+
+0decies. **Guide « Que préparer » (25/11)** : qui achète le domaine d'un client et au nom de qui ; coût domaine/hébergement après la 1re année ; délai décalé si le client tarde ? ; photos libres de droits possibles si le client n'en a pas ?
 
 0nonies. **Cluses (24/11)** : client réel dans la vallée de l'Arve ? présentiel à Cluses possible ? le formulaire accepte-t-il un fichier joint ?
 

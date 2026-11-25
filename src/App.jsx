@@ -18,6 +18,7 @@ import DomainOwnershipPage from "./pages/DomainOwnershipPage";
 import SocialVsSitePage from "./pages/SocialVsSitePage";
 import AiVisibilityPage from "./pages/AiVisibilityPage";
 import ArtisanSitePage from "./pages/ArtisanSitePage";
+import PrepareSitePage from "./pages/PrepareSitePage";
 import YanisPage from "./pages/YanisPage";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -117,6 +118,10 @@ export default function App() {
         <Route
           path="/creation-site-internet-artisan"
           element={<ArtisanSitePage />}
+        />
+        <Route
+          path="/que-preparer-avant-de-creer-son-site-internet"
+          element={<PrepareSitePage />}
         />
         {/* Pages villes SEO local (src/data/cities.js) — catch-all volontaire,
             gère aussi le 404 propre pour un slug inconnu (comme /projets/:slug). */}

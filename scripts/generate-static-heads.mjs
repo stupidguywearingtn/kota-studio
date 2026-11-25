@@ -49,6 +49,7 @@ import {
   buildDomainOwnershipJsonLd,
   buildSocialVsSiteJsonLd,
   buildArtisanSiteJsonLd,
+  buildPrepareSiteJsonLd,
   buildAiVisibilityJsonLd,
   buildProjectJsonLd,
   PAGE_SCHEMA_ATTR,
@@ -228,6 +229,14 @@ writeRoute("/creation-site-internet-artisan", {
     "Site internet pour artisan : ce qu'il doit contenir, landing page ou site complet, prix (dès 790 €), délai de 14 jours et comment être trouvé sur Google et par les IA dans sa zone.",
   schemaId: "artisan-site",
   jsonLd: buildArtisanSiteJsonLd(),
+});
+
+writeRoute("/que-preparer-avant-de-creer-son-site-internet", {
+  title: "Que préparer avant de faire créer son site internet ? | Kota Studio",
+  description:
+    "Ce qu'il faut préparer avant de faire créer son site : infos pour le devis, éléments à fournir, domaine, cahier des charges, ce qui retarde un projet et budget réel.",
+  schemaId: "prepare-site",
+  jsonLd: buildPrepareSiteJsonLd(),
 });
 
 writeRoute("/yanis", {

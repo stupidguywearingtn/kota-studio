@@ -664,3 +664,71 @@ export function buildArtisanSiteJsonLd() {
     ],
   };
 }
+
+export const PREPARE_SITE_PATH = "/que-preparer-avant-de-creer-son-site-internet";
+
+/* Les 6 questions/réponses affichées sur PrepareSitePage.jsx, reprises mot
+   pour mot dans le JSON-LD FAQPage. Page ajoutée le 2026-11-25 (requête réelle
+   « que préparer avant de faire créer son site internet », servie par des
+   blogs nationaux génériques : JDN, Codeur, La Fabrique du Net,
+   petite-entreprise.net — aucun prestataire ne dit ce qu'IL demande au
+   client). Faits propres au studio tirés de content.js et de la FAQ de
+   l'accueil uniquement (appel de 15 min, devis à prix fixe, calendrier des
+   5 étapes sur 14 jours, options chiffrées, maintenance optionnelle sur
+   devis). Rien d'affirmé sur le coût du domaine/hébergement après la 1re
+   année ni sur ce qui se passe si le client tarde (inconnus, voir journal). */
+export const prepareSiteFaqs = [
+  {
+    q: "Que faut-il préparer avant de demander un devis pour un site internet ?",
+    a: "Trois réponses suffisent pour un premier échange utile : ce que vous vendez et à qui, l'action que le site doit déclencher (un appel, une demande de devis, une réservation, un achat) et une idée de budget. Les textes, les photos et le logo se préparent ensuite. Chez Kota Studio, ce premier échange est un appel de 15 minutes, gratuit et sans engagement, suivi d'un devis à prix fixe écrit noir sur blanc.",
+  },
+  {
+    q: "Quels éléments faut-il fournir à l'agence pour créer son site ?",
+    a: "Ce que vous seul pouvez apporter : votre logo, des photos réelles de votre activité, la liste de vos prestations ou produits, vos coordonnées et horaires, et les textes ou au moins les informations à faire passer. Le design, le code, la structure des pages et la mise en ligne sont le travail de l'agence. Si un élément manque, Kota Studio le propose en option à prix affiché : logo et branding +490 €, rédaction de contenu +290 €, langue supplémentaire +390 €.",
+  },
+  {
+    q: "Faut-il déjà avoir un nom de domaine avant de commencer ?",
+    a: "Non, ce n'est pas un prérequis pour démarrer : chez Kota Studio, le domaine est traité à la dernière étape, la mise en ligne, avec la configuration Google et la prise en main de l'espace admin. Si vous possédez déjà un nom de domaine, préparez simplement l'accès au compte où il est enregistré, et vérifiez qu'il est bien à votre nom et pas à celui d'un ancien prestataire : c'est ce qui garantit que l'adresse de votre site vous appartient.",
+  },
+  {
+    q: "Faut-il rédiger un cahier des charges pour un petit site ?",
+    a: "Pour un site d'artisan, de commerce ou d'indépendant, non : une page de notes suffit, avec votre objectif, les pages que vous imaginez, deux ou trois sites que vous aimez (et pourquoi), et une éventuelle date butoir. La définition de l'arborescence et des objectifs fait partie du travail inclus chez Kota Studio. Un cahier des charges détaillé devient utile pour une boutique en ligne, un outil métier ou une application, des projets que Kota Studio chiffre sur devis.",
+  },
+  {
+    q: "Qu'est-ce qui retarde le plus souvent la création d'un site ?",
+    a: "Rarement le développement : le plus souvent, l'attente des contenus et des validations. Chez Kota Studio, le calendrier de 14 jours prévoit la maquette à valider entre le jour 3 et le jour 6, puis les ajustements entre le jour 7 et le jour 13. Avoir logo, photos et informations prêts avant la maquette, et désigner une seule personne qui valide, est ce qui permet de tenir ce délai.",
+  },
+  {
+    q: "Quel budget prévoir avant de se lancer ?",
+    a: "Chez Kota Studio, une landing page démarre à 790 € et un site sur-mesure à 1 290 €, options affichées à part, paiement par virement en deux fois : 50 % à la commande, 50 % à la livraison (TVA non applicable, art. 293 B du CGI). Après la mise en ligne, le site vous appartient ; une maintenance mensuelle est possible mais pas obligatoire, sur devis. Quelle que soit l'agence, demandez par écrit ce qui sera facturé après la première année.",
+  },
+];
+
+export function buildPrepareSiteJsonLd() {
+  const pageUrl = `${SITE_URL}${PREPARE_SITE_PATH}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE_URL}/` },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Que préparer avant de créer son site internet ?",
+            item: pageUrl,
+          },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: prepareSiteFaqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+    ],
+  };
+}

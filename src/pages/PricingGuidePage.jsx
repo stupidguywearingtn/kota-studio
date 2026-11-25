@@ -12,6 +12,7 @@ import {
   SITE_PAGES_PATH,
   SOCIAL_VS_SITE_PATH,
   AI_VISIBILITY_PATH,
+  PREPARE_SITE_PATH,
 } from "../lib/jsonld";
 import { offer, process, whatWeDo, promises, whatsapp } from "../data/content";
 import { cities } from "../data/cities";
@@ -251,6 +252,11 @@ export default function PricingGuidePage() {
               Les questions qu'on se pose ensuite
             </h3>
             <ul className="mt-3 flex flex-col gap-2 text-sm">
+              <li>
+                <Link to={PREPARE_SITE_PATH} className="font-semibold text-or hover:underline">
+                  Que préparer avant de faire créer son site internet ? →
+                </Link>
+              </li>
               <li>
                 <Link to={AGENCY_GUIDE_PATH} className="font-semibold text-or hover:underline">
                   Comment choisir une agence de création de site internet ? →
