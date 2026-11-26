@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
-import { buildCustomVsCmsJsonLd, customVsCmsFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
+import { GUIDE_DATES, buildCustomVsCmsJsonLd, customVsCmsFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
 import { offer, promises, whatsapp } from "../data/content";
 import Logo from "../components/Logo";
 import Button from "../components/Button";
@@ -15,7 +15,7 @@ const PAGE_PATH = "/site-sur-mesure-ou-wordpress-wix";
 const META_TITLE = "Site sur-mesure ou WordPress / Wix : que choisir ? | Kota Studio";
 const META_DESCRIPTION =
   "Site sur-mesure ou WordPress / Wix : différences, budget, référencement, autonomie. Quand un modèle suffit, quand le sur-mesure vaut le coup, et ce que propose Kota Studio.";
-const UPDATED_AT = "29 septembre 2026";
+const UPDATED_AT = GUIDE_DATES[PAGE_PATH].updated;
 
 /* Les 5 questions/réponses affichées ci-dessous + reprises mot pour mot dans
    le JSON-LD FAQPage. Définies une seule fois dans lib/jsonld.js (source de

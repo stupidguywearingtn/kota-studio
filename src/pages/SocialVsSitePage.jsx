@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
-import { buildSocialVsSiteJsonLd, socialVsSiteFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
+import { GUIDE_DATES, buildSocialVsSiteJsonLd, socialVsSiteFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
 import { whatsapp } from "../data/content";
 import Logo from "../components/Logo";
 import Button from "../components/Button";
@@ -15,7 +15,7 @@ const PAGE_PATH = "/site-internet-ou-reseaux-sociaux";
 const META_TITLE = "Site internet ou réseaux sociaux : faut-il les deux ? | Kota Studio";
 const META_DESCRIPTION =
   "TikTok, Instagram ou site internet : ce que chacun apporte, ce que la fiche Google Business ne remplace pas, et par où commencer quand on est un commerce ou un indépendant local.";
-const UPDATED_AT = "5 octobre 2026";
+const UPDATED_AT = GUIDE_DATES[PAGE_PATH].updated;
 
 /* Les 5 questions/réponses affichées ci-dessous + reprises mot pour mot dans
    le JSON-LD FAQPage. Définies une seule fois dans lib/jsonld.js (source de

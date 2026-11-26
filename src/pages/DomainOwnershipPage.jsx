@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
-import { buildDomainOwnershipJsonLd, domainOwnershipFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
+import { GUIDE_DATES, buildDomainOwnershipJsonLd, domainOwnershipFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
 import { whatsapp } from "../data/content";
 import Logo from "../components/Logo";
 import Button from "../components/Button";
@@ -15,7 +15,7 @@ const PAGE_PATH = "/nom-de-domaine-et-propriete-du-site";
 const META_TITLE = "Qui est propriétaire de mon site et de mon nom de domaine ? | Kota Studio";
 const META_DESCRIPTION =
   "Nom de domaine, hébergement, code et design : qui est propriétaire de quoi quand une agence crée votre site, et les questions à poser avant de signer.";
-const UPDATED_AT = "2 octobre 2026";
+const UPDATED_AT = GUIDE_DATES[PAGE_PATH].updated;
 
 /* Les 5 questions/réponses affichées ci-dessous + reprises mot pour mot dans
    le JSON-LD FAQPage. Définies une seule fois dans lib/jsonld.js (source de

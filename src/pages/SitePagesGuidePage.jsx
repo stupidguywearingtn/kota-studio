@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
-import { buildSitePagesJsonLd, sitePagesFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
+import { GUIDE_DATES, buildSitePagesJsonLd, sitePagesFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
 import { offer, promises, whatsapp } from "../data/content";
 import Logo from "../components/Logo";
 import Button from "../components/Button";
@@ -15,7 +15,7 @@ const PAGE_PATH = "/quelles-pages-pour-un-site-vitrine";
 const META_TITLE = "Quelles pages pour un site vitrine ? Combien et lesquelles | Kota Studio";
 const META_DESCRIPTION =
   "Quelles pages prévoir sur un site vitrine, combien en faut-il, quand une landing page suffit et comment Kota Studio définit l'arborescence de votre site.";
-const UPDATED_AT = "30 septembre 2026";
+const UPDATED_AT = GUIDE_DATES[PAGE_PATH].updated;
 
 /* Les 5 questions/réponses affichées ci-dessous + reprises mot pour mot dans
    le JSON-LD FAQPage. Définies une seule fois dans lib/jsonld.js (source de

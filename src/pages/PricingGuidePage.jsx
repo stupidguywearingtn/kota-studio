@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
 import {
+  GUIDE_DATES,
   buildPricingGuideJsonLd,
   pricingGuideFaqs,
   PAGE_SCHEMA_ATTR,
@@ -26,7 +27,7 @@ const PAGE_PATH = "/combien-coute-un-site-internet";
 const META_TITLE = "Combien coûte un site internet ? Prix, délais, inclus | Kota Studio";
 const META_DESCRIPTION =
   "Prix réels d'un site internet chez Kota Studio : landing page à partir de 790 €, site sur-mesure à partir de 1 290 €. Délai de 14 jours, ce qui est inclus, ce qui est en option.";
-const UPDATED_AT = "10 septembre 2026";
+const UPDATED_AT = GUIDE_DATES[PAGE_PATH].updated;
 
 /* Les 5 questions/réponses affichées ci-dessous + reprises mot pour mot dans
    le JSON-LD FAQPage. Définies une seule fois dans lib/jsonld.js (source de

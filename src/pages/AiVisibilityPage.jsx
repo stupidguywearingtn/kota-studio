@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
-import { buildAiVisibilityJsonLd, aiVisibilityFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
+import { GUIDE_DATES, buildAiVisibilityJsonLd, aiVisibilityFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
 import { whatsapp } from "../data/content";
 import Logo from "../components/Logo";
 import Button from "../components/Button";
@@ -15,7 +15,7 @@ const PAGE_PATH = "/apparaitre-dans-chatgpt-et-ia-site-local";
 const META_TITLE = "Apparaître dans ChatGPT et les IA quand on a un site local | Kota Studio";
 const META_DESCRIPTION =
   "Comment apparaître dans ChatGPT et les AI Overviews de Google : ce que disent Google et OpenAI, ce qui rend une page citable et ce que Kota Studio applique sur son site.";
-const UPDATED_AT = "23 novembre 2026";
+const UPDATED_AT = GUIDE_DATES[PAGE_PATH].updated;
 
 /* Les 6 questions/réponses affichées ci-dessous + reprises mot pour mot dans
    le JSON-LD FAQPage. Définies une seule fois dans lib/jsonld.js (source de

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
-import { buildRefonteSignsJsonLd, refonteSignsFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
+import { GUIDE_DATES, buildRefonteSignsJsonLd, refonteSignsFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
 import { offer, promises, whatsapp } from "../data/content";
 import Logo from "../components/Logo";
 import Button from "../components/Button";
@@ -15,7 +15,7 @@ const PAGE_PATH = "/quand-refaire-son-site-internet";
 const META_TITLE = "Quand refaire son site internet ? Les signes d'une refonte | Kota Studio";
 const META_DESCRIPTION =
   "Les 6 signes qui indiquent qu'une refonte est nécessaire, la différence avec une simple mise à jour, et comment se passe une refonte chez Kota Studio (prix, délai, référencement).";
-const UPDATED_AT = "27 septembre 2026";
+const UPDATED_AT = GUIDE_DATES[PAGE_PATH].updated;
 
 /* Les 5 questions/réponses affichées ci-dessous + reprises mot pour mot dans
    le JSON-LD FAQPage. Définies une seule fois dans lib/jsonld.js (source de

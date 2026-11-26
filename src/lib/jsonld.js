@@ -26,6 +26,7 @@ export function buildCityJsonLd(city) {
   return {
     "@context": "https://schema.org",
     "@graph": [
+      buildCityWebPageNode(city),
       {
         "@type": "BreadcrumbList",
         itemListElement: [
@@ -98,6 +99,7 @@ export function buildPricingGuideJsonLd() {
   return {
     "@context": "https://schema.org",
     "@graph": [
+      buildArticleNode(PRICING_GUIDE_PATH, "Combien coûte un site internet ?"),
       {
         "@type": "BreadcrumbList",
         itemListElement: [
@@ -200,6 +202,7 @@ export function buildAgencyGuideJsonLd() {
   return {
     "@context": "https://schema.org",
     "@graph": [
+      buildArticleNode(AGENCY_GUIDE_PATH, "Comment choisir une agence de création de site internet ?"),
       {
         "@type": "BreadcrumbList",
         itemListElement: [
@@ -266,6 +269,7 @@ export function buildRefonteSignsJsonLd() {
   return {
     "@context": "https://schema.org",
     "@graph": [
+      buildArticleNode(REFONTE_SIGNS_PATH, "Quand refaire son site internet ?"),
       {
         "@type": "BreadcrumbList",
         itemListElement: [
@@ -327,6 +331,7 @@ export function buildCustomVsCmsJsonLd() {
   return {
     "@context": "https://schema.org",
     "@graph": [
+      buildArticleNode(CUSTOM_VS_CMS_PATH, "Site sur-mesure ou WordPress / Wix : que choisir ?"),
       {
         "@type": "BreadcrumbList",
         itemListElement: [
@@ -386,6 +391,7 @@ export function buildSitePagesJsonLd() {
   return {
     "@context": "https://schema.org",
     "@graph": [
+      buildArticleNode(SITE_PAGES_PATH, "Quelles pages pour un site vitrine ?"),
       {
         "@type": "BreadcrumbList",
         itemListElement: [
@@ -448,6 +454,7 @@ export function buildDomainOwnershipJsonLd() {
   return {
     "@context": "https://schema.org",
     "@graph": [
+      buildArticleNode(DOMAIN_OWNERSHIP_PATH, "Qui est propriétaire de mon site internet ?"),
       {
         "@type": "BreadcrumbList",
         itemListElement: [
@@ -517,6 +524,7 @@ export function buildAiVisibilityJsonLd() {
   return {
     "@context": "https://schema.org",
     "@graph": [
+      buildArticleNode(AI_VISIBILITY_PATH, "Comment apparaître dans ChatGPT et les IA quand on a un site local ?"),
       {
         "@type": "BreadcrumbList",
         itemListElement: [
@@ -577,6 +585,7 @@ export function buildSocialVsSiteJsonLd() {
   return {
     "@context": "https://schema.org",
     "@graph": [
+      buildArticleNode(SOCIAL_VS_SITE_PATH, "Site internet ou réseaux sociaux ?"),
       {
         "@type": "BreadcrumbList",
         itemListElement: [
@@ -641,6 +650,7 @@ export function buildArtisanSiteJsonLd() {
   return {
     "@context": "https://schema.org",
     "@graph": [
+      buildArticleNode(ARTISAN_SITE_PATH, "Site internet pour artisan : quoi mettre, quel prix, quel délai ?"),
       {
         "@type": "BreadcrumbList",
         itemListElement: [
@@ -709,6 +719,7 @@ export function buildPrepareSiteJsonLd() {
   return {
     "@context": "https://schema.org",
     "@graph": [
+      buildArticleNode(PREPARE_SITE_PATH, "Que préparer avant de faire créer son site internet ?"),
       {
         "@type": "BreadcrumbList",
         itemListElement: [
@@ -731,4 +742,95 @@ export function buildPrepareSiteJsonLd() {
       },
     ],
   };
+}
+
+/* ============================================================================
+   Dates des pages de fond (ajout 2026-11-26). `updated` est la SEULE source de
+   la date « Dernière mise à jour » affichée sur chaque guide (les pages
+   l'importent) ET du `dateModified` du JSON-LD : aucun écart possible entre le
+   visible et le balisage. `published` = date de première mise en ligne,
+   relevée dans SEO-JOURNAL.md (l'historique git a été repris lors de la
+   refonte du 07/10/2026). Règle : ne changer `updated` que si le contenu
+   change vraiment (même règle que la date visible et le lastmod du sitemap).
+   ============================================================================ */
+export const GUIDE_DATES = {
+  [PRICING_GUIDE_PATH]: { published: "2026-09-10", updated: "10 septembre 2026" },
+  [AGENCY_GUIDE_PATH]: { published: "2026-09-24", updated: "24 septembre 2026" },
+  [REFONTE_SIGNS_PATH]: { published: "2026-09-27", updated: "27 septembre 2026" },
+  [CUSTOM_VS_CMS_PATH]: { published: "2026-09-29", updated: "29 septembre 2026" },
+  [SITE_PAGES_PATH]: { published: "2026-09-30", updated: "30 septembre 2026" },
+  [AI_VISIBILITY_PATH]: { published: "2026-10-01", updated: "23 novembre 2026" },
+  [DOMAIN_OWNERSHIP_PATH]: { published: "2026-10-02", updated: "2 octobre 2026" },
+  [SOCIAL_VS_SITE_PATH]: { published: "2026-10-05", updated: "5 octobre 2026" },
+  [ARTISAN_SITE_PATH]: { published: "2026-11-17", updated: "17 novembre 2026" },
+  [PREPARE_SITE_PATH]: { published: "2026-11-25", updated: "25 novembre 2026" },
+};
+
+/* Première mise en ligne des pages villes/zones (SEO-JOURNAL.md). La date de
+   mise à jour vient de `city.updatedAt` (cities.js), déjà affichée sur la page. */
+const CITY_PUBLISHED = {
+  "creation-site-internet-saint-julien-en-genevois": "2026-09-07",
+  "creation-site-internet-annecy": "2026-09-09",
+  "agence-web-annemasse": "2026-09-14",
+  "agence-web-lyon": "2026-09-16",
+  "creation-refonte-site-internet-haute-savoie": "2026-09-20",
+  "creation-site-internet-thonon-les-bains": "2026-11-18",
+  "creation-site-internet-pays-de-gex": "2026-11-20",
+  "creation-site-internet-cluses": "2026-11-24",
+};
+
+const FR_MONTHS = [
+  "janvier", "février", "mars", "avril", "mai", "juin",
+  "juillet", "août", "septembre", "octobre", "novembre", "décembre",
+];
+
+/* « 7 septembre 2026 » / « 1er octobre 2026 » → « 2026-09-07 ». Lève une
+   erreur (donc casse le build) si le format change : mieux qu'une date fausse
+   dans le balisage. */
+export function frDateToIso(fr) {
+  const m = /^(\d{1,2})(?:er)? (\S+) (\d{4})$/.exec(String(fr).trim());
+  const month = m ? FR_MONTHS.indexOf(m[2].toLowerCase()) : -1;
+  if (!m || month < 0) throw new Error(`Date française non reconnue : « ${fr} »`);
+  return `${m[3]}-${String(month + 1).padStart(2, "0")}-${m[1].padStart(2, "0")}`;
+}
+
+const ORGANISATION_REF = {
+  "@type": "ProfessionalService",
+  "@id": `${SITE_URL}/#organisation`,
+  name: "Kota Studio",
+  url: `${SITE_URL}/`,
+};
+
+function buildArticleNode(path, headline) {
+  const dates = GUIDE_DATES[path];
+  const pageUrl = `${SITE_URL}${path}`;
+  return {
+    "@type": "Article",
+    "@id": `${pageUrl}#article`,
+    headline,
+    url: pageUrl,
+    mainEntityOfPage: pageUrl,
+    inLanguage: "fr-FR",
+    datePublished: dates.published,
+    dateModified: frDateToIso(dates.updated),
+    author: ORGANISATION_REF,
+    publisher: ORGANISATION_REF,
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+  };
+}
+
+function buildCityWebPageNode(city) {
+  const pageUrl = `${SITE_URL}/${city.slug}`;
+  const node = {
+    "@type": "WebPage",
+    "@id": `${pageUrl}#webpage`,
+    name: city.h1,
+    url: pageUrl,
+    inLanguage: "fr-FR",
+    dateModified: frDateToIso(city.updatedAt),
+    publisher: ORGANISATION_REF,
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+  };
+  if (CITY_PUBLISHED[city.slug]) node.datePublished = CITY_PUBLISHED[city.slug];
+  return node;
 }

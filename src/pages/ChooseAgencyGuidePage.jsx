@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
-import { buildAgencyGuideJsonLd, agencyGuideFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
+import { GUIDE_DATES, buildAgencyGuideJsonLd, agencyGuideFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
 import { promises, whatsapp } from "../data/content";
 import { cities } from "../data/cities";
 import Logo from "../components/Logo";
@@ -16,7 +16,7 @@ const PAGE_PATH = "/comment-choisir-une-agence-web";
 const META_TITLE = "Comment choisir une agence de création de site internet ? | Kota Studio";
 const META_DESCRIPTION =
   "Les critères concrets pour choisir une agence web (prix, délai, interlocuteur, signaux d'alerte) et les 5 questions à poser avant de signer, en Haute-Savoie ou ailleurs.";
-const UPDATED_AT = "24 septembre 2026";
+const UPDATED_AT = GUIDE_DATES[PAGE_PATH].updated;
 
 /* Les 5 questions/réponses affichées ci-dessous + reprises mot pour mot dans
    le JSON-LD FAQPage. Définies une seule fois dans lib/jsonld.js (source de

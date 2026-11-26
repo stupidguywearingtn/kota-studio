@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
-import { buildPrepareSiteJsonLd, prepareSiteFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
+import { GUIDE_DATES, buildPrepareSiteJsonLd, prepareSiteFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
 import { whatsapp } from "../data/content";
 import Logo from "../components/Logo";
 import Button from "../components/Button";
@@ -15,7 +15,7 @@ const PAGE_PATH = "/que-preparer-avant-de-creer-son-site-internet";
 const META_TITLE = "Que préparer avant de faire créer son site internet ? | Kota Studio";
 const META_DESCRIPTION =
   "Ce qu'il faut préparer avant de faire créer son site : infos pour le devis, éléments à fournir, domaine, cahier des charges, ce qui retarde un projet et budget réel.";
-const UPDATED_AT = "25 novembre 2026";
+const UPDATED_AT = GUIDE_DATES[PAGE_PATH].updated;
 
 /* Les 6 questions/réponses affichées ci-dessous + reprises mot pour mot dans
    le JSON-LD FAQPage. Définies une seule fois dans lib/jsonld.js (source de

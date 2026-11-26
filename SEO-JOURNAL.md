@@ -37,6 +37,12 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-26 (jeudi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : `main` distant = `d3b144c` avant run (vérifié par `git ls-remote`, identique au local). `/`, guide « Que préparer », page prix, choisir une agence, artisan, sitemap.xml (21 URLs), llms.txt, robots.txt en 200 ; URL inconnue 404 ; `www.kotastudio.fr/` → 308 apex. NAP servi sur l'accueil : +33615802619, « Paluel » ; ancien numéro absent. Rien de cassé.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site vitrine Haute-Savoie" (118712 ×n, Malt ×3, Codeur, La Fabrique du Net Annecy/Chambéry, Infomaniak partenaires ×2, Sortlist Webies, ComeUp) et "agence web Lyon création site internet" (La Fabrique du Net ×n, digitiz ×2, Codeur blog, Clutch, PagesJaunes, 118712, leblogdudirigeant, DesignRush, tool-advisor). `site:kotastudio.fr` : 0 page du domaine (Contra AUREA seule). Inchangé depuis le 07/09.
+- Audit JSON-LD de `dist/` (27 routes) : toutes les pages indexables ont BreadcrumbList + FAQPage (+ Service sur les villes, HowTo sur la page prix) mais **aucune ne portait de date lisible par machine** alors que 18 pages affichent « Dernière mise à jour ». Chantier du jour : voir "Chantiers faits".
+
 **Au 2026-11-25 (mercredi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : `main` distant = `bcbcabe` avant run (⚠️ la ref locale `origin/main` du conteneur était périmée à `6ef6248` : toujours vérifier avec `git ls-remote origin` avant de conclure). Commits hors run depuis le 24/11 : page portfolio perso `/yanis` (Yanis) — vérifiée : `noindex, follow`, absente du sitemap et de llms.txt, téléphone affiché +33 6 15 80 26 19 (NAP cohérent). `/`, `/creation-site-internet-cluses`, page prix, sitemap.xml (20 URLs), llms.txt, robots.txt en 200 ; URL inconnue 404 noindex ; `www.kotastudio.fr/` → 308 apex. Rien de cassé.
@@ -745,6 +751,16 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-26 (jeudi) — Données structurées : `Article` / `WebPage` avec `datePublished` + `dateModified` sur les 18 pages de fond
+
+- Pourquoi : angle suggéré par le run du 25/11 (technique ou données structurées, après 3 contenus les 17, 24, 25/11). Audit du JSON-LD pré-rendu : les 10 guides et les 8 pages villes/zones affichent une date « Dernière mise à jour » mais aucun nœud ne la portait en balisage (`dateModified` absent partout). Le run du 12/11 l'avait écarté comme « gain marginal qui touche toutes les fonctions » ; je revois cette décision : la consigne GEO insiste sur les contenus datés, Bing/ChatGPT Search et Google utilisent `dateModified` comme signal de fraîcheur, et le risque d'écart visible/balisage a été supprimé à la source (voir ci-dessous) — c'était l'objection réelle.
+- Fait :
+  - `src/lib/jsonld.js` : `GUIDE_DATES` (chemin → `published` ISO + `updated` en français), `CITY_PUBLISHED` (slug → ISO), `frDateToIso()` (lève une erreur et casse le build si le format de date change, plutôt que de publier une date fausse), `buildArticleNode()` (Article : headline = H1 exact, url, mainEntityOfPage, inLanguage fr-FR, datePublished, dateModified, author/publisher = ProfessionalService `#organisation`, isPartOf `#website`) ajouté aux 10 builders de guides ; `buildCityWebPageNode()` (WebPage, même logique, dateModified = `city.updatedAt`) ajouté à `buildCityJsonLd`.
+  - Les 10 pages guides (`src/pages/*Page.jsx`) lisent désormais leur date visible dans `GUIDE_DATES[PAGE_PATH].updated` au lieu d'une constante locale : **une seule source** pour la date affichée et le `dateModified`. Pages villes : déjà une seule source (`cities.js > updatedAt`).
+  - `datePublished` = date de première mise en ligne relevée dans ce journal (l'historique git a été repris à la refonte du 07/10, il ne donne que 2026-10-06 pour les anciennes pages).
+- Vérifs : build OK (27 routes) ; script sur le HTML pré-rendu : **18/18 pages : dateModified = date visible, headline/name = H1 exact** ; dateModified = lastmod du sitemap partout sauf Haute-Savoie (lastmod 2026-11-24 pour l'ajout de « Cluses » dans la Q1, date visible restée au 20/09 → balisage aligné sur le visible, volontairement). FAQPage non touchés. Playwright iPhone 13 (vite preview) sur page prix, guide « Que préparer », Cluses, accueil : scrollWidth 390 = viewport, 0 erreur JS, 2 blocs JSON-LD après hydratation (le client remplace bien le bloc statique), date visible inchangée.
+- NE PAS fait : pas d'`image` dans Article (recommandée, pas requise ; aucune image dédiée par guide → ne pas en inventer une) ; pas d'auteur personne (Yanis) : nom légal / page auteur non confirmés ; accueil non touché (sections validées, pas de date visible) ; aucune date visible modifiée ; sitemap et llms.txt inchangés (aucune page ajoutée, aucun contenu modifié) ; pas de ping IndexNow (contenu visible identique).
 
 ### 2026-11-25 (mercredi) — Guide « Que préparer avant de faire créer son site internet ? »
 
@@ -2470,6 +2486,8 @@ Par ordre de priorité pour les prochains runs :
     piste à rechercher : requête non couverte (ex. spécifique TikTok/créateurs,
     ou artisans/PME locales) — vérifier la demande avant d'écrire.
 
+22. **Après le run du 26/11** : (a) vérifier en prod qu'un guide sert le nœud `Article` (curl + grep `"dateModified"`). (b) **Règle désormais** : toute nouvelle page de fond ajoute son entrée dans `GUIDE_DATES` (jsonld.js) et lit `UPDATED_AT` depuis là ; toute nouvelle ville ajoute son slug dans `CITY_PUBLISHED`. Une mise à jour de contenu = changer `updated` (date visible + dateModified) ET le lastmod du sitemap. (c) Prochain angle suggéré : maillage (lien contextuel vers « Que préparer » depuis `/comment-choisir-une-agence-web` et `/creation-site-internet-artisan`, item 21b non fait) ou contenu.
+
 21. **Après le run du 25/11** : (a) ~~vérif prod + IndexNow~~ fait le 25/11 même. (b) Prochain angle suggéré : technique ou données structurées (contenus les 17, 24, 25/11). Piste : ajouter un lien contextuel vers le nouveau guide depuis `/comment-choisir-une-agence-web` (Q « questions à poser ») et `/creation-site-internet-artisan` (Q5 parle déjà de « préparer ») si pertinent. (c) Dès que Yanis répond sur domaine/hébergement et délais client : compléter Q3/Q5 du guide (texte + date).
 
 ---
@@ -2561,6 +2579,8 @@ _Ce que Yanis doit fournir — rien n'a été inventé pour combler ces trous :_
 ---
 
 ## Erreurs commises et corrigées
+
+- **2026-11-26** — Décision du 12/11 « pas de `dateModified` dans le JSON-LD (gain marginal) » revue : les pages affichaient une date que les moteurs ne pouvaient lire qu'en parsant le texte. Corrigé (voir "Chantiers faits"). Leçon : quand l'objection est un risque d'écart entre deux sources, supprimer la double source plutôt que renoncer au balisage.
 
 - **2026-11-16** — La redirection www → apex du 11/11 (`source: "/:path*"`) ne couvrait pas la racine : `www.kotastudio.fr/` est resté en 200 du 11/11 au 16/11. Erreur de vérification : seules des sous-pages (`/agence-web-lyon`, `/x`) avaient été testées. Corrigé par une règle `source: "/"` dédiée. Leçon : toute règle de redirection se teste sur la racine ET une sous-page.
 
@@ -3309,6 +3329,10 @@ Après déploiement : `/creation-site-internet-cluses` en 200 en prod (title + c
 
 Absent sur « agence web Annemasse création site internet » et « refonte site internet Haute-Savoie » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé. SERP « que préparer avant de faire créer son site internet » relevée : blogs nationaux génériques, aucun prestataire ne dit ce qu'il demande au client (cible du nouveau guide).
 Après déploiement : `/que-preparer-avant-de-creer-son-site-internet` en 200 en prod (canonical propre, FAQ JSON-LD = visible 6/6), sitemap à 21 URLs, `/` en 200. IndexNow : POST nouvelle page + page prix + llms.txt + sitemap → HTTP 200.
+
+### 2026-11-26
+
+Absent sur « création site vitrine Haute-Savoie » et « agence web Lyon création site internet » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé.
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 

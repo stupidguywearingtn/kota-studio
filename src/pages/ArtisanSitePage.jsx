@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setupReveals } from "../lib/reveal";
-import { buildArtisanSiteJsonLd, artisanSiteFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
+import { GUIDE_DATES, buildArtisanSiteJsonLd, artisanSiteFaqs, PAGE_SCHEMA_ATTR } from "../lib/jsonld";
 import { whatsapp } from "../data/content";
 import Logo from "../components/Logo";
 import Button from "../components/Button";
@@ -15,7 +15,7 @@ const PAGE_PATH = "/creation-site-internet-artisan";
 const META_TITLE = "Site internet pour artisan : contenu, prix et délai | Kota Studio";
 const META_DESCRIPTION =
   "Site internet pour artisan : ce qu'il doit contenir, landing page ou site complet, prix (dès 790 €), délai de 14 jours et comment être trouvé sur Google et par les IA dans sa zone.";
-const UPDATED_AT = "17 novembre 2026";
+const UPDATED_AT = GUIDE_DATES[PAGE_PATH].updated;
 
 /* Les 6 questions/réponses affichées ci-dessous + reprises mot pour mot dans
    le JSON-LD FAQPage. Définies une seule fois dans lib/jsonld.js (source de
