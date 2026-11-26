@@ -2486,7 +2486,7 @@ Par ordre de priorité pour les prochains runs :
     piste à rechercher : requête non couverte (ex. spécifique TikTok/créateurs,
     ou artisans/PME locales) — vérifier la demande avant d'écrire.
 
-22. **Après le run du 26/11** : (a) vérifier en prod qu'un guide sert le nœud `Article` (curl + grep `"dateModified"`). (b) **Règle désormais** : toute nouvelle page de fond ajoute son entrée dans `GUIDE_DATES` (jsonld.js) et lit `UPDATED_AT` depuis là ; toute nouvelle ville ajoute son slug dans `CITY_PUBLISHED`. Une mise à jour de contenu = changer `updated` (date visible + dateModified) ET le lastmod du sitemap. (c) Prochain angle suggéré : maillage (lien contextuel vers « Que préparer » depuis `/comment-choisir-une-agence-web` et `/creation-site-internet-artisan`, item 21b non fait) ou contenu.
+22. **Après le run du 26/11** : (a) ~~vérif prod du nœud `Article`~~ faite le 26/11 même. (b) **Règle désormais** : toute nouvelle page de fond ajoute son entrée dans `GUIDE_DATES` (jsonld.js) et lit `UPDATED_AT` depuis là ; toute nouvelle ville ajoute son slug dans `CITY_PUBLISHED`. Une mise à jour de contenu = changer `updated` (date visible + dateModified) ET le lastmod du sitemap. (c) Prochain angle suggéré : maillage (lien contextuel vers « Que préparer » depuis `/comment-choisir-une-agence-web` et `/creation-site-internet-artisan`, item 21b non fait) ou contenu.
 
 21. **Après le run du 25/11** : (a) ~~vérif prod + IndexNow~~ fait le 25/11 même. (b) Prochain angle suggéré : technique ou données structurées (contenus les 17, 24, 25/11). Piste : ajouter un lien contextuel vers le nouveau guide depuis `/comment-choisir-une-agence-web` (Q « questions à poser ») et `/creation-site-internet-artisan` (Q5 parle déjà de « préparer ») si pertinent. (c) Dès que Yanis répond sur domaine/hébergement et délais client : compléter Q3/Q5 du guide (texte + date).
 
@@ -3333,6 +3333,7 @@ Après déploiement : `/que-preparer-avant-de-creer-son-site-internet` en 200 en
 ### 2026-11-26
 
 Absent sur « création site vitrine Haute-Savoie » et « agence web Lyon création site internet » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé.
+Après déploiement (`030d506`) : guide « Que préparer » sert `dateModified` en prod, Cluses `"dateModified":"2026-11-24"`, date visible de la page prix inchangée, `/` en 200. Pas d'IndexNow (contenu visible identique).
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 
