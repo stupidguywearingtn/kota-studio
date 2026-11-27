@@ -37,6 +37,12 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-27 (vendredi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : `main` distant = `4e3277f` avant run (vérifié par `git ls-remote`). `/`, page prix, « Que préparer », choisir une agence, artisan, sitemap.xml, llms.txt, robots.txt en 200 ; URL inconnue 404 ; `www.kotastudio.fr/` → 308 apex. NAP servi sur l'accueil : +33615802619 ×3, « Paluel » ; ancien numéro absent. Rien de cassé.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Saint-Julien-en-Genevois" (Aladom, Infomaniak partenaire Genevois Informatique ×6, 118712 ×2, PagesJaunes, edana.ch, Codeur, Malt) et "freelance création site internet Genève" (Malt ×15, Codeur ×3, Infomaniak partenaires ×2). `site:kotastudio.fr` : 0 page du domaine (Contra AUREA seule). Inchangé depuis le 07/09 : le blocage reste l'indexation (Search Console + Bing Webmaster Tools côté Yanis).
+- Audit des liens contextuels reçus (HTML pré-rendu, hors header/nav/footer) : `/que-preparer-avant-de-creer-son-site-internet` **1** (page prix seule), `/apparaitre-dans-chatgpt-et-ia-site-local` **2**, toutes les autres pages de fond ≥ 4. Chantier du jour : voir "Chantiers faits".
+
 **Au 2026-11-26 (jeudi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : `main` distant = `d3b144c` avant run (vérifié par `git ls-remote`, identique au local). `/`, guide « Que préparer », page prix, choisir une agence, artisan, sitemap.xml (21 URLs), llms.txt, robots.txt en 200 ; URL inconnue 404 ; `www.kotastudio.fr/` → 308 apex. NAP servi sur l'accueil : +33615802619, « Paluel » ; ancien numéro absent. Rien de cassé.
@@ -751,6 +757,16 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-27 (vendredi) — Maillage interne : « Que préparer » (1 → 11 liens) et « ChatGPT/IA » (2 → 12 liens)
+
+- Pourquoi : angle suggéré par les runs du 25/11 (item 21b) et du 26/11 (item 22c) ; alternance respectée (données structurées 26/11, contenu 25/11, page ville 24/11). Audit par script : les deux guides les plus « GEO » du site (ce qu'un prospect demande à une IA avant de choisir/préparer) étaient quasi orphelins hors footer, alors que les pages villes (9 liens reçus chacune) n'y renvoyaient pas.
+- Fait (aucun texte de Q/R modifié, uniquement des liens ajoutés dans des blocs existants, styles existants réutilisés) :
+  - `src/pages/CityPage.jsx` (8 pages villes/zones) : sous la Q « délai » (cartes Jour 1 → Jour 14), après « Voir le déroulé complet du process », lien « Que préparer avant de faire créer son site internet ? » (contexte = ce qui fait tenir le planning) ; dans « Envie de comparer avant d'appeler ? », lien « Comment apparaître dans ChatGPT et les IA quand on a un site local ? ». Chemins importés depuis `jsonld.js` (`PREPARE_SITE_PATH`, `AI_VISIBILITY_PATH`).
+  - `src/pages/ChooseAgencyGuidePage.jsx` : sous la Q4 (signaux d'alerte, dont « classement Google garanti ») → « Et dans ChatGPT ? Comment apparaître dans les IA quand on a un site local » ; sous la Q5 (questions à poser à l'agence), hors de la liste numérotée → « Et de votre côté : que préparer avant le premier appel ? ».
+  - `src/pages/ArtisanSitePage.jsx` : bloc « Pour aller plus loin » → « Que préparer… » en premier, « Comment apparaître dans ChatGPT… » ajouté.
+- Vérifs : build OK (27 routes) ; audit après : « Que préparer » **11** liens contextuels, « ChatGPT/IA » **12**. JSON-LD inchangé (FAQPage générés depuis les mêmes `faqs`, aucun texte touché). Playwright iPhone 13 (vite preview) sur Cluses, Lyon, choisir une agence, artisan : scrollWidth 390 = viewport, 0 erreur JS, 2 blocs JSON-LD, 1 lien de chaque hors footer ; captures relues (liens lisibles, pas de débordement).
+- NE PAS fait : accueil non touché (sections validées) ; aucune date visible ni `dateModified` ni lastmod changés (ajout de liens ≠ mise à jour de contenu, même règle que le 25/11) ; sitemap et llms.txt inchangés (aucune page ajoutée) ; pas d'IndexNow (Bing n'indexe rien tant que Bing Webmaster Tools n'est pas configuré, et le contenu des réponses est identique) ; pas de lien vers « Que préparer » depuis la page GEO ni l'inverse (pas de rapport de sens).
 
 ### 2026-11-26 (jeudi) — Données structurées : `Article` / `WebPage` avec `datePublished` + `dateModified` sur les 18 pages de fond
 
@@ -2486,6 +2502,8 @@ Par ordre de priorité pour les prochains runs :
     piste à rechercher : requête non couverte (ex. spécifique TikTok/créateurs,
     ou artisans/PME locales) — vérifier la demande avant d'écrire.
 
+23. **Après le run du 27/11** : (a) Vérifier en prod au prochain run que les liens sont servis (ex. `curl -s https://kotastudio.fr/agence-web-lyon | grep -c que-preparer` ≥ 2 avec le footer). (b) Prochain angle suggéré : contenu (dernier contenu le 25/11). Pistes : vérifier la SERP de « Chambéry / Savoie » ou une question réelle non couverte (ex. « combien de temps pour être visible sur Google après la mise en ligne » — à vérifier sans rien promettre, en cohérence avec `content.js > promises`). Le maillage est désormais équilibré (plus aucune page de fond < 4 liens contextuels).
+
 22. **Après le run du 26/11** : (a) ~~vérif prod du nœud `Article`~~ faite le 26/11 même. (b) **Règle désormais** : toute nouvelle page de fond ajoute son entrée dans `GUIDE_DATES` (jsonld.js) et lit `UPDATED_AT` depuis là ; toute nouvelle ville ajoute son slug dans `CITY_PUBLISHED`. Une mise à jour de contenu = changer `updated` (date visible + dateModified) ET le lastmod du sitemap. (c) Prochain angle suggéré : maillage (lien contextuel vers « Que préparer » depuis `/comment-choisir-une-agence-web` et `/creation-site-internet-artisan`, item 21b non fait) ou contenu.
 
 21. **Après le run du 25/11** : (a) ~~vérif prod + IndexNow~~ fait le 25/11 même. (b) Prochain angle suggéré : technique ou données structurées (contenus les 17, 24, 25/11). Piste : ajouter un lien contextuel vers le nouveau guide depuis `/comment-choisir-une-agence-web` (Q « questions à poser ») et `/creation-site-internet-artisan` (Q5 parle déjà de « préparer ») si pertinent. (c) Dès que Yanis répond sur domaine/hébergement et délais client : compléter Q3/Q5 du guide (texte + date).
@@ -3334,6 +3352,10 @@ Après déploiement : `/que-preparer-avant-de-creer-son-site-internet` en 200 en
 
 Absent sur « création site vitrine Haute-Savoie » et « agence web Lyon création site internet » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé.
 Après déploiement (`030d506`) : guide « Que préparer » sert `dateModified` en prod, Cluses `"dateModified":"2026-11-24"`, date visible de la page prix inchangée, `/` en 200. Pas d'IndexNow (contenu visible identique).
+
+### 2026-11-27
+
+Absent sur « création site internet Saint-Julien-en-Genevois » et « freelance création site internet Genève » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé (près de 12 semaines sans aucune page indexée).
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 

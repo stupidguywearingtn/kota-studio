@@ -215,6 +215,12 @@ export default function ChooseAgencyGuidePage() {
                     </p>
                     <p className="mt-2 text-sm text-taupe">{promises.items[3].text}</p>
                   </div>
+                  <Link
+                    to="/apparaitre-dans-chatgpt-et-ia-site-local"
+                    className="mt-4 inline-block text-sm font-semibold text-or hover:underline"
+                  >
+                    Et dans ChatGPT ? Comment apparaître dans les IA quand on a un site local →
+                  </Link>
                 </>
               )}
 
@@ -236,6 +242,14 @@ export default function ChooseAgencyGuidePage() {
                     </li>
                   ))}
                 </ul>
+              )}
+              {i === 4 && (
+                <Link
+                  to="/que-preparer-avant-de-creer-son-site-internet"
+                  className="mt-4 inline-block text-sm font-semibold text-or hover:underline"
+                >
+                  Et de votre côté : que préparer avant le premier appel ? →
+                </Link>
               )}
             </div>
           ))}

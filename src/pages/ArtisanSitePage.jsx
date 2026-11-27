@@ -188,6 +188,11 @@ export default function ArtisanSitePage() {
             </h3>
             <ul className="mt-3 space-y-2 text-sm">
               <li>
+                <Link to="/que-preparer-avant-de-creer-son-site-internet" className="font-semibold text-or hover:underline">
+                  Que préparer avant de faire créer son site internet ? →
+                </Link>
+              </li>
+              <li>
                 <Link to="/combien-coute-un-site-internet" className="font-semibold text-or hover:underline">
                   Combien coûte un site internet ? Prix, délais et inclus détaillés →
                 </Link>
@@ -200,6 +205,11 @@ export default function ArtisanSitePage() {
               <li>
                 <Link to="/site-internet-ou-reseaux-sociaux" className="font-semibold text-or hover:underline">
                   Site internet ou réseaux sociaux : faut-il les deux ? →
+                </Link>
+              </li>
+              <li>
+                <Link to="/apparaitre-dans-chatgpt-et-ia-site-local" className="font-semibold text-or hover:underline">
+                  Comment apparaître dans ChatGPT et les IA quand on a un site local ? →
                 </Link>
               </li>
               <li>

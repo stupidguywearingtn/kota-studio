@@ -11,6 +11,8 @@ import {
   ARTISAN_SITE_PATH,
   REFONTE_SIGNS_PATH,
   DOMAIN_OWNERSHIP_PATH,
+  PREPARE_SITE_PATH,
+  AI_VISIBILITY_PATH,
 } from "../lib/jsonld";
 import { cities } from "../data/cities";
 import { offer, process, whatsapp } from "../data/content";
@@ -204,6 +206,12 @@ export default function CityPage() {
                   >
                     Voir le déroulé complet du process →
                   </Link>
+                  <Link
+                    to={PREPARE_SITE_PATH}
+                    className="text-sm font-semibold text-or hover:underline sm:col-span-2"
+                  >
+                    Que préparer avant de faire créer son site internet ? →
+                  </Link>
                 </div>
               )}
             </div>
@@ -240,6 +248,11 @@ export default function CityPage() {
               <li>
                 <Link to={DOMAIN_OWNERSHIP_PATH} className="font-semibold text-or hover:underline">
                   Qui est propriétaire de votre site et de votre nom de domaine ? →
+                </Link>
+              </li>
+              <li>
+                <Link to={AI_VISIBILITY_PATH} className="font-semibold text-or hover:underline">
+                  Comment apparaître dans ChatGPT et les IA quand on a un site local ? →
                 </Link>
               </li>
             </ul>
