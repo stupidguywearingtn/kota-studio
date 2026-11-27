@@ -3356,6 +3356,7 @@ Après déploiement (`030d506`) : guide « Que préparer » sert `dateModified` 
 ### 2026-11-27
 
 Absent sur « création site internet Saint-Julien-en-Genevois » et « freelance création site internet Genève » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé (près de 12 semaines sans aucune page indexée).
+Après déploiement (`0c362fc`) : `/agence-web-lyon` sert les nouveaux liens en prod (2 liens « Que préparer » et 2 « ChatGPT/IA » avec le footer, ~40 s après push), `/` en 200. Pas d'IndexNow (liens seuls). Item 23(a) déjà fait.
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 
