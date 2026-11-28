@@ -50,6 +50,7 @@ import {
   buildSocialVsSiteJsonLd,
   buildArtisanSiteJsonLd,
   buildPrepareSiteJsonLd,
+  buildGoogleDelayJsonLd,
   buildAiVisibilityJsonLd,
   buildProjectJsonLd,
   PAGE_SCHEMA_ATTR,
@@ -237,6 +238,14 @@ writeRoute("/que-preparer-avant-de-creer-son-site-internet", {
     "Ce qu'il faut préparer avant de faire créer son site : infos pour le devis, éléments à fournir, domaine, cahier des charges, ce qui retarde un projet et budget réel.",
   schemaId: "prepare-site",
   jsonLd: buildPrepareSiteJsonLd(),
+});
+
+writeRoute("/combien-de-temps-pour-apparaitre-sur-google", {
+  title: "Combien de temps pour apparaître sur Google ? | Kota Studio",
+  description:
+    "Délai réel pour qu'un nouveau site apparaisse sur Google, indexation ou classement, comment l'accélérer, Google Maps, ChatGPT et AI Overviews : ce que dit Google, sans promesse.",
+  schemaId: "google-delay",
+  jsonLd: buildGoogleDelayJsonLd(),
 });
 
 writeRoute("/yanis", {

@@ -14,6 +14,7 @@ import {
   SOCIAL_VS_SITE_PATH,
   AI_VISIBILITY_PATH,
   PREPARE_SITE_PATH,
+  GOOGLE_DELAY_PATH,
 } from "../lib/jsonld";
 import { offer, process, whatWeDo, promises, whatsapp } from "../data/content";
 import { cities } from "../data/cities";
@@ -241,6 +242,13 @@ export default function PricingGuidePage() {
                   </p>
                   <p className="mt-2 text-sm text-taupe">{promises.items[3].text}</p>
                 </div>
+              )}
+              {i === 4 && (
+                <p className="mt-4 text-sm">
+                  <Link to={GOOGLE_DELAY_PATH} className="font-semibold text-or hover:underline">
+                    Combien de temps pour apparaître sur Google après la mise en ligne ? →
+                  </Link>
+                </p>
               )}
             </div>
           ))}

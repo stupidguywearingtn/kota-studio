@@ -37,6 +37,12 @@ de Bricolage, des « 9 sections » et du slider avant/après — tout ça n'exis
 
 _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppositions)_
 
+**Au 2026-11-28 (samedi — pas de recherche du lundi, étape 5 non applicable) :**
+
+- Prod : `main` distant = `c097846` avant run (vérifié par `git ls-remote`). `/`, `/agence-web-lyon`, page prix, sitemap.xml, llms.txt, robots.txt en 200 ; URL inconnue 404 ; `www.kotastudio.fr/` → 308 apex. NAP servi sur l'accueil : +33615802619, « Paluel » ; ancien numéro absent. Liens « Que préparer » toujours servis sur `/agence-web-lyon` (item 23a OK). Rien de cassé.
+- Positions (WebSearch, jamais la marque) : **kotastudio.fr absent** sur "création site internet Annecy" (La Fabrique du Net, 118712 ×3, Mappy, avis-verifies Local.fr ×6, Codeur, Aladom, IUT Annecy) et "agence web Annemasse" (La Fabrique du Net ×2, Gralon ×2, 118712 ×2, Sortlist ×3, Codeur, Incremys, Infomaniak partenaires, Malt, Contra, France Travail). `site:kotastudio.fr` : 0 page du domaine. Inchangé depuis le 07/09 (12 semaines) : le blocage reste l'indexation (Search Console + Bing côté Yanis).
+- Chantier : **nouveau guide `/combien-de-temps-pour-apparaitre-sur-google`** (contenu, piste notée le 27/11). Voir "Chantiers faits".
+
 **Au 2026-11-27 (vendredi — pas de recherche du lundi, étape 5 non applicable) :**
 
 - Prod : `main` distant = `4e3277f` avant run (vérifié par `git ls-remote`). `/`, page prix, « Que préparer », choisir une agence, artisan, sitemap.xml, llms.txt, robots.txt en 200 ; URL inconnue 404 ; `www.kotastudio.fr/` → 308 apex. NAP servi sur l'accueil : +33615802619 ×3, « Paluel » ; ancien numéro absent. Rien de cassé.
@@ -757,6 +763,17 @@ _(mis à jour à chaque run — reflète l'état réel constaté, pas des suppos
 ---
 
 ## Chantiers faits
+
+### 2026-11-28 (samedi) — Guide « Combien de temps pour apparaître sur Google après la mise en ligne ? »
+
+- Pourquoi : angle « contenu » (dernier contenu le 25/11 ; données structurées 26/11, maillage 27/11). Requête réelle vérifiée ce jour : « combien de temps pour qu'un nouveau site internet apparaisse sur Google » → SERP = Wix (aide), aioseo, La Fabrique du Net ×3, digitiz ×2, Ahrefs ×3, JDN, presse-citron, wpbeginner, BDM, tool-advisor, docs Google : **que des contenus nationaux/outils, aucun prestataire local ne dit ce qu'il fait lui-même à la mise en ligne ni ne cite Google mot pour mot**. Pas de cannibalisation : la page prix couvre « combien de temps pour avoir son site » (création), pas l'indexation ; vérifié par grep (aucune Q/R du site sur l'indexation/délai Google). Piste Chambéry/Savoie laissée pour un prochain run « page ville ».
+- Sources (consultées et citées seulement pour ce qu'elles disent, vérifié par fetch le 28/11) : Google « Inclure votre site Web sur Google » (« quelques semaines » pour remarquer un nouveau site ; « inévitable » de manquer des petits sites ; liens depuis d'autres sites, non payés), « Demander une nouvelle exploration » (« de quelques jours à quelques semaines », quota, répéter n'accélère pas, aucune garantie), « Fonctionnement de la recherche » (pas de garantie d'exploration/indexation/diffusion ; découverte par liens et sitemaps), « Créer un sitemap » (« simple indication »), aide GBP 7091 (pertinence, distance, proéminence ; aucun classement local payant ; avis). OpenAI bots (déjà cité sur la page IA).
+- Fait :
+  - `src/lib/jsonld.js` : `GOOGLE_DELAY_PATH`, `googleDelayFaqs` (7 Q/R, réponse directe autonome en tête), `buildGoogleDelayJsonLd()` (Article daté + BreadcrumbList + FAQPage), entrée `GUIDE_DATES` (published 2026-11-28). Questions : (1) combien de temps pour apparaître, (2) indexé vs bien classé, (3) comment accélérer l'indexation, (4) pourquoi mon site n'apparaît toujours pas, (5) quand apparaît-on dans Google Maps / résultats locaux, (6) faut-il aussi attendre pour ChatGPT / AI Overviews, (7) ce que fait Kota Studio à la mise en ligne et ce qui dépend du client.
+  - `src/pages/GoogleDelayPage.jsx` (gabarit PrepareSitePage, DA inchangée) : date visible « 28 novembre 2026 », 3 cartes numérotées sous Q3 (Search Console / Sitemap / Inspection d'URL), 4 cartes « causes fréquentes » sous Q4, liens contextuels Q5 → réseaux sociaux/fiche Google, Q6 → page IA, Q7 → page prix, **bloc « Sources (consultées le 28 novembre 2026) »** avec 6 liens officiels, « Pour aller plus loin » (choisir une agence, refonte, que préparer, Haute-Savoie), CTA final.
+  - Câblage : route `App.jsx`, `<head>` statique (title court 59 car. « Combien de temps pour apparaître sur Google ? | Kota Studio »), corps pré-rendu, footer « Guides », sitemap (22 URLs, lastmod 2026-11-28), llms.txt, **lien contextuel sous la Q5 SEO de la page prix** (après l'encadré promesse).
+  - Vérifs : build OK (28 routes), title/canonical/og:url exacts, 1 H1, FAQ JSON-LD = visible 7/7 ; non-régression FAQ accueil 8/8, prix 5/5, Cluses 5/5 ; Article dates 2026-11-28. Mobile iPhone 13 (Playwright) : scrollWidth 390 = viewport, 0 erreur JS, cartes et sources lisibles.
+- NE PAS fait : **aucun délai de classement chiffré** (les études Ahrefs « plusieurs mois » n'ont pas été vérifiées → non citées) ; rien sur l'âge du domaine (affirmation répandue mais non sourcée par Google) ; **rien de détaillé sur ce que recouvre « configuration Google » à la mise en ligne** (Search Console créée pour le client ? sitemap soumis ? fiche créée ?) : la Q7 reprend mot pour mot content.js (jour 14 : « Domaine, Google, visibilité IA ») et la FAQ de l'accueil (« structure, vitesse, balises, sitemap, fiche Google ») — à préciser par Yanis ; pas de `HowTo` (rich result abandonné par Google, et déjà présent sur la page prix) ; **pas d'exemple tiré du propre site Kota** (12 semaines sans indexation : vrai mais contre-productif commercialement et lié à une action en attente côté Yanis) ; lastmod de la page prix inchangé (ajout d'un lien ≠ mise à jour de contenu).
 
 ### 2026-11-27 (vendredi) — Maillage interne : « Que préparer » (1 → 11 liens) et « ChatGPT/IA » (2 → 12 liens)
 
@@ -2504,6 +2521,8 @@ Par ordre de priorité pour les prochains runs :
 
 23. **Après le run du 27/11** : (a) Vérifier en prod au prochain run que les liens sont servis (ex. `curl -s https://kotastudio.fr/agence-web-lyon | grep -c que-preparer` ≥ 2 avec le footer). (b) Prochain angle suggéré : contenu (dernier contenu le 25/11). Pistes : vérifier la SERP de « Chambéry / Savoie » ou une question réelle non couverte (ex. « combien de temps pour être visible sur Google après la mise en ligne » — à vérifier sans rien promettre, en cohérence avec `content.js > promises`). Le maillage est désormais équilibré (plus aucune page de fond < 4 liens contextuels).
 
+24. **Après le run du 28/11** : (a) Vérifier en prod au prochain run : `curl -s https://kotastudio.fr/combien-de-temps-pour-apparaitre-sur-google | grep -c FAQPage` ≥ 1 et 200 ; ping IndexNow si la clé existe (voir runs précédents). (b) Le nouveau guide ne reçoit que 2 liens contextuels (page prix + footer) : piste maillage → sous la Q « SEO » des pages villes ou depuis la page IA (Q1 « site indexable ») et la page refonte. (c) Prochain angle suggéré : page ville (Chambéry / Savoie, SERP à vérifier) ou technique ; lundi 30/11 = recherche état de l'art (étape 5) + revérifier Business Hub (item 19b).
+
 22. **Après le run du 26/11** : (a) ~~vérif prod du nœud `Article`~~ faite le 26/11 même. (b) **Règle désormais** : toute nouvelle page de fond ajoute son entrée dans `GUIDE_DATES` (jsonld.js) et lit `UPDATED_AT` depuis là ; toute nouvelle ville ajoute son slug dans `CITY_PUBLISHED`. Une mise à jour de contenu = changer `updated` (date visible + dateModified) ET le lastmod du sitemap. (c) Prochain angle suggéré : maillage (lien contextuel vers « Que préparer » depuis `/comment-choisir-une-agence-web` et `/creation-site-internet-artisan`, item 21b non fait) ou contenu.
 
 21. **Après le run du 25/11** : (a) ~~vérif prod + IndexNow~~ fait le 25/11 même. (b) Prochain angle suggéré : technique ou données structurées (contenus les 17, 24, 25/11). Piste : ajouter un lien contextuel vers le nouveau guide depuis `/comment-choisir-une-agence-web` (Q « questions à poser ») et `/creation-site-internet-artisan` (Q5 parle déjà de « préparer ») si pertinent. (c) Dès que Yanis répond sur domaine/hébergement et délais client : compléter Q3/Q5 du guide (texte + date).
@@ -2511,6 +2530,8 @@ Par ordre de priorité pour les prochains runs :
 ---
 
 ## Hypothèses à vérifier
+
+- **Guide « délais Google » (2026-11-28)** : (1) Que recouvre exactement « Google » à la mise en ligne (jour 14) : Kota crée-t-il la propriété Search Console du client et y soumet-il le sitemap ? Crée-t-il ou optimise-t-il la fiche Google Business Profile ? Si oui, la Q7 peut le dire précisément (fort différenciant : aucun concurrent ne le publie). (2) Contenu et prix de l'option « SEO avancé » (toujours « sur devis »).
 
 - **Guide « Que préparer » (2026-11-25)** : (1) Qui achète et au nom de qui est enregistré le nom de domaine d'un client sans domaine ? Coût domaine + hébergement inclus la 1re année, et après ? (réponse attendue aussi pour la page artisan). (2) Si le client fournit ses contenus ou ses retours en retard, le délai de 14 jours est-il simplement décalé d'autant ? (3) Formats acceptés pour logo/photos (et Kota peut-il utiliser des photos libres de droits si le client n'en a pas ?). (4) Le client peut-il envoyer ses éléments par WhatsApp / lien de partage ? Chaque réponse permettrait d'ajouter une phrase vraie au guide.
 
@@ -3358,7 +3379,13 @@ Après déploiement (`030d506`) : guide « Que préparer » sert `dateModified` 
 Absent sur « création site internet Saint-Julien-en-Genevois » et « freelance création site internet Genève » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé (près de 12 semaines sans aucune page indexée).
 Après déploiement (`0c362fc`) : `/agence-web-lyon` sert les nouveaux liens en prod (2 liens « Que préparer » et 2 « ChatGPT/IA » avec le footer, ~40 s après push), `/` en 200. Pas d'IndexNow (liens seuls). Item 23(a) déjà fait.
 
+### 2026-11-28
+
+Absent sur « création site internet Annecy » et « agence web Annemasse » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé (12 semaines sans aucune page indexée).
+
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
+
+0undecies. **Guide délais Google (28/11)** : à la mise en ligne d'un site client, Kota crée-t-il la Search Console (et soumet-il le sitemap) et la fiche Google Business ? Si oui, le dire permettrait de l'écrire noir sur blanc dans la Q7.
 
 0decies. **Guide « Que préparer » (25/11)** : qui achète le domaine d'un client et au nom de qui ; coût domaine/hébergement après la 1re année ; délai décalé si le client tarde ? ; photos libres de droits possibles si le client n'en a pas ?
 

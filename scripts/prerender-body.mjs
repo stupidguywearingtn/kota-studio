@@ -95,6 +95,10 @@ const routes = [
     filePath: path.join(distDir, "que-preparer-avant-de-creer-son-site-internet", "index.html"),
   },
   {
+    routePath: "/combien-de-temps-pour-apparaitre-sur-google",
+    filePath: path.join(distDir, "combien-de-temps-pour-apparaitre-sur-google", "index.html"),
+  },
+  {
     routePath: "/mentions-legales",
     filePath: path.join(distDir, "mentions-legales", "index.html"),
   },

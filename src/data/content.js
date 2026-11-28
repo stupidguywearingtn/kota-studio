@@ -498,6 +498,7 @@ export const footer = {
         { label: "Apparaître dans ChatGPT et les IA", href: "/apparaitre-dans-chatgpt-et-ia-site-local" },
         { label: "Site internet pour artisan", href: "/creation-site-internet-artisan" },
         { label: "Que préparer avant de créer son site ?", href: "/que-preparer-avant-de-creer-son-site-internet" },
+        { label: "Combien de temps pour apparaître sur Google ?", href: "/combien-de-temps-pour-apparaitre-sur-google" },
       ],
     },
     {

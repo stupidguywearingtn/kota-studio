@@ -744,6 +744,82 @@ export function buildPrepareSiteJsonLd() {
   };
 }
 
+export const GOOGLE_DELAY_PATH = "/combien-de-temps-pour-apparaitre-sur-google";
+
+/* Les 7 questions/réponses affichées sur GoogleDelayPage.jsx, reprises mot
+   pour mot dans le JSON-LD FAQPage. Page ajoutée le 2026-11-28 (requête réelle
+   « combien de temps pour qu'un nouveau site apparaisse sur Google », servie
+   par Wix, Ahrefs, JDN, La Fabrique du Net, digitiz : contenus nationaux qui
+   ne disent pas ce qu'un prestataire fait lui-même à la mise en ligne).
+   Faits externes : uniquement la documentation Google consultée le
+   2026-11-28 (« Inclure votre site Web sur Google », « Demander à Google
+   d'explorer à nouveau vos URL », « Fonctionnement de la recherche Google »,
+   « Créer un sitemap », aide Google Business Profile « Améliorer son
+   classement local »), et la doc OpenAI déjà citée sur la page IA. Faits
+   propres au studio tirés de content.js (process jour 14, promesse n°4,
+   options) et de la FAQ de l'accueil (« structure, vitesse, balises, sitemap,
+   fiche Google »). Aucun délai de classement promis ni chiffré. */
+export const googleDelayFaqs = [
+  {
+    q: "Combien de temps faut-il pour qu'un nouveau site apparaisse sur Google ?",
+    a: "Il n'existe pas de délai fixe. Google indique qu'il peut lui falloir quelques semaines pour remarquer un nouveau site, et que l'exploration d'une page peut prendre de quelques jours à quelques semaines. Apparaître quand on tape le nom de son entreprise vient en général en premier ; apparaître sur une recherche concurrentielle comme « création site internet + ville » prend beaucoup plus longtemps, et personne ne peut en garantir le délai.",
+  },
+  {
+    q: "Quelle est la différence entre être indexé et être bien classé sur Google ?",
+    a: "Être indexé veut dire que Google a enregistré la page et peut l'afficher ; être bien classé veut dire qu'elle sort parmi les premiers résultats pour une recherche précise. La première étape est technique, la seconde dépend de la concurrence, du contenu et de la notoriété du site. Google précise d'ailleurs qu'il ne garantit pas d'explorer, d'indexer ni d'afficher une page, même quand elle respecte toutes ses règles.",
+  },
+  {
+    q: "Comment accélérer l'indexation d'un nouveau site sur Google ?",
+    a: "En trois gestes, tous gratuits : ajouter le site à Google Search Console, y soumettre le sitemap, puis demander l'indexation des pages les plus importantes avec l'outil d'inspection d'URL. Google prévient qu'un sitemap n'est qu'une indication, que les demandes d'indexation sont limitées par un quota et que les répéter pour la même page ne l'accélère pas. Des liens vers votre site depuis d'autres sites (fiche Google, annuaires sérieux, partenaires) aident aussi Google à le découvrir.",
+  },
+  {
+    q: "Pourquoi mon site n'apparaît-il toujours pas sur Google ?",
+    a: "Le plus souvent pour une raison simple à vérifier : le site est trop récent, il n'a été ajouté à aucune propriété Search Console, aucun autre site ne pointe vers lui, ou une balise « noindex » ou le fichier robots.txt bloque les robots. Un site dont le texte n'apparaît qu'après exécution du JavaScript peut aussi être plus long à traiter. Google reconnaît aussi qu'il passe à côté de certains sites, surtout les petits : Search Console est le seul endroit où voir ce qu'il a réellement retenu.",
+  },
+  {
+    q: "Quand apparaît-on dans Google Maps et dans les résultats locaux ?",
+    a: "Les résultats locaux et Google Maps dépendent d'abord de la fiche Google Business Profile, pas du site seul. Google classe ces fiches selon trois critères : la pertinence par rapport à la recherche, la distance avec la personne qui cherche et la proéminence, c'est-à-dire la notoriété de l'établissement, à laquelle les avis contribuent. Google précise qu'il n'existe aucun moyen d'obtenir une meilleure place locale contre rémunération ; un site qui reprend exactement le même nom, la même adresse et le même téléphone que la fiche renforce ce signal.",
+  },
+  {
+    q: "Faut-il aussi attendre pour apparaître dans ChatGPT ou les AI Overviews de Google ?",
+    a: "Oui, car ces réponses s'appuient sur des pages déjà accessibles aux robots. Selon Google, une page doit être indexée et éligible à l'affichage avec un extrait pour pouvoir apparaître dans les AI Overviews : le délai d'indexation s'applique donc aussi. Côté ChatGPT, OpenAI indique qu'un site qui bloque son robot OAI-SearchBot n'apparaît pas dans ses réponses de recherche, et qu'un changement du fichier robots.txt peut mettre environ 24 heures à être pris en compte.",
+  },
+  {
+    q: "Que fait Kota Studio à la mise en ligne, et qu'est-ce qui dépend de vous ensuite ?",
+    a: "Chez Kota Studio, la mise en ligne a lieu au jour 14 et comprend le nom de domaine, la configuration Google, la visibilité IA et la prise en main de l'espace admin ; les bases sont posées dès le développement : structure, vitesse, balises, sitemap et fiche Google. Aucun classement ni délai de classement n'est promis. Ce qui dépend ensuite de vous : les avis clients, les photos et une activité régulière sur la fiche Google ; un accompagnement plus poussé est possible avec l'option SEO avancé, sur devis.",
+  },
+];
+
+export function buildGoogleDelayJsonLd() {
+  const pageUrl = `${SITE_URL}${GOOGLE_DELAY_PATH}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      buildArticleNode(GOOGLE_DELAY_PATH, "Combien de temps pour apparaître sur Google après la mise en ligne ?"),
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE_URL}/` },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Combien de temps pour apparaître sur Google ?",
+            item: pageUrl,
+          },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: googleDelayFaqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+    ],
+  };
+}
+
 /* ============================================================================
    Dates des pages de fond (ajout 2026-11-26). `updated` est la SEULE source de
    la date « Dernière mise à jour » affichée sur chaque guide (les pages
@@ -764,6 +840,7 @@ export const GUIDE_DATES = {
   [SOCIAL_VS_SITE_PATH]: { published: "2026-10-05", updated: "5 octobre 2026" },
   [ARTISAN_SITE_PATH]: { published: "2026-11-17", updated: "17 novembre 2026" },
   [PREPARE_SITE_PATH]: { published: "2026-11-25", updated: "25 novembre 2026" },
+  [GOOGLE_DELAY_PATH]: { published: "2026-11-28", updated: "28 novembre 2026" },
 };
 
 /* Première mise en ligne des pages villes/zones (SEO-JOURNAL.md). La date de
