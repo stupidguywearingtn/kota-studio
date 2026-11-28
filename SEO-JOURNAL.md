@@ -3382,6 +3382,7 @@ Après déploiement (`0c362fc`) : `/agence-web-lyon` sert les nouveaux liens en 
 ### 2026-11-28
 
 Absent sur « création site internet Annecy » et « agence web Annemasse » ; `site:kotastudio.fr` = 0 résultat du domaine. Inchangé (12 semaines sans aucune page indexée).
+Après déploiement (`5e88c7f`) : `/combien-de-temps-pour-apparaitre-sur-google` en 200 en prod avec son FAQPage, présent dans le sitemap servi, `/` en 200. IndexNow (nouveau guide + page prix) : HTTP 200. Item 24(a) déjà fait.
 
 ## Ce que Yanis doit fournir (résumé, voir aussi "Hypothèses à vérifier")
 
